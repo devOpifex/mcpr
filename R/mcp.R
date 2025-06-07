@@ -79,6 +79,7 @@ new_mcp <- function(
 #' @param name Name of the tool
 #' @param description Description of the tool
 #' @param input_schema Input schema for the tool
+#' @param handler Function to handle the tool
 #'
 #' @return A new tool capability
 #' @export
@@ -99,15 +100,39 @@ new_mcp <- function(
 #'         description = "Input 2"
 #'       )
 #'     )
-#'   )
+#'   ),
+#'   handler = function(input) {
+#'     # Process the input here
+#'     return(input)
+#'   }
 #' )
-new_tool <- function(name, description, input_schema = list()) {
-  new_capability(
+new_tool <- function(
+  name,
+  description,
+  input_schema,
+  handler
+) {
+  stopifnot(
+    !missing(name),
+    !missing(description),
+    !missing(input_schema),
+    !missing(handler)
+  )
+
+  if (!inherits(input_schema, "schema")) {
+    stop("input_schema must be a schema object")
+  }
+
+  cap <- new_capability(
     name = name,
     description = description,
     inputSchema = input_schema,
     type = "tool"
   )
+
+  attr(cap, "handler") <- handler
+
+  cap
 }
 
 #' Create a new resource

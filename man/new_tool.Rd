@@ -4,7 +4,7 @@
 \alias{new_tool}
 \title{Create a new tool}
 \usage{
-new_tool(name, description, input_schema = list())
+new_tool(name, description, input_schema, handler)
 }
 \arguments{
 \item{name}{Name of the tool}
@@ -12,6 +12,8 @@ new_tool(name, description, input_schema = list())
 \item{description}{Description of the tool}
 
 \item{input_schema}{Input schema for the tool}
+
+\item{handler}{Function to handle the tool}
 }
 \value{
 A new tool capability
@@ -35,6 +37,10 @@ tool <- new_tool(
         description = "Input 2"
       )
     )
-  )
+  ),
+  handler = function(input) {
+    # Process the input here
+    return(input)
+  }
 )
 }
