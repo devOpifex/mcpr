@@ -5,8 +5,6 @@
 run <- function() {
   #!/usr/bin/env Rscript
 
-  library(jsonlite)
-
   cat("JSON-RPC CLI started. Send JSON requests line by line.\n")
 
   while (TRUE) {
@@ -17,7 +15,7 @@ run <- function() {
     tryCatch(
       {
         # Parse JSON
-        request <- fromJSON(line)
+        request <- jsonlite::fromJSON(line)
 
         # Process JSON-RPC request
         if (!is.null(request$method)) {

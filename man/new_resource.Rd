@@ -16,7 +16,7 @@ new_resource(name, description, uri, mime_type = NULL)
 \item{mime_type}{Mime type of the resource}
 }
 \value{
-A new resource definition
+A new resource capability
 }
 \description{
 Create a new resource

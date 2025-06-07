@@ -14,7 +14,17 @@ new_mcp(
 )
 }
 \arguments{
-\item{...}{Named arguments to be included in the MCP object}
+\item{name}{Name of the MCP}
+
+\item{description}{Description of the MCP}
+
+\item{version}{Version of the MCP}
+
+\item{tools}{List of tools}
+
+\item{resources}{List of resources}
+
+\item{prompts}{List of prompts}
 }
 \value{
 A new MCP object
@@ -23,5 +33,9 @@ A new MCP object
 Create a new MCP object
 }
 \examples{
-mcp <- new_mcp(name = "My MCP", description = "This is a description")
+mcp <- new_mcp(
+  name = "My MCP",
+  description = "This is a description",
+  version = "1.0.0"
+)
 }

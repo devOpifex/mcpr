@@ -1,12 +1,21 @@
 #' Create a new MCP object
 #'
-#' @param ... Named arguments to be included in the MCP object
+#' @param name Name of the MCP
+#' @param description Description of the MCP
+#' @param version Version of the MCP
+#' @param tools List of tools
+#' @param resources List of resources
+#' @param prompts List of prompts
 #'
 #' @return A new MCP object
 #' @export
 #'
 #' @examples
-#' mcp <- new_mcp(name = "My MCP", description = "This is a description")
+#' mcp <- new_mcp(
+#'   name = "My MCP",
+#'   description = "This is a description",
+#'   version = "1.0.0"
+#' )
 new_mcp <- function(
   name,
   description,

@@ -14,7 +14,7 @@ new_tool(name, description, input_schema = list())
 \item{input_schema}{Input schema for the tool}
 }
 \value{
-A new tool definition
+A new tool capability
 }
 \description{
 Create a new tool

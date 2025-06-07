@@ -14,7 +14,7 @@ new_prompt(name, description, arguments = list())
 \item{arguments}{List of arguments for the prompt}
 }
 \value{
-A new prompt definition
+A new prompt capability
 }
 \description{
 Create a new prompt
