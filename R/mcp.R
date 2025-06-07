@@ -190,22 +190,22 @@ new_definition <- function(
 add_definition <- function(mcp, definition) UseMethod("add_tool", definition)
 
 #' @export
-#' @method add_tool tool
-add_tool.tool <- function(mcp, definition) {
+#' @method add_definition tool
+add_definition.tool <- function(mcp, definition) {
   mcp$tools[[definition$name]] <- definition
   invisible(mcp)
 }
 
 #' @export
-#' @method add_tool resource
-add_tool.resource <- function(mcp, definition) {
+#' @method add_definition resource
+add_definition.resource <- function(mcp, definition) {
   mcp$resources[[definition$name]] <- definition
   invisible(mcp)
 }
 
 #' @export
-#' @method add_tool prompt
-add_tool.prompt <- function(mcp, definition) {
+#' @method add_definition prompt
+add_definition.prompt <- function(mcp, definition) {
   mcp$prompts[[definition$name]] <- definition
   invisible(mcp)
 }
