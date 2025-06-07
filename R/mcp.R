@@ -71,7 +71,7 @@ new_mcp <- function(
 #' @param description Description of the tool
 #' @param input_schema Input schema for the tool
 #'
-#' @return A new tool definition
+#' @return A new tool capability
 #' @export
 #'
 #' @examples
@@ -93,7 +93,7 @@ new_mcp <- function(
 #'   )
 #' )
 new_tool <- function(name, description, input_schema = list()) {
-  new_definition(
+  new_capability(
     name = name,
     description = description,
     inputSchema = input_schema,
@@ -108,7 +108,7 @@ new_tool <- function(name, description, input_schema = list()) {
 #' @param uri URI of the resource
 #' @param mime_type Mime type of the resource
 #'
-#' @return A new resource definition
+#' @return A new resource capability
 #' @export
 #'
 #' @examples
@@ -119,7 +119,7 @@ new_tool <- function(name, description, input_schema = list()) {
 #'   mime_type = "text/plain"
 #' )
 new_resource <- function(name, description, uri, mime_type = NULL) {
-  new_definition(
+  new_capability(
     name = name,
     description = description,
     uri = uri,
@@ -134,7 +134,7 @@ new_resource <- function(name, description, uri, mime_type = NULL) {
 #' @param description Description of the prompt
 #' @param arguments List of arguments for the prompt
 #'
-#' @return A new prompt definition
+#' @return A new prompt capability
 #' @export
 #'
 #' @examples
@@ -153,7 +153,7 @@ new_resource <- function(name, description, uri, mime_type = NULL) {
 #'   )
 #' )
 new_prompt <- function(name, description, arguments = list()) {
-  new_definition(
+  new_capability(
     name = name,
     description = description,
     arguments = arguments,
@@ -162,7 +162,7 @@ new_prompt <- function(name, description, arguments = list()) {
 }
 
 # Print method for mcp_server
-new_definition <- function(
+new_capability <- function(
   name,
   description,
   ...,
@@ -177,35 +177,35 @@ new_definition <- function(
     ),
     name = name,
     description = description,
-    class = c("definition", type, "list")
+    class = c("capability", type, "list")
   )
 }
 
-#' Add a definition to an MCP object
+#' Add a capability to an MCP object
 #'
-#' @param definition A definition object
+#' @param capability A capability object
 #' @param mcp An MCP object
 #'
-#' @return The MCP object with the definition added
-add_definition <- function(mcp, definition) UseMethod("add_tool", definition)
+#' @return The MCP object with the capability added
+add_capability <- function(mcp, capability) UseMethod("add_tool", capability)
 
 #' @export
-#' @method add_definition tool
-add_definition.tool <- function(mcp, definition) {
-  mcp$tools[[definition$name]] <- definition
+#' @method add_capability tool
+add_capability.tool <- function(mcp, capability) {
+  mcp$tools[[capability$name]] <- capability
   invisible(mcp)
 }
 
 #' @export
-#' @method add_definition resource
-add_definition.resource <- function(mcp, definition) {
-  mcp$resources[[definition$name]] <- definition
+#' @method add_capability resource
+add_capability.resource <- function(mcp, capability) {
+  mcp$resources[[capability$name]] <- capability
   invisible(mcp)
 }
 
 #' @export
-#' @method add_definition prompt
-add_definition.prompt <- function(mcp, definition) {
-  mcp$prompts[[definition$name]] <- definition
+#' @method add_capability prompt
+add_capability.prompt <- function(mcp, capability) {
+  mcp$prompts[[capability$name]] <- capability
   invisible(mcp)
 }
