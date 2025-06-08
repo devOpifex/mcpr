@@ -137,16 +137,6 @@ validate_request <- function(request) {
     ))
   }
 
-  # Check method format (must have at least one dot)
-  method_parts <- strsplit(request$method, ".", fixed = TRUE)[[1]]
-  if (length(method_parts) < 2) {
-    return(create_error(
-      id = request$id,
-      JSONRPC_METHOD_NOT_FOUND,
-      paste("Invalid method format:", request$method)
-    ))
-  }
-
   NULL
 }
 
