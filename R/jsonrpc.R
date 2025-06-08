@@ -1,0 +1,307 @@
+#' JSON-RPC 2.0 Standard Error Codes
+#' @keywords internal
+JSONRPC_PARSE_ERROR <- -32700
+JSONRPC_INVALID_REQUEST <- -32600
+JSONRPC_METHOD_NOT_FOUND <- -32601
+JSONRPC_INVALID_PARAMS <- -32602
+JSONRPC_INTERNAL_ERROR <- -32603
+
+#' Convert an R object to JSON
+#'
+#' @param x R object to convert to JSON
+#' @param ... Additional arguments passed to jsonlite::toJSON
+#'
+#' @return JSON string
+#' @keywords internal
+to_json <- function(x, ...) {
+  jsonlite::toJSON(x, auto_unbox = TRUE, ...)
+}
+
+#' Parse JSON to an R object
+#'
+#' @param json JSON string to parse
+#' @param ... Additional arguments passed to jsonlite::fromJSON
+#'
+#' @return R object
+#' @keywords internal
+from_json <- function(json, ...) {
+  jsonlite::fromJSON(json, simplifyVector = FALSE, ...)
+}
+
+#' Create a JSON-RPC 2.0 error response
+#'
+#' @param id Request identifier
+#' @param code Error code
+#' @param message Error message
+#' @param data Optional error data
+#'
+#' @return A structured JSON-RPC 2.0 error response
+#' @keywords internal
+create_error <- function(id, code, message, data = NULL) {
+  error <- list(code = code, message = message)
+  if (!is.null(data)) error$data <- data
+
+  structure(
+    list(
+      jsonrpc = "2.0",
+      error = error,
+      id = id
+    ),
+    class = c("jsonrpc_error", "list")
+  )
+}
+
+#' Create a JSON-RPC 2.0 success response
+#'
+#' @param id Request identifier
+#' @param result Result data
+#'
+#' @return A structured JSON-RPC 2.0 success response
+#' @keywords internal
+create_response <- function(id, result) {
+  structure(
+    list(
+      jsonrpc = "2.0",
+      result = result,
+      id = id
+    ),
+    class = c("jsonrpc_response", "list")
+  )
+}
+
+send <- function(response, con = stdout()) UseMethod("send")
+
+#' @export
+#' @method send jsonrpc_error
+send.jsonrpc_error <- function(response, con = stdout()) {
+  # Check if it's a notification
+  if (is.null(response$id)) {
+    return(NULL)
+  }
+
+  # Send the response
+  cat(to_json(response), "\n", file = con)
+}
+
+#' @export
+#' @method send jsonrpc_response
+send.jsonrpc_response <- function(response, con = stdout()) {
+  # Check if it's a notification
+  if (is.null(response$id)) {
+    return(NULL)
+  }
+
+  # Send the response
+  cat(to_json(response), "\n", file = con)
+}
+
+#' Validate a JSON-RPC 2.0 request
+#'
+#' @param request Parsed request object
+#'
+#' @return NULL if valid, error response if invalid
+#' @keywords internal
+validate_request <- function(request) {
+  # Check JSON-RPC version
+  if (is.null(request$jsonrpc) || request$jsonrpc != "2.0") {
+    return(create_error(
+      request$id,
+      JSONRPC_INVALID_REQUEST,
+      "Invalid JSON-RPC version"
+    ))
+  }
+
+  # Check method is present and a string
+  if (is.null(request$method) || !is.character(request$method)) {
+    return(create_error(
+      request$id,
+      JSONRPC_INVALID_REQUEST,
+      "Method must be a string"
+    ))
+  }
+
+  # If params exist, they must be object or array
+  if (
+    !is.null(request$params) &&
+      !is.list(request$params) &&
+      !is.vector(request$params)
+  ) {
+    return(create_error(
+      request$id,
+      JSONRPC_INVALID_REQUEST,
+      "Params must be object or array"
+    ))
+  }
+
+  # Check method format (must have at least one dot)
+  method_parts <- strsplit(request$method, ".", fixed = TRUE)[[1]]
+  if (length(method_parts) < 2) {
+    return(create_error(
+      request$id,
+      JSONRPC_METHOD_NOT_FOUND,
+      paste("Invalid method format:", request$method)
+    ))
+  }
+
+  NULL
+}
+
+#' Process a JSON-RPC 2.0 request
+#'
+#' @param request Parsed request object
+#' @param mcp MCP server object
+#'
+#' @return Response object or NULL for notifications
+#' @export
+process_request <- function(request, mcp) {
+  # First validate the request
+  validation_error <- validate_request(request)
+  if (!is.null(validation_error)) {
+    return(validation_error)
+  }
+
+  # Extract request components
+  method <- request$method
+  params <- request$params
+  id <- request$id
+
+  # Check if it's a notification (no id)
+  is_notification <- is.null(id)
+
+  # Parse method name
+  method_parts <- strsplit(method, ".", fixed = TRUE)[[1]]
+  category <- method_parts[1]
+  action <- method_parts[2]
+
+  # Handle system methods
+  if (category == "system") {
+    if (action == "listMethods") {
+      methods <- c()
+      # List all tool methods
+      for (tool_name in names(mcp$tools)) {
+        methods <- c(methods, paste0("tool.", tool_name))
+      }
+      return(create_response(id, methods))
+    }
+    return(create_error(
+      id,
+      JSONRPC_METHOD_NOT_FOUND,
+      "System method not implemented"
+    ))
+  }
+
+  # Handle tool methods
+  if (category == "tool") {
+    tool_name <- action
+    if (!is.null(mcp$tools[[tool_name]])) {
+      tool <- mcp$tools[[tool_name]]
+      handler <- attr(tool, "handler")
+
+      if (is.function(handler)) {
+        tryCatch(
+          {
+            result <- handler(params)
+            if (!is_notification) {
+              return(create_response(id, result))
+            }
+            return(NULL) # No response for notifications
+          },
+          error = function(e) {
+            return(create_error(
+              id,
+              JSONRPC_INTERNAL_ERROR,
+              paste("Handler error:", e$message)
+            ))
+          }
+        )
+      }
+    }
+    return(create_error(
+      id,
+      JSONRPC_METHOD_NOT_FOUND,
+      paste("Tool not found:", tool_name)
+    ))
+  }
+
+  create_error(
+    id,
+    JSONRPC_METHOD_NOT_FOUND,
+    paste("Method not found:", method)
+  )
+}
+
+#' Process batch JSON-RPC 2.0 requests
+#'
+#' @param batch_requests List of request objects
+#' @param mcp MCP server object
+#'
+#' @return List of response objects
+#' @export
+process_batch <- function(batch_requests, mcp) {
+  # Validate batch structure
+  if (!is.list(batch_requests) || length(batch_requests) == 0) {
+    return(list(create_error(
+      NULL,
+      JSONRPC_INVALID_REQUEST,
+      "Invalid batch request - must be non-empty array"
+    )))
+  }
+
+  # Process each request in the batch
+  responses <- list()
+  for (request in batch_requests) {
+    # Process each request individually
+    # No need to validate again, as process_request already does validation
+    response <- process_request(request, mcp)
+
+    # Only add non-notification responses to the batch response
+    if (!is.null(response)) {
+      responses <- c(responses, list(response))
+    }
+  }
+
+  responses
+}
+
+#' Parse and process a JSON-RPC 2.0 request
+#'
+#' @param json_text JSON request text
+#' @param mcp MCP server object
+#'
+#' @return JSON response text or NULL for notifications
+#' @export
+parse_request <- function(json_text, mcp) {
+  tryCatch(
+    {
+      # Parse the JSON request
+      request <- from_json(json_text)
+
+      # Check if it's a batch request (array of requests)
+      if (is.list(request) && !length(names(request))) {
+        responses <- process_batch(request, mcp)
+        if (length(responses) == 0) {
+          return(NULL) # All were notifications
+        }
+        return(to_json(responses))
+      } else {
+        # Single request
+        response <- process_request(request, mcp)
+
+        # Notifications don't get responses
+        if (is.null(response)) {
+          return(NULL)
+        }
+
+        return(to_json(response))
+      }
+    },
+    error = function(e) {
+      error_response <- create_error(
+        NULL,
+        JSONRPC_PARSE_ERROR,
+        paste("Parse error:", e$message)
+      )
+      to_json(error_response)
+    }
+  )
+}

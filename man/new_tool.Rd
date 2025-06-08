@@ -25,17 +25,10 @@ Create a new tool
 tool <- new_tool(
   name = "My Tool",
   description = "This is a description",
-  input_schema = list(
-    type = "object",
+  input_schema = schema(
     properties = list(
-      input1 = list(
-        type = "string",
-        description = "Input 1"
-      ),
-      input2 = list(
-        type = "number",
-        description = "Input 2"
-      )
+      input1 = prop_string("Input 1", "Description of input 1"),
+      input2 = prop_number("Input 2", "Description of input 2")
     )
   ),
   handler = function(input) {

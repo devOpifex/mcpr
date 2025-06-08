@@ -2,13 +2,18 @@
 % Please edit documentation in R/cli.R
 \name{run}
 \alias{run}
-\title{Run the CLI}
+\title{Run the MCP Server CLI}
 \usage{
-run()
+run(mcp, port = NULL)
+}
+\arguments{
+\item{mcp}{An MCP server object}
+
+\item{port}{Port number to listen on (optional)}
 }
 \value{
-Nothing
+Nothing, runs indefinitely
 }
 \description{
-Run the CLI
+Run the MCP Server CLI
 }

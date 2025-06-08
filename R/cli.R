@@ -1,31 +1,40 @@
-#' Run the CLI
+#' Run the MCP Server CLI
 #'
-#' @return Nothing
+#' @param mcp An MCP server object
+#' @param port Port number to listen on (optional)
+#'
+#' @return Nothing, runs indefinitely
 #' @export
-run <- function() {
-  #!/usr/bin/env Rscript
+run <- function(mcp, port = NULL) {
+  # Validate MCP object
+  if (missing(mcp)) {
+    stop("An MCP server object is required")
+  }
 
-  cat("JSON-RPC CLI started. Send JSON requests line by line.\n")
+  if (!inherits(mcp, "mcp_server")) {
+    stop("mcp must be an MCP server object")
+  }
 
+  # Handle port parameter
+  if (!is.null(port)) {
+    # TODO: Implement server socket in future versions
+    stop("Port-based server not yet implemented")
+  }
+
+  # Main request-response loop
   while (TRUE) {
+    # Read a line from stdin
     line <- readLines(con = stdin(), n = 1, warn = FALSE)
 
+    # Exit on EOF (Ctrl+D)
     if (length(line) == 0) break
 
-    tryCatch(
-      {
-        # Parse JSON
-        request <- jsonlite::fromJSON(line)
+    # Process the request through JSON-RPC
+    response <- parse_request(line, mcp)
 
-        # Process JSON-RPC request
-        if (!is.null(request$method)) {
-          cat("Method:", request$method, "\n")
-          # Handle your RPC methods here
-        }
-      },
-      error = function(e) {
-        cat("Error parsing JSON:", e$message, "\n")
-      }
-    )
+    # Only print responses for non-notifications
+    if (!is.null(response)) {
+      cat(response, "\n")
+    }
   }
 }

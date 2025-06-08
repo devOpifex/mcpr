@@ -88,17 +88,10 @@ new_mcp <- function(
 #' tool <- new_tool(
 #'   name = "My Tool",
 #'   description = "This is a description",
-#'   input_schema = list(
-#'     type = "object",
+#'   input_schema = schema(
 #'     properties = list(
-#'       input1 = list(
-#'         type = "string",
-#'         description = "Input 1"
-#'       ),
-#'       input2 = list(
-#'         type = "number",
-#'         description = "Input 2"
-#'       )
+#'       input1 = prop_string("Input 1", "Description of input 1"),
+#'       input2 = prop_number("Input 2", "Description of input 2")
 #'     )
 #'   ),
 #'   handler = function(input) {
@@ -207,10 +200,10 @@ new_capability <- function(
 
   structure(
     list(
+      name = name,
+      description = description,
       ...
     ),
-    name = name,
-    description = description,
     class = c("capability", type, "list")
   )
 }
@@ -221,7 +214,8 @@ new_capability <- function(
 #' @param mcp An MCP object
 #'
 #' @return The MCP object with the capability added
-add_capability <- function(mcp, capability) UseMethod("add_tool", capability)
+add_capability <- function(mcp, capability)
+  UseMethod("add_capability", capability)
 
 #' @export
 #' @method add_capability tool

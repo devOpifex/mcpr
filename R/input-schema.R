@@ -7,13 +7,13 @@
 #' @export
 #'
 #' @examples
-#' schema <- input_schema(
+#' schema <- schema(
 #'   properties = list(
 #'     name = prop_string("User name", "The name of the user", required = TRUE),
 #'     age = prop_number("User age", "The age of the user in years", minimum = 0)
 #'   )
 #' )
-input_schema <- function(properties, additional_properties = FALSE) {
+schema <- function(properties, additional_properties = FALSE) {
   # Extract required properties
   required <- character(0)
   for (name in names(properties)) {
@@ -321,4 +321,3 @@ prop_enum <- function(title, description, values, required = FALSE) {
     enum = values
   )
 }
-

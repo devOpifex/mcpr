@@ -1,10 +1,23 @@
 Package: mcpr
-Title: What the Package Does (One Line, Title Case)
+Title: Model Context Protocol for R
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+  c(
+    person(given = "John",
+           family = "Coene",
+           role = c("aut", "cre"),
+           email = "jcoenep@gmail.com"),
+    person(family = "Opifex",
+           role = c("cph", "fnd"),
+           email = "john@opifex.org")
+  )
+Description: Create and run Model Context Protocol (MCP) servers in R. The package
+    provides a framework for implementing MCP-compatible servers with tools, 
+    resources, and prompts capabilities. It includes a JSON-RPC 2.0 implementation
+    for communication between clients and servers.
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+Imports:
+    jsonlite (>= 1.7.0)
