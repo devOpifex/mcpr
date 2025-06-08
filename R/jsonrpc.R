@@ -292,16 +292,15 @@ parse_request <- function(json_text, mcp) {
           return(NULL)
         }
 
-        return(to_json(response))
+        return(response)
       }
     },
     error = function(e) {
-      error_response <- create_error(
+      create_error(
         NULL,
         JSONRPC_PARSE_ERROR,
         paste("Parse error:", e$message)
       )
-      to_json(error_response)
     }
   )
 }

@@ -4,13 +4,17 @@
 \alias{serve_std_io}
 \title{Serve an MCP server using stdin/stdout}
 \usage{
-serve_std_io(mcp)
+serve_std_io(mcp, input_con = stdin(), output_con = stdout())
 }
 \arguments{
 \item{mcp}{An MCP server object}
+
+\item{input_con}{Connection to read from (defaults to stdin())}
+
+\item{output_con}{Connection to write to (defaults to stdout())}
 }
 \value{
-Nothing, runs indefinitely
+Nothing, runs indefinitely in normal mode, or the response in test mode
 }
 \description{
 Serve an MCP server using stdin/stdout
