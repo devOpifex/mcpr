@@ -5,7 +5,7 @@ tools_list <- function(mcp) {
     tool <- mcp$tools[[tool_name]]
     tools <- c(tools, list(tool))
   }
-  tools
+  list(tools = tools)
 }
 
 resources_list <- function(mcp) {
@@ -15,7 +15,7 @@ resources_list <- function(mcp) {
     resource <- mcp$resources[[resource_name]]
     resources <- c(resources, list(resource))
   }
-  resources
+  list(resources = resources)
 }
 
 prompts_list <- function(mcp) {
@@ -25,7 +25,7 @@ prompts_list <- function(mcp) {
     prompt <- mcp$prompts[[prompt_name]]
     prompts <- c(prompts, list(prompt))
   }
-  prompts
+  list(prompts = prompts)
 }
 
 initialize_server <- function(mcp) {
@@ -61,10 +61,10 @@ tools_call <- function(mcp, params, id = NULL) {
       id = id
     ))
   }
-  
+
   tool_name <- params$name
   arguments <- params$arguments
-  
+
   # Check if tool exists
   if (is.null(mcp$tools) || is.null(mcp$tools[[tool_name]])) {
     return(create_error(
@@ -73,10 +73,10 @@ tools_call <- function(mcp, params, id = NULL) {
       id = id
     ))
   }
-  
+
   tool <- mcp$tools[[tool_name]]
   handler <- attr(tool, "handler")
-  
+
   if (is.null(handler) || !is.function(handler)) {
     return(create_error(
       JSONRPC_INTERNAL_ERROR,
@@ -84,16 +84,117 @@ tools_call <- function(mcp, params, id = NULL) {
       id = id
     ))
   }
-  
+
   # Execute the tool handler
-  tryCatch({
-    result <- handler(arguments)
-    return(result) # Just return the result, process_request will wrap it
-  }, error = function(e) {
+  tryCatch(
+    {
+      result <- handler(arguments)
+      return(result) # Just return the result, process_request will wrap it
+    },
+    error = function(e) {
+      return(create_error(
+        JSONRPC_INTERNAL_ERROR,
+        paste0("Error executing tool: ", e$message),
+        id = id
+      ))
+    }
+  )
+}
+
+resources_call <- function(mcp, params, id = NULL) {
+  # Check required parameters
+  if (is.null(params$name) || !is.character(params$name)) {
     return(create_error(
-      JSONRPC_INTERNAL_ERROR,
-      paste0("Error executing tool: ", e$message),
+      JSONRPC_INVALID_PARAMS,
+      "Missing or invalid resource name",
       id = id
     ))
-  })
+  }
+
+  resource_name <- params$name
+  arguments <- params$arguments
+
+  # Check if resource exists
+  if (is.null(mcp$resources) || is.null(mcp$resources[[resource_name]])) {
+    return(create_error(
+      JSONRPC_METHOD_NOT_FOUND,
+      paste0("Resource not found: ", resource_name),
+      id = id
+    ))
+  }
+
+  resource <- mcp$resources[[resource_name]]
+  handler <- attr(resource, "handler")
+
+  if (is.null(handler) || !is.function(handler)) {
+    return(create_error(
+      JSONRPC_INTERNAL_ERROR,
+      paste0("Invalid handler for resource: ", resource_name),
+      id = id
+    ))
+  }
+
+  # Execute the resource handler
+  tryCatch(
+    {
+      result <- handler(arguments)
+      return(result) # Just return the result, process_request will wrap it
+    },
+    error = function(e) {
+      return(create_error(
+        JSONRPC_INTERNAL_ERROR,
+        paste0("Error executing resource: ", e$message),
+        id = id
+      ))
+    }
+  )
+}
+
+prompts_call <- function(mcp, params, id = NULL) {
+  # Check required parameters
+  if (is.null(params$name) || !is.character(params$name)) {
+    return(create_error(
+      JSONRPC_INVALID_PARAMS,
+      "Missing or invalid prompt name",
+      id = id
+    ))
+  }
+
+  prompt_name <- params$name
+  arguments <- params$arguments
+
+  # Check if prompt exists
+  if (is.null(mcp$prompts) || is.null(mcp$prompts[[prompt_name]])) {
+    return(create_error(
+      JSONRPC_METHOD_NOT_FOUND,
+      paste0("Prompt not found: ", prompt_name),
+      id = id
+    ))
+  }
+
+  prompt <- mcp$prompts[[prompt_name]]
+  handler <- attr(prompt, "handler")
+
+  if (is.null(handler) || !is.function(handler)) {
+    return(create_error(
+      JSONRPC_INTERNAL_ERROR,
+      paste0("Invalid handler for prompt: ", prompt_name),
+      id = id
+    ))
+  }
+
+  # Execute the prompt handler
+  tryCatch(
+    {
+      result <- handler(arguments)
+      return(result) # Just return the result, process_request will wrap it
+    },
+    error = function(e) {
+      return(create_error(
+        JSONRPC_INTERNAL_ERROR,
+        paste0("Error executing prompt: ", e$message),
+        id = id
+      ))
+    }
+  )
 }

@@ -116,6 +116,10 @@ new_tool <- function(
     stop("input_schema must be a schema object")
   }
 
+  if (!is.function(handler)) {
+    stop("handler must be a function")
+  }
+
   cap <- new_capability(
     name = name,
     description = description,
@@ -134,6 +138,7 @@ new_tool <- function(
 #' @param description Description of the resource
 #' @param uri URI of the resource
 #' @param mime_type Mime type of the resource
+#' @param handler Function to handle the resource
 #'
 #' @return A new resource capability
 #' @export
@@ -143,16 +148,35 @@ new_tool <- function(
 #'   name = "My Resource",
 #'   description = "This is a description",
 #'   uri = "https://example.com/resource",
-#'   mime_type = "text/plain"
+#'   mime_type = "text/plain",
+#'   handler = function(params) {
+#'     # Process the resource request
+#'     return(list(content = "Resource content"))
+#'   }
 #' )
-new_resource <- function(name, description, uri, mime_type = NULL) {
-  new_capability(
+new_resource <- function(name, description, uri, mime_type = NULL, handler) {
+  stopifnot(
+    !missing(name),
+    !missing(description),
+    !missing(uri),
+    !missing(handler)
+  )
+  
+  if (!is.function(handler)) {
+    stop("handler must be a function")
+  }
+  
+  cap <- new_capability(
     name = name,
     description = description,
     uri = uri,
     mimeType = mime_type,
     type = "resource"
   )
+  
+  attr(cap, "handler") <- handler
+  
+  cap
 }
 
 #' Create a new prompt
@@ -160,6 +184,7 @@ new_resource <- function(name, description, uri, mime_type = NULL) {
 #' @param name Name of the prompt
 #' @param description Description of the prompt
 #' @param arguments List of arguments for the prompt
+#' @param handler Function to handle the prompt
 #'
 #' @return A new prompt capability
 #' @export
@@ -177,15 +202,33 @@ new_resource <- function(name, description, uri, mime_type = NULL) {
 #'       type = "number",
 #'       description = "Input 2"
 #'     )
-#'   )
+#'   ),
+#'   handler = function(params) {
+#'     # Process the prompt request
+#'     return(list(text = "Generated text from prompt"))
+#'   }
 #' )
-new_prompt <- function(name, description, arguments = list()) {
-  new_capability(
+new_prompt <- function(name, description, arguments = list(), handler) {
+  stopifnot(
+    !missing(name),
+    !missing(description),
+    !missing(handler)
+  )
+  
+  if (!is.function(handler)) {
+    stop("handler must be a function")
+  }
+  
+  cap <- new_capability(
     name = name,
     description = description,
     arguments = arguments,
     type = "prompt"
   )
+  
+  attr(cap, "handler") <- handler
+  
+  cap
 }
 
 # Print method for mcp_server

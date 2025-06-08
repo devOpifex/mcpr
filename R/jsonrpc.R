@@ -180,8 +180,14 @@ process_request <- function(request, mcp) {
     "resources/list" = {
       resources_list(mcp)
     },
+    "resources/call" = {
+      resources_call(mcp, params, id)
+    },
     "prompts/list" = {
       prompts_list(mcp)
+    },
+    "prompts/call" = {
+      prompts_call(mcp, params, id)
     },
     NULL # For method not found
   )
