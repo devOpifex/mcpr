@@ -162,27 +162,33 @@ process_request <- function(request, mcp) {
   # Check if it's a notification (no id)
   is_notification <- is.null(id)
 
-  # Switch on the method
-  switch(
+  # Process the method
+  result <- switch(
     method,
     "tools/list" = {
-      r <- tools_list(mcp)
-      create_response(r, id = id)
+      tools_list(mcp)
     },
     "resources/list" = {
-      r <- resources_list(mcp)
-      create_response(r, id = id)
+      resources_list(mcp)
     },
     "prompts/list" = {
-      r <- prompts_list(mcp)
-      create_response(r, id = id)
+      prompts_list(mcp)
     },
-    # Default error for unsupported methods
-    create_error(
-      id = id,
-      JSONRPC_METHOD_NOT_FOUND,
-      paste("Method not found:", method)
-    )
+    NULL # For method not found
+  )
+
+  if (length(result)) {
+    return(create_response(result, id = id))
+  }
+
+  if (is_notification) {
+    return(NULL)
+  }
+
+  create_error(
+    id = id,
+    JSONRPC_METHOD_NOT_FOUND,
+    paste("Method not found:", method)
   )
 }
 
