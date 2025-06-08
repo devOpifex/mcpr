@@ -92,11 +92,11 @@ tools_call <- function(mcp, params, id = NULL) {
       return(result) # Just return the result, process_request will wrap it
     },
     error = function(e) {
-      return(create_error(
+      create_error(
         JSONRPC_INTERNAL_ERROR,
         paste0("Error executing tool: ", e$message),
         id = id
-      ))
+      )
     }
   )
 }
@@ -141,11 +141,11 @@ resources_call <- function(mcp, params, id = NULL) {
       return(result) # Just return the result, process_request will wrap it
     },
     error = function(e) {
-      return(create_error(
+      create_error(
         JSONRPC_INTERNAL_ERROR,
         paste0("Error executing resource: ", e$message),
         id = id
-      ))
+      )
     }
   )
 }
@@ -190,11 +190,11 @@ prompts_call <- function(mcp, params, id = NULL) {
       return(result) # Just return the result, process_request will wrap it
     },
     error = function(e) {
-      return(create_error(
+      create_error(
         JSONRPC_INTERNAL_ERROR,
         paste0("Error executing prompt: ", e$message),
         id = id
-      ))
+      )
     }
   )
 }
