@@ -8,10 +8,6 @@ serve_std_io(mcp)
 }
 \arguments{
 \item{mcp}{An MCP server object}
-
-\item{input_con}{Connection to read from (defaults to stdin())}
-
-\item{output_con}{Connection to write to (defaults to stdout())}
 }
 \value{
 Nothing, runs indefinitely in normal mode, or the response in test mode

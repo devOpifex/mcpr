@@ -4,12 +4,12 @@
 \alias{create_response}
 \title{Create a JSON-RPC 2.0 success response}
 \usage{
-create_response(id = NULL, result)
+create_response(result, id = NULL)
 }
 \arguments{
-\item{id}{Request identifier}
-
 \item{result}{Result data}
+
+\item{id}{Request identifier}
 }
 \value{
 A structured JSON-RPC 2.0 success response

@@ -4,16 +4,16 @@
 \alias{create_error}
 \title{Create a JSON-RPC 2.0 error response}
 \usage{
-create_error(id = NULL, code, message, data = NULL)
+create_error(code, message, data = NULL, id = NULL)
 }
 \arguments{
-\item{id}{Request identifier}
-
 \item{code}{Error code}
 
 \item{message}{Error message}
 
 \item{data}{Optional error data}
+
+\item{id}{Request identifier}
 }
 \value{
 A structured JSON-RPC 2.0 error response

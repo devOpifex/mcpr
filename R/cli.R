@@ -1,8 +1,6 @@
 #' Serve an MCP server using stdin/stdout
 #'
 #' @param mcp An MCP server object
-#' @param input_con Connection to read from (defaults to stdin())
-#' @param output_con Connection to write to (defaults to stdout())
 #'
 #' @return Nothing, runs indefinitely in normal mode, or the response in test mode
 #' @export

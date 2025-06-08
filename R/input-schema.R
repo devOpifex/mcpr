@@ -32,7 +32,7 @@ schema <- function(properties, additional_properties = FALSE) {
 
   # Add required list if any properties are required
   if (length(required) > 0) {
-    schema$required <- required
+    schema$required <- as.list(required)
   }
 
   # Set class

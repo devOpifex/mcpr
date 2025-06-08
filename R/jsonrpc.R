@@ -162,65 +162,19 @@ process_request <- function(request, mcp) {
   # Check if it's a notification (no id)
   is_notification <- is.null(id)
 
-  # Parse method name
-  method_parts <- strsplit(method, ".", fixed = TRUE)[[1]]
-  category <- method_parts[1]
-  action <- method_parts[2]
-
-  # Handle system methods
-  if (category == "system") {
-    if (action == "listMethods") {
-      methods <- c()
-      # List all tool methods
-      for (tool_name in names(mcp$tools)) {
-        methods <- c(methods, paste0("tool.", tool_name))
-      }
-      return(create_response(methods, id = id))
-    }
-    return(create_error(
+  # Switch on the method
+  switch(
+    method,
+    "tools/list" = {
+      r <- tools_list(mcp)
+      create_response(r, id = id)
+    },
+    # Default error for unsupported methods
+    create_error(
       id = id,
       JSONRPC_METHOD_NOT_FOUND,
-      "System method not implemented"
-    ))
-  }
-
-  # Handle tool methods
-  if (category == "tool") {
-    tool_name <- action
-    if (!is.null(mcp$tools[[tool_name]])) {
-      tool <- mcp$tools[[tool_name]]
-      handler <- attr(tool, "handler")
-
-      if (is.function(handler)) {
-        tryCatch(
-          {
-            result <- handler(params)
-            if (!is_notification) {
-              return(create_response(result, id = id))
-            }
-            return(NULL) # No response for notifications
-          },
-          error = function(e) {
-            create_error(
-              id = id,
-              JSONRPC_INTERNAL_ERROR,
-              paste("Handler error:", e$message)
-            )
-          }
-        )
-      }
-    }
-    return(create_error(
-      id = id,
-      JSONRPC_METHOD_NOT_FOUND,
-      paste("Tool not found:", tool_name)
-    ))
-  }
-
-  create_error(
-    id = id,
-    JSONRPC_METHOD_NOT_FOUND,
-    paste("Method not found:", method)
+      paste("Method not found:", method)
+    )
   )
 }
 
