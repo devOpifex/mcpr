@@ -37,7 +37,7 @@ from_json <- function(json, ...) {
 #'
 #' @return A structured JSON-RPC 2.0 error response
 #' @keywords internal
-create_error <- function(id = NULL, code, message, data = NULL) {
+create_error <- function(code, message, data = NULL, id = NULL) {
   error <- list(code = code, message = message)
   if (!is.null(data)) error$data <- data
   if (is.null(id)) id <- generate_id()
@@ -59,7 +59,7 @@ create_error <- function(id = NULL, code, message, data = NULL) {
 #'
 #' @return A structured JSON-RPC 2.0 success response
 #' @keywords internal
-create_response <- function(id = NULL, result) {
+create_response <- function(result, id = NULL) {
   if (is.null(id)) id <- generate_id()
   structure(
     list(
@@ -109,7 +109,7 @@ validate_request <- function(request) {
   # Check JSON-RPC version
   if (is.null(request$jsonrpc) || request$jsonrpc != "2.0") {
     return(create_error(
-      request$id,
+      id = request$id,
       JSONRPC_INVALID_REQUEST,
       "Invalid JSON-RPC version"
     ))
@@ -118,7 +118,7 @@ validate_request <- function(request) {
   # Check method is present and a string
   if (is.null(request$method) || !is.character(request$method)) {
     return(create_error(
-      request$id,
+      id = request$id,
       JSONRPC_INVALID_REQUEST,
       "Method must be a string"
     ))
@@ -131,7 +131,7 @@ validate_request <- function(request) {
       !is.vector(request$params)
   ) {
     return(create_error(
-      request$id,
+      id = request$id,
       JSONRPC_INVALID_REQUEST,
       "Params must be object or array"
     ))
@@ -141,7 +141,7 @@ validate_request <- function(request) {
   method_parts <- strsplit(request$method, ".", fixed = TRUE)[[1]]
   if (length(method_parts) < 2) {
     return(create_error(
-      request$id,
+      id = request$id,
       JSONRPC_METHOD_NOT_FOUND,
       paste("Invalid method format:", request$method)
     ))
@@ -185,10 +185,10 @@ process_request <- function(request, mcp) {
       for (tool_name in names(mcp$tools)) {
         methods <- c(methods, paste0("tool.", tool_name))
       }
-      return(create_response(id, methods))
+      return(create_response(methods, id = id))
     }
     return(create_error(
-      id,
+      id = id,
       JSONRPC_METHOD_NOT_FOUND,
       "System method not implemented"
     ))
@@ -206,29 +206,29 @@ process_request <- function(request, mcp) {
           {
             result <- handler(params)
             if (!is_notification) {
-              return(create_response(id, result))
+              return(create_response(result, id = id))
             }
             return(NULL) # No response for notifications
           },
           error = function(e) {
-            return(create_error(
-              id,
+            create_error(
+              id = id,
               JSONRPC_INTERNAL_ERROR,
               paste("Handler error:", e$message)
-            ))
+            )
           }
         )
       }
     }
     return(create_error(
-      id,
+      id = id,
       JSONRPC_METHOD_NOT_FOUND,
       paste("Tool not found:", tool_name)
     ))
   }
 
   create_error(
-    id,
+    id = id,
     JSONRPC_METHOD_NOT_FOUND,
     paste("Method not found:", method)
   )
@@ -245,7 +245,6 @@ process_batch <- function(batch_requests, mcp) {
   # Validate batch structure
   if (!is.list(batch_requests) || length(batch_requests) == 0) {
     return(list(create_error(
-      NULL,
       JSONRPC_INVALID_REQUEST,
       "Invalid batch request - must be non-empty array"
     )))
@@ -301,7 +300,6 @@ parse_request <- function(json_text, mcp) {
     },
     error = function(e) {
       create_error(
-        NULL,
         JSONRPC_PARSE_ERROR,
         paste("Parse error:", e$message)
       )
