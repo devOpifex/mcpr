@@ -4,7 +4,7 @@
 \alias{serve_std_io}
 \title{Serve an MCP server using stdin/stdout}
 \usage{
-serve_std_io(mcp, input_con = stdin(), output_con = stdout())
+serve_std_io(mcp)
 }
 \arguments{
 \item{mcp}{An MCP server object}

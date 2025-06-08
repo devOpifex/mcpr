@@ -4,7 +4,7 @@
 \alias{create_response}
 \title{Create a JSON-RPC 2.0 success response}
 \usage{
-create_response(id, result)
+create_response(id = NULL, result)
 }
 \arguments{
 \item{id}{Request identifier}

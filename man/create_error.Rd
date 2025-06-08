@@ -4,7 +4,7 @@
 \alias{create_error}
 \title{Create a JSON-RPC 2.0 error response}
 \usage{
-create_error(id, code, message, data = NULL)
+create_error(id = NULL, code, message, data = NULL)
 }
 \arguments{
 \item{id}{Request identifier}

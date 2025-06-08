@@ -37,9 +37,10 @@ from_json <- function(json, ...) {
 #'
 #' @return A structured JSON-RPC 2.0 error response
 #' @keywords internal
-create_error <- function(id, code, message, data = NULL) {
+create_error <- function(id = NULL, code, message, data = NULL) {
   error <- list(code = code, message = message)
   if (!is.null(data)) error$data <- data
+  if (is.null(id)) id <- generate_id()
 
   structure(
     list(
@@ -58,7 +59,8 @@ create_error <- function(id, code, message, data = NULL) {
 #'
 #' @return A structured JSON-RPC 2.0 success response
 #' @keywords internal
-create_response <- function(id, result) {
+create_response <- function(id = NULL, result) {
+  if (is.null(id)) id <- generate_id()
   structure(
     list(
       jsonrpc = "2.0",
