@@ -162,6 +162,7 @@ process_request <- function(request, mcp) {
   # it's a notification (no id)
   # we shoud not return a response
   if (is.null(id)) {
+    process_notification(request, mcp)
     return(NULL)
   }
 
@@ -208,6 +209,16 @@ process_request <- function(request, mcp) {
     id = id,
     JSONRPC_METHOD_NOT_FOUND,
     paste("Method not found:", method)
+  )
+}
+
+process_notification <- function(request, mcp) {
+  switch(
+    request$method,
+    "initialized" = {
+      attr(mcp, "initialized") <- TRUE
+    },
+    NULL # For method not found
   )
 }
 
