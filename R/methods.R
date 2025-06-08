@@ -32,23 +32,11 @@ initialize_server <- function(mcp) {
   # Return information about the server and its capabilities in the expected format
   list(
     protocolVersion = "2024-11-05",
-    capabilities = list(
-      tools = list(
-        listChanged = TRUE
-      ),
-      resources = list(
-        subscribe = TRUE,
-        listChanged = TRUE
-      ),
-      prompts = list(
-        listChanged = TRUE
-      ),
-      logging = list()
-    ),
     serverInfo = list(
       name = attr(mcp, "name"),
       version = mcp$version
-    )
+    ),
+    capabilities = mcp$capabilities
   )
 }
 

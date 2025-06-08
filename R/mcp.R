@@ -66,12 +66,13 @@ new_mcp <- function(
     )
   )
 
-  # Set attributes
-  attr(server, "name") <- name
-  attr(server, "description") <- description
-  attr(server, "class") <- c("mcp_server", "list")
-
-  return(server)
+  structure(
+    server,
+    initialized = FALSE,
+    name = name,
+    description = description,
+    class = c("mcp_server", class(server))
+  )
 }
 
 #' Create a new tool
@@ -161,11 +162,11 @@ new_resource <- function(name, description, uri, mime_type = NULL, handler) {
     !missing(uri),
     !missing(handler)
   )
-  
+
   if (!is.function(handler)) {
     stop("handler must be a function")
   }
-  
+
   cap <- new_capability(
     name = name,
     description = description,
@@ -173,9 +174,9 @@ new_resource <- function(name, description, uri, mime_type = NULL, handler) {
     mimeType = mime_type,
     type = "resource"
   )
-  
+
   attr(cap, "handler") <- handler
-  
+
   cap
 }
 
@@ -214,20 +215,20 @@ new_prompt <- function(name, description, arguments = list(), handler) {
     !missing(description),
     !missing(handler)
   )
-  
+
   if (!is.function(handler)) {
     stop("handler must be a function")
   }
-  
+
   cap <- new_capability(
     name = name,
     description = description,
     arguments = arguments,
     type = "prompt"
   )
-  
+
   attr(cap, "handler") <- handler
-  
+
   cap
 }
 
