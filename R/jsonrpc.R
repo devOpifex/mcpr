@@ -81,6 +81,7 @@ send.jsonrpc_error <- function(response, con = stdout()) {
 
   # Send the response
   cat(to_json(response), "\n", file = con)
+  flush(con)
 }
 
 #' @export
@@ -93,6 +94,7 @@ send.jsonrpc_response <- function(response, con = stdout()) {
 
   # Send the response
   cat(to_json(response), "\n", file = con)
+  flush(con)
 }
 
 #' Validate a JSON-RPC 2.0 request

@@ -7,9 +7,7 @@
 #' @return Nothing, runs indefinitely in normal mode, or the response in test mode
 #' @export
 serve_std_io <- function(
-  mcp,
-  input_con = stdin(),
-  output_con = stdout()
+  mcp
 ) {
   # Validate MCP object
   if (missing(mcp)) {
@@ -23,7 +21,7 @@ serve_std_io <- function(
   # Main request-response loop
   while (TRUE) {
     # Read a line from input connection
-    line <- readLines(con = input_con, n = 1, warn = FALSE)
+    line <- readLines("stdin", n = 1, warn = FALSE)
 
     # Exit on EOF (Ctrl+D or end of file)
     if (length(line) == 0) break
@@ -36,6 +34,6 @@ serve_std_io <- function(
       next
     }
 
-    send(response, output_con)
+    send(response, stdout())
   }
 }
