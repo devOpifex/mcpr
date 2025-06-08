@@ -6,7 +6,7 @@ to AI models through a standard JSON-RPC 2.0 interface.
 
 ## Installation
 
-You can install MCPR from GitHub using the [pak](https://pak.r-lib.org/) package:
+You can install mcpr from GitHub using the [pak](https://pak.r-lib.org/) package:
 
 ```r
 # Install MCPR from GitHub
@@ -60,7 +60,7 @@ mcp <- add_capability(mcp, calculator)
 serve_std_io(mcp)
 ```
 
-## Using MCPR with AI Coding Assistants
+## Using mcpr
 
 ### Claude Code Integration
 
