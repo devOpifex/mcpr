@@ -8,9 +8,9 @@
 #'
 #' @examples
 #' schema <- schema(
-#'   properties = list(
-#'     name = prop_string("User name", "The name of the user", required = TRUE),
-#'     age = prop_number("User age", "The age of the user in years", minimum = 0)
+#'   properties = properties(
+#'     name = property_string("User name", "The name of the user", required = TRUE),
+#'     age = property_number("User age", "The age of the user in years", minimum = 0)
 #'   )
 #' )
 schema <- function(properties, additional_properties = FALSE) {
@@ -39,6 +39,25 @@ schema <- function(properties, additional_properties = FALSE) {
   class(schema) <- c("schema", "list")
 
   return(schema)
+}
+
+#' Create a new properties list
+#'
+#' @param ... Property objects
+#'
+#' @return A list of property objects
+#' @export
+#'
+#' @examples
+#' properties <- properties(
+#'   property_string("Name", "The name of the user", required = TRUE),
+#'   property_number("Age", "The age of the user in years", minimum = 0)
+#' )
+properties <- function(...) {
+  structure(
+    list(...),
+    class = c("properties", "list")
+  )
 }
 
 #' Create a new property
@@ -83,14 +102,14 @@ new_property <- function(type, title, description, required = FALSE, ...) {
 #' @export
 #'
 #' @examples
-#' name_prop <- prop_string(
+#' name_prop <- property_string(
 #'   "User name",
 #'   "The name of the user",
 #'   required = TRUE,
 #'   min_length = 2,
 #'   max_length = 50
 #' )
-prop_string <- function(
+property_string <- function(
   title,
   description,
   required = FALSE,
@@ -138,14 +157,14 @@ prop_string <- function(
 #' @export
 #'
 #' @examples
-#' age_prop <- prop_number(
+#' age_prop <- property_number(
 #'   "User age",
 #'   "The age of the user in years",
 #'   required = TRUE,
 #'   minimum = 0,
 #'   integer = TRUE
 #' )
-prop_number <- function(
+property_number <- function(
   title,
   description,
   required = FALSE,
@@ -190,12 +209,12 @@ prop_number <- function(
 #' @export
 #'
 #' @examples
-#' active_prop <- prop_boolean(
+#' active_prop <- property_boolean(
 #'   "Active status",
 #'   "Whether the user account is active",
 #'   required = TRUE
 #' )
-prop_boolean <- function(title, description, required = FALSE) {
+property_boolean <- function(title, description, required = FALSE) {
   new_property(
     type = "boolean",
     title = title,
@@ -218,13 +237,13 @@ prop_boolean <- function(title, description, required = FALSE) {
 #' @export
 #'
 #' @examples
-#' tags_prop <- prop_array(
+#' tags_prop <- property_array(
 #'   "Tags",
 #'   "List of tags for the user",
-#'   items = prop_string("Tag", "A user tag"),
+#'   items = property_string("Tag", "A user tag"),
 #'   unique_items = TRUE
 #' )
-prop_array <- function(
+property_array <- function(
   title,
   description,
   items,
@@ -265,16 +284,16 @@ prop_array <- function(
 #' @export
 #'
 #' @examples
-#' address_prop <- prop_object(
+#' address_prop <- property_object(
 #'   "Address",
 #'   "User's address information",
 #'   properties = list(
-#'     street = prop_string("Street", "Street address", required = TRUE),
-#'     city = prop_string("City", "City name", required = TRUE),
-#'     country = prop_string("Country", "Country name")
+#'     street = property_string("Street", "Street address", required = TRUE),
+#'     city = property_string("City", "City name", required = TRUE),
+#'     country = property_string("Country", "Country name")
 #'   )
 #' )
-prop_object <- function(
+property_object <- function(
   title,
   description,
   properties,
@@ -302,13 +321,13 @@ prop_object <- function(
 #' @export
 #'
 #' @examples
-#' status_prop <- prop_enum(
+#' status_prop <- property_enum(
 #'   "Status",
 #'   "User account status",
 #'   values = c("active", "pending", "suspended"),
 #'   required = TRUE
 #' )
-prop_enum <- function(title, description, values, required = FALSE) {
+property_enum <- function(title, description, values, required = FALSE) {
   if (length(values) == 0) {
     stop("Enum property must have at least one value")
   }

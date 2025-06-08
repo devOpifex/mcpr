@@ -8,7 +8,11 @@ echo_tool <- new_tool(
   description = "Echoes back the message sent to it",
   input_schema = schema(
     properties = list(
-      message = prop_string("Message", "The message to echo", required = TRUE)
+      message = property_string(
+        "Message",
+        "The message to echo",
+        required = TRUE
+      )
     )
   ),
   handler = function(params) {

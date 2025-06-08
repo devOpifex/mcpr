@@ -15,7 +15,7 @@
 #' @return A response object
 #' @export
 response_text <- function(text) {
-  response(text = text, type = "text")
+  response(text = as.character(text), type = "text")
 }
 
 #' @rdname response
