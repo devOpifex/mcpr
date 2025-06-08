@@ -169,6 +169,14 @@ process_request <- function(request, mcp) {
       r <- tools_list(mcp)
       create_response(r, id = id)
     },
+    "resources/list" = {
+      r <- resources_list(mcp)
+      create_response(r, id = id)
+    },
+    "prompts/list" = {
+      r <- prompts_list(mcp)
+      create_response(r, id = id)
+    },
     # Default error for unsupported methods
     create_error(
       id = id,
