@@ -4,7 +4,7 @@
 \alias{new_resource}
 \title{Create a new resource}
 \usage{
-new_resource(name, description, uri, mime_type = NULL)
+new_resource(name, description, uri, mime_type = NULL, handler)
 }
 \arguments{
 \item{name}{Name of the resource}
@@ -14,6 +14,8 @@ new_resource(name, description, uri, mime_type = NULL)
 \item{uri}{URI of the resource}
 
 \item{mime_type}{Mime type of the resource}
+
+\item{handler}{Function to handle the resource}
 }
 \value{
 A new resource capability
@@ -26,6 +28,10 @@ resource <- new_resource(
   name = "My Resource",
   description = "This is a description",
   uri = "https://example.com/resource",
-  mime_type = "text/plain"
+  mime_type = "text/plain",
+  handler = function(params) {
+    # Process the resource request
+    return(list(content = "Resource content"))
+  }
 )
 }

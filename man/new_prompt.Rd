@@ -4,7 +4,7 @@
 \alias{new_prompt}
 \title{Create a new prompt}
 \usage{
-new_prompt(name, description, arguments = list())
+new_prompt(name, description, arguments = list(), handler)
 }
 \arguments{
 \item{name}{Name of the prompt}
@@ -12,6 +12,8 @@ new_prompt(name, description, arguments = list())
 \item{description}{Description of the prompt}
 
 \item{arguments}{List of arguments for the prompt}
+
+\item{handler}{Function to handle the prompt}
 }
 \value{
 A new prompt capability
@@ -32,6 +34,10 @@ prompt <- new_prompt(
       type = "number",
       description = "Input 2"
     )
-  )
+  ),
+  handler = function(params) {
+    # Process the prompt request
+    return(list(text = "Generated text from prompt"))
+  }
 )
 }

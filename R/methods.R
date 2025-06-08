@@ -88,8 +88,31 @@ tools_call <- function(mcp, params, id = NULL) {
   # Execute the tool handler
   tryCatch(
     {
-      result <- handler(arguments)
-      return(result) # Just return the result, process_request will wrap it
+      handler_result <- handler(arguments)
+
+      # Format the result in the expected structure
+      # If handler_result already has the correct structure, preserve it
+      if (
+        is.list(handler_result) &&
+          !is.null(handler_result$content) &&
+          !is.null(handler_result$isError)
+      ) {
+        return(handler_result)
+      }
+
+      # Otherwise, wrap the result in the expected format
+      result <- list(
+        content = list(
+          list(
+            type = "text",
+            text = if (is.character(handler_result)) handler_result else
+              as.character(to_json(handler_result))
+          )
+        ),
+        isError = FALSE
+      )
+
+      return(result) # Return the formatted result, process_request will wrap it
     },
     error = function(e) {
       create_error(
@@ -101,7 +124,7 @@ tools_call <- function(mcp, params, id = NULL) {
   )
 }
 
-resources_call <- function(mcp, params, id = NULL) {
+resources_read <- function(mcp, params, id = NULL) {
   # Check required parameters
   if (is.null(params$name) || !is.character(params$name)) {
     return(create_error(
@@ -150,7 +173,7 @@ resources_call <- function(mcp, params, id = NULL) {
   )
 }
 
-prompts_call <- function(mcp, params, id = NULL) {
+prompts_get <- function(mcp, params, id = NULL) {
   # Check required parameters
   if (is.null(params$name) || !is.character(params$name)) {
     return(create_error(
