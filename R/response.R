@@ -3,6 +3,8 @@
 #' @param text Text content
 #' @param image Image content
 #' @param audio Audio content
+#' @param video Video content
+#' @param file File content
 #' @param resource Resource content
 #' @param type Type of tool_response
 #' @param isError Whether the tool_response is an error
@@ -28,6 +30,18 @@ tool_response_audio <- function(audio, mime_type = "audio/mpeg") {
 
 #' @rdname tool_response
 #' @export
+tool_response_video <- function(video, mime_type = "video/mp4") {
+  tool_response(data = video, type = "video", mime_type = mime_type)
+}
+
+#' @rdname tool_response
+#' @export
+tool_response_file <- function(file, mime_type = "application/octet-stream") {
+  tool_response(data = file, type = "file", mime_type = mime_type)
+}
+
+#' @rdname tool_response
+#' @export
 tool_response_resource <- function(resource) {
   tool_response(resource = resource, type = "resource")
 }
@@ -42,7 +56,7 @@ tool_response_error <- function(text) {
 #' @export
 tool_response <- function(
   ...,
-  type = c("text", "image", "audio"),
+  type = c("text", "image", "audio", "video", "file", "resource"),
   isError = FALSE
 ) {
   type <- match.arg(type)
