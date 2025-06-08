@@ -1,3 +1,3 @@
 generate_id <- function() {
-  as.numeric(Sys.time()) * 1000000 # microseconds
+  trunc(as.numeric(Sys.time()) * 1000000) # microseconds
 }

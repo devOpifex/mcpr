@@ -90,29 +90,12 @@ tools_call <- function(mcp, params, id = NULL) {
     {
       handler_result <- handler(arguments)
 
-      # Format the result in the expected structure
-      # If handler_result already has the correct structure, preserve it
-      if (
-        is.list(handler_result) &&
-          !is.null(handler_result$content) &&
-          !is.null(handler_result$isError)
-      ) {
-        return(handler_result)
+      # this may be dangerous, we just assume that the handler returns a response
+      if (!inherits(handler_result, "tool_response")) {
+        handler_result <- response_text(handler_result)
       }
 
-      # Otherwise, wrap the result in the expected format
-      result <- list(
-        content = list(
-          list(
-            type = "text",
-            text = if (is.character(handler_result)) handler_result else
-              as.character(to_json(handler_result))
-          )
-        ),
-        isError = FALSE
-      )
-
-      return(result) # Return the formatted result, process_request will wrap it
+      create_response(handler_result)
     },
     error = function(e) {
       create_error(

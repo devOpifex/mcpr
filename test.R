@@ -12,10 +12,7 @@ echo_tool <- new_tool(
     )
   ),
   handler = function(params) {
-    list(
-      echo = params$message,
-      timestamp = format(Sys.time(), "%Y-%m-%d %H:%M:%S")
-    )
+    tool_response_text(sprintf("Echo'd: %s", params$message))
   }
 )
 
