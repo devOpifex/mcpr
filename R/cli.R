@@ -29,8 +29,7 @@ serve_std_io <- function(
     # Process the request through JSON-RPC
     response <- parse_request(line, mcp)
 
-    if (is.null(response)) {
-      # If it's a notification, just continue
+    if (!length(response)) {
       next
     }
 
