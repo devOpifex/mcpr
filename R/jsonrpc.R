@@ -159,14 +159,23 @@ process_request <- function(request, mcp) {
   params <- request$params
   id <- request$id
 
-  # Check if it's a notification (no id)
-  is_notification <- is.null(id)
+  # it's a notification (no id)
+  # we shoud not return a response
+  if (is.null(id)) {
+    return(NULL)
+  }
 
   # Process the method
   result <- switch(
     method,
+    "initialize" = {
+      initialize_server(mcp)
+    },
     "tools/list" = {
       tools_list(mcp)
+    },
+    "tools/call" = {
+      tools_call(mcp, params, id)
     },
     "resources/list" = {
       resources_list(mcp)
@@ -177,12 +186,16 @@ process_request <- function(request, mcp) {
     NULL # For method not found
   )
 
-  if (length(result)) {
-    return(create_response(result, id = id))
+  if (inherits(result, "jsonrpc_response")) {
+    return(result)
   }
 
-  if (is_notification) {
-    return(NULL)
+  if (inherits(result, "jsonrpc_error")) {
+    return(result)
+  }
+
+  if (length(result)) {
+    return(create_response(result, id = id))
   }
 
   create_error(
