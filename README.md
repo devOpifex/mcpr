@@ -64,7 +64,7 @@ serve_std_io(mcp)
 
 ### Claude Code Integration
 
-To use your MCP server with Claude Code:
+To use your MCP server with Claude Code, see the [documentation](https://docs.anthropic.com/en/docs/claude-code/tutorials#set-up-model-context-protocol-mcp)
 
 ```bash
 claude mcp add r-calculator -- Rscript /path/to/calculator_server.R
@@ -72,9 +72,7 @@ claude mcp add r-calculator -- Rscript /path/to/calculator_server.R
 
 ### Cursor Integration
 
-To integrate with Cursor:
-
-1. Configure a custom command in Cursor settings:
+To integrate with Cursor see the [documentation](https://docs.cursor.com/context/model-context-protocol)
 
 ```json
 {
@@ -84,10 +82,4 @@ To integrate with Cursor:
     }
   }
 }
-```
-
-2. In Cursor, you can now invoke your tool by using:
-
-```
-/r-calculator
 ```
