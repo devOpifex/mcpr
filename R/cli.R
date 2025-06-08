@@ -1,11 +1,10 @@
-#' Run the MCP Server CLI
+#' Serve an MCP server using stdin/stdout
 #'
 #' @param mcp An MCP server object
-#' @param port Port number to listen on (optional)
 #'
 #' @return Nothing, runs indefinitely
 #' @export
-run <- function(mcp, port = NULL) {
+serve_std_io <- function(mcp) {
   # Validate MCP object
   if (missing(mcp)) {
     stop("An MCP server object is required")
@@ -13,12 +12,6 @@ run <- function(mcp, port = NULL) {
 
   if (!inherits(mcp, "mcp_server")) {
     stop("mcp must be an MCP server object")
-  }
-
-  # Handle port parameter
-  if (!is.null(port)) {
-    # TODO: Implement server socket in future versions
-    stop("Port-based server not yet implemented")
   }
 
   # Main request-response loop

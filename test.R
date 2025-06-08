@@ -28,4 +28,4 @@ mcp <- new_mcp(
 
 mcp <- add_capability(mcp, echo_tool)
 
-run(mcp)
+serve_std_io(mcp)
