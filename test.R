@@ -12,7 +12,7 @@ echo_tool <- new_tool(
     )
   ),
   handler = function(params) {
-    tool_response_text(sprintf("Echo'd: %s", params$message))
+    response_text(sprintf("Echo'd: %s", params$message))
   }
 )
 

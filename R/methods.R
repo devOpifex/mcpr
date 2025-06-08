@@ -91,8 +91,15 @@ tools_call <- function(mcp, params, id = NULL) {
       handler_result <- handler(arguments)
 
       # this may be dangerous, we just assume that the handler returns a response
-      if (!inherits(handler_result, "tool_response")) {
-        handler_result <- response_text(handler_result)
+      if (
+        !inherits(handler_result, "response") &&
+          !inherits(handler_result, "responses")
+      ) {
+        return(create_error(
+          JSONRPC_INTERNAL_ERROR,
+          paste0("Tool handler did not return a response object."),
+          id = id
+        ))
       }
 
       create_response(handler_result)
@@ -143,13 +150,26 @@ resources_read <- function(mcp, params, id = NULL) {
   # Execute the resource handler
   tryCatch(
     {
-      result <- handler(arguments)
-      return(result) # Just return the result, process_request will wrap it
+      handler_result <- handler(arguments)
+
+      # this may be dangerous, we just assume that the handler returns a response
+      if (
+        !inherits(handler_result, "response") &&
+          !inherits(handler_result, "responses")
+      ) {
+        return(create_error(
+          JSONRPC_INTERNAL_ERROR,
+          paste0("Tool handler did not return a response object."),
+          id = id
+        ))
+      }
+
+      create_response(handler_result)
     },
     error = function(e) {
       create_error(
         JSONRPC_INTERNAL_ERROR,
-        paste0("Error executing resource: ", e$message),
+        paste0("Error executing tool: ", e$message),
         id = id
       )
     }
@@ -192,13 +212,26 @@ prompts_get <- function(mcp, params, id = NULL) {
   # Execute the prompt handler
   tryCatch(
     {
-      result <- handler(arguments)
-      return(result) # Just return the result, process_request will wrap it
+      handler_result <- handler(arguments)
+
+      # this may be dangerous, we just assume that the handler returns a response
+      if (
+        !inherits(handler_result, "response") &&
+          !inherits(handler_result, "responses")
+      ) {
+        return(create_error(
+          JSONRPC_INTERNAL_ERROR,
+          paste0("Tool handler did not return a response object."),
+          id = id
+        ))
+      }
+
+      create_response(handler_result)
     },
     error = function(e) {
       create_error(
         JSONRPC_INTERNAL_ERROR,
-        paste0("Error executing prompt: ", e$message),
+        paste0("Error executing tool: ", e$message),
         id = id
       )
     }
