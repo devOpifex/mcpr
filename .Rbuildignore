@@ -1,3 +1,6 @@
 ^makefile$
 ^LICENSE\.md$
 ^test\.R$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

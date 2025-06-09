@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="inst/mcpr.png" />
+<img src="man/figures/logo.png" />
 </div>
 
 mcpr is an R implementation of the [Model Context Protocol (MCP)](https://modelcontextprotocol.io),

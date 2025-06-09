@@ -8,3 +8,6 @@ check: document
 
 install: check
 	R -s -e "devtools::install()"
+
+site: document
+	R -s -e "pkgdown::build_site()"
