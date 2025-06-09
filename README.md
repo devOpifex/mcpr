@@ -1,4 +1,6 @@
-# mcpr
+<div align="center">
+    <img src="inst/mcpr.png" />
+</div>
 
 mcpr is an R implementation of the [Model Context Protocol (MCP)](https://modelcontextprotocol.io),
 enabling R applications to expose capabilities (tools, resources, and prompts)
@@ -9,7 +11,6 @@ to AI models through a standard JSON-RPC 2.0 interface.
 You can install mcpr from GitHub using the [pak](https://pak.r-lib.org/) package:
 
 ```r
-# Install MCPR from GitHub
 pak::pkg_install("devOpifex/mcpr")
 ```
 
@@ -78,7 +79,7 @@ To integrate with Cursor see the [documentation](https://docs.cursor.com/context
 {
   "customCommands": {
     "r-calculator": {
-      "command": "Rscript -e 'path/to/calculator_server.R'"
+      "command": "Rscript 'path/to/calculator_server.R'"
     }
   }
 }
