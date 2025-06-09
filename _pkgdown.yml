@@ -2,3 +2,61 @@ url: https://mcpr.opifex.org
 template:
   bootstrap: 5
 
+reference:
+- title: "MCP Core Functions"
+  desc: >
+    Core functions for creating and managing MCP server objects
+  contents:
+    - new_mcp
+    - add_capability
+
+- title: "Capability Creation"
+  desc: >
+    Functions for creating different types of capabilities
+  contents:
+    - new_tool
+    - new_resource
+    - new_prompt
+
+- title: "Schema and Properties"
+  desc: >
+    Functions for defining input schemas and properties
+  contents:
+    - schema
+    - properties
+    - property_string
+    - property_number
+    - property_boolean
+    - property_array
+    - property_object
+    - property_enum
+    - new_property
+
+- title: "Server Functions"
+  desc: >
+    Functions for serving MCP implementations
+  contents:
+    - serve_io
+    - serve_http
+
+- title: "JSON-RPC Functions"
+  desc: >
+    Functions for handling JSON-RPC requests and responses
+  contents:
+    - process_request
+    - process_batch
+    - parse_request
+    - validate_request
+    - create_response
+    - create_error
+    - JSONRPC_PARSE_ERROR
+    - from_json
+    - to_json
+
+- title: "Response Functions"
+  desc: >
+    Functions for creating various response types
+  contents:
+    - response
+    - matches("^response_")
+
