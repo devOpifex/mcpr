@@ -27,43 +27,76 @@
 #' @return A response object
 #' @export
 response_text <- function(text) {
+  if (missing(text)) {
+    stop("'text' argument is required")
+  }
   response_item(text = as.character(text), type = "text")
 }
 
 #' @rdname response
 #' @export
 response_image <- function(image, mime_type = "image/png") {
+  if (missing(image)) {
+    stop("'image' argument is required")
+  }
+  if (!is.character(mime_type)) {
+    stop("'mime_type' must be a character string")
+  }
   response_item(data = image, type = "image", mimeType = mime_type)
 }
 
 #' @rdname response
 #' @export
 response_audio <- function(audio, mime_type = "audio/mpeg") {
+  if (missing(audio)) {
+    stop("'audio' argument is required")
+  }
+  if (!is.character(mime_type)) {
+    stop("'mime_type' must be a character string")
+  }
   response_item(data = audio, type = "audio", mimeType = mime_type)
 }
 
 #' @rdname response
 #' @export
 response_video <- function(video, mime_type = "video/mp4") {
+  if (missing(video)) {
+    stop("'video' argument is required")
+  }
+  if (!is.character(mime_type)) {
+    stop("'mime_type' must be a character string")
+  }
   response_item(data = video, type = "video", mimeType = mime_type)
 }
 
 #' @rdname response
 #' @export
 response_file <- function(file, mime_type = "application/octet-stream") {
+  if (missing(file)) {
+    stop("'file' argument is required")
+  }
+  if (!is.character(mime_type)) {
+    stop("'mime_type' must be a character string")
+  }
   response_item(data = file, type = "file", mimeType = mime_type)
 }
 
 #' @rdname response
 #' @export
 response_resource <- function(resource) {
+  if (missing(resource)) {
+    stop("'resource' argument is required")
+  }
   response_item(resource = resource, type = "resource")
 }
 
 #' @rdname response
 #' @export
 response_error <- function(text) {
-  response_item(text = text, type = "text", isError = TRUE)
+  if (missing(text)) {
+    stop("'text' argument is required")
+  }
+  response_item(text = as.character(text), type = "text", isError = TRUE)
 }
 
 #' @rdname response
@@ -72,10 +105,15 @@ response_item <- function(
   ...,
   type = c("text", "image", "audio", "video", "file", "resource")
 ) {
+  if (length(list(...)) == 0) {
+    stop("At least one parameter must be provided")
+  }
+
   if (length(type) > 1) {
     stop("Only one type can be specified")
   }
 
+  # no mathc.arg to allow custom types
   type <- type[1]
 
   structure(
@@ -97,9 +135,19 @@ response <- function(
   ...,
   is_error = FALSE
 ) {
+  content <- list(...)
+
+  if (length(content) == 0) {
+    stop("At least one response item must be provided")
+  }
+
+  if (!is.logical(is_error)) {
+    stop("'is_error' must be a logical value")
+  }
+
   structure(
     list(
-      content = list(...),
+      content = content,
       isError = is_error
     ),
     class = c(

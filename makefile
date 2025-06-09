@@ -1,10 +1,10 @@
-default: document check install
+default: install
 
 document:
 	R -s -e "devtools::document()"
 
-check:
+check: document
 	R -s -e "devtools::check()"
 
-install:
+install: check
 	R -s -e "devtools::install()"
