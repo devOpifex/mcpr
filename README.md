@@ -78,6 +78,8 @@ response(
 
 You can also serve via HTTP transport with `serve_http`.
 
+See the [Get Started](https://mcpr.opifex.org/articles/get-started) guide for more information.
+
 ## Using mcpr
 
 ### Claude Code Integration
@@ -101,3 +103,5 @@ To integrate with Cursor see the [documentation](https://docs.cursor.com/context
   }
 }
 ```
+
+More integrations in the [docs](https://mcpr.opifex.org/articles/client-integration)
