@@ -1,0 +1,100 @@
+/* mcpr theme based on logo colors */
+
+:root {
+  --mcpr-dark-blue: #1a3c5e;
+  --mcpr-mid-blue: #195b7f;
+  --mcpr-teal: #19b8bf;
+  --mcpr-light-teal: #72d6d9;
+  --mcpr-very-light-teal: #e5f7f7;
+}
+
+/* Navbar styling */
+.navbar {
+  background-color: var(--mcpr-dark-blue);
+  border-bottom: 3px solid var(--mcpr-teal);
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.navbar-dark .navbar-nav .active > .nav-link {
+  color: var(--mcpr-light-teal);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover, 
+.navbar-dark .navbar-nav .nav-link:focus {
+  color: var(--mcpr-light-teal);
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--mcpr-dark-blue);
+}
+
+/* Links */
+a {
+  color: var(--mcpr-mid-blue);
+}
+
+a:hover, a:focus {
+  color: var(--mcpr-teal);
+}
+
+/* Code blocks */
+pre, code {
+  background-color: var(--mcpr-very-light-teal);
+  border-color: var(--mcpr-light-teal);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--mcpr-mid-blue);
+  border-color: var(--mcpr-mid-blue);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--mcpr-dark-blue);
+  border-color: var(--mcpr-dark-blue);
+}
+
+/* Sidebar navigation */
+.nav-pills .nav-link.active {
+  background-color: var(--mcpr-mid-blue);
+}
+
+/* Footer */
+footer {
+  border-top: 1px solid var(--mcpr-light-teal);
+  background-color: var(--mcpr-very-light-teal);
+}
+
+/* Table styling */
+table {
+  border-collapse: collapse;
+}
+
+thead {
+  background-color: var(--mcpr-very-light-teal);
+}
+
+th {
+  color: var(--mcpr-dark-blue);
+}
+
+tr:hover {
+  background-color: var(--mcpr-very-light-teal);
+}
+
+/* Syntax highlighting tweaks */
+.fl {
+  color: var(--mcpr-mid-blue);
+}
+
+.fu {
+  color: var(--mcpr-dark-blue);
+}
+
+.st {
+  color: var(--mcpr-teal);
+}
