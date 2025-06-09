@@ -21,7 +21,6 @@ Here's a simple example that creates an MCP server with a calculator tool:
 ```r
 library(mcpr)
 
-# Create a calculator tool
 calculator <- new_tool(
   name = "calculator",
   description = "Performs basic arithmetic operations",
@@ -49,7 +48,6 @@ calculator <- new_tool(
   }
 )
 
-# Create an MCP server and add the calculator tool
 mcp <- new_mcp(
   name = "R Calculator Server",
   description = "A simple calculator server implemented in R",
@@ -58,7 +56,6 @@ mcp <- new_mcp(
 
 mcp <- add_capability(mcp, calculator)
 
-# Start the server (listening on stdin/stdout)
 serve_io(mcp)
 ```
 
@@ -74,6 +71,8 @@ response(
   response_resource(system.file("extdata/resource.json", package = "mcpr"))
 )
 ```
+
+You can also serve via HTTP transport with `serve_http`.
 
 ## Using mcpr
 
