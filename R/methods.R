@@ -90,7 +90,7 @@ tools_call <- function(mcp, params, id = NULL) {
         ))
       }
 
-      create_response(handler_result)
+      return(create_response(handler_result, id = id))
     },
     error = function(e) {
       create_error(
@@ -152,7 +152,7 @@ resources_read <- function(mcp, params, id = NULL) {
         ))
       }
 
-      create_response(handler_result)
+      return(create_response(handler_result, id = id))
     },
     error = function(e) {
       create_error(
@@ -214,7 +214,7 @@ prompts_get <- function(mcp, params, id = NULL) {
         ))
       }
 
-      create_response(handler_result)
+      return(create_response(handler_result, id = id))
     },
     error = function(e) {
       create_error(
