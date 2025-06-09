@@ -38,4 +38,4 @@ mcp <- new_mcp(
 mcp <- add_capability(mcp, calculator)
 
 # Start the server (listening on stdin/stdout)
-serve_std_io(mcp)
+serve_io(mcp)

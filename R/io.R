@@ -4,7 +4,7 @@
 #'
 #' @return Nothing, runs indefinitely in normal mode, or the response in test mode
 #' @export
-serve_std_io <- function(
+serve_io <- function(
   mcp
 ) {
   # Validate MCP object
