@@ -7,8 +7,6 @@
 #'
 #' @return A new mcp client
 #' @export
-#'
-#' @examples
 new_client <- function(
   command,
   args = character(),
@@ -28,6 +26,6 @@ new_client <- function(
     p,
     name = name,
     version = version,
-    class = c("mcp_client", class(p))
+    class = c("client", class(p))
   )
 }

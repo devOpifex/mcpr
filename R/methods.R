@@ -23,7 +23,7 @@ tools_list.server <- function(mcp) {
 #' @export
 #' @method tools_list client
 tools_list.client <- function(mcp) {
-  write(mcp, "tools.list", NULL)
+  write(mcp, "tools/list", NULL)
 }
 
 #' List all available resources

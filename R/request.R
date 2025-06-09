@@ -8,8 +8,6 @@
 #'
 #' @return The client provider
 #' @export
-#'
-#' @examples
 write <- function(x, method, params = NULL, id = generate_id(), timeout = 5000)
   UseMethod("write")
 
@@ -58,7 +56,19 @@ read.client <- function(x, timeout = 60 * 1000) {
   # Check if we have data to read
   if (poll_result["output"] == "ready") {
     # Read the output when it's ready
-    return(x$read_output())
+
+    res <- tryCatch(
+      {
+        res <- x$read_output()
+        from_json(res)
+      },
+      error = function(e) {
+        warning("Invalid JSON response: ", e$message)
+        NULL
+      }
+    )
+
+    return(res)
   }
 
   if (poll_result["output"] == "timeout") {
