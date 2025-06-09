@@ -1,0 +1,209 @@
+---
+title: "Integrating mcpr with MCP Clients"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Integrating mcpr with MCP Clients}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(mcpr)
+```
+
+## Introduction
+
+The Model Context Protocol (MCP) allows you to register custom tools with various AI clients. This vignette demonstrates how to create a simple MCP server with `mcpr` and register it with popular clients including Claude Code, Cursor, OpenAI GPTs, and LangChain.
+
+## Creating a Simple Math Calculator Server
+
+Let's create a simple MCP server with a basic calculator tool:
+
+```{r}
+# Create a new MCP server
+math_server <- new_mcp(
+  name = "r-calculator",
+  description = "A simple calculator that performs basic arithmetic operations",
+  version = "1.0.0"
+)
+
+# Create a calculator tool
+calculator <- new_tool(
+  name = "math_calculator",
+  description = "Performs basic arithmetic operations",
+  input_schema = schema(
+    properties = list(
+      operation = property_enum(
+        "Operation", 
+        "Math operation to perform",
+        enum = c("add", "subtract", "multiply", "divide"),
+        required = TRUE
+      ),
+      a = property_number("First number", "First operand", required = TRUE),
+      b = property_number("Second number", "Second operand", required = TRUE)
+    )
+  ),
+  handler = function(input) {
+    result <- switch(input$operation,
+      "add" = input$a + input$b,
+      "subtract" = input$a - input$b,
+      "multiply" = input$a * input$b,
+      "divide" = input$a / input$b
+    )
+    response_text(paste("Result:", result))
+  }
+)
+
+# Add the tool to the server
+math_server <- add_capability(math_server, calculator)
+```
+
+Save this code to a file, for example `calculator_server.R`, and add code to serve it at the end:
+
+```{r, eval=FALSE}
+# At the end of calculator_server.R, add:
+serve_io(math_server)
+```
+
+## Registering with MCP Clients
+
+### Claude Code
+
+Claude Code supports registering MCP tools using the `claude mcp` command:
+
+```bash
+# Register the MCP server
+claude mcp add r-calculator -- Rscript /path/to/calculator_server.R
+
+# List registered MCP servers
+claude mcp list
+
+# Use the registered tool
+claude "Add 2 to 40"
+```
+
+Claude will automatically discover and use the registered MCP server's capabilities.
+
+### Cursor
+
+Cursor supports registering MCP tools via its configuration:
+
+1. Open Cursor settings
+2. Navigate to the "Tools" section
+3. Add a new tool with:
+   - Name: r-calculator
+   - Command: Rscript /path/to/calculator_server.R
+4. Save the settings
+
+Now when you ask Cursor to perform calculations, it will have access to your MCP tool.
+
+### OpenAI GPT
+
+For OpenAI GPTs, you'll need to run your MCP server over HTTP:
+
+```{r, eval=FALSE}
+# Modify your calculator_server.R to use HTTP instead of IO
+serve_http(math_server, port = 8080)
+```
+
+Then register it with a custom GPT:
+
+1. Create a custom GPT in the GPT Builder
+2. In the "Configure" tab, add an "Action"
+3. Set the Authentication to "None" 
+4. Set the API URL to your server (e.g., http://localhost:8080)
+5. Import schema from URL: http://localhost:8080/openapi.json
+6. Save your GPT
+
+Your custom GPT will now be able to use your MCP calculator.
+
+### LangChain
+
+LangChain provides adapters specifically for MCP integration:
+
+```python
+from langchain_mcp_adapters.client import MultiServerMCPClient
+from langchain.agents import create_tool_calling_agent
+from langchain_openai import ChatOpenAI
+
+# Connect to your R-based MCP server
+# You need to run your server with serve_http for this approach
+mcp_client = MultiServerMCPClient(
+    servers=[{"url": "http://localhost:8080"}]
+)
+
+# Get tools from the MCP server
+tools = mcp_client.get_tools()
+
+# Create a LangChain agent with the MCP tools
+llm = ChatOpenAI(model="gpt-4o")
+agent = create_tool_calling_agent(llm, tools)
+
+# Use the agent
+response = agent.invoke({"input": "What is 10 multiplied by 5?"})
+print(response["output"])
+```
+
+Alternatively, you can use the process-based approach:
+
+```python
+from langchain_mcp_adapters.client import MultiServerMCPClient
+from langchain.agents import create_tool_calling_agent
+from langchain_openai import ChatOpenAI
+
+# Connect to your R-based MCP server using process
+mcp_client = MultiServerMCPClient(
+    servers=[{"command": ["Rscript", "/path/to/calculator_server.R"]}]
+)
+
+# The rest is the same as above
+tools = mcp_client.get_tools()
+llm = ChatOpenAI(model="gpt-4o")
+agent = create_tool_calling_agent(llm, tools)
+```
+
+## Testing Your MCP Server
+
+Before registering with clients, you can test your MCP server by sending direct JSON-RPC requests:
+
+```{r, eval=FALSE}
+# Using the jsonlite package to create a request
+library(jsonlite)
+
+# Create a JSON-RPC 2.0 request
+request <- toJSON(list(
+  jsonrpc = "2.0",
+  id = 1,
+  method = "mcp.tools.math_calculator",
+  params = list(
+    operation = "multiply",
+    a = 5,
+    b = 3
+  )
+), auto_unbox = TRUE)
+
+# Echo the request to standard output
+cat(request)
+
+# The response will come back through standard input
+```
+
+## Conclusion
+
+With `mcpr`, you can create MCP servers that register seamlessly with various AI clients. This enables AI tools to leverage R's statistical and data processing capabilities.
+
+For more advanced usage, consider:
+
+1. Adding multiple tools to your server
+2. Creating resources to serve data
+3. Implementing prompts for text generation
+4. Handling more complex data types in your tools
+
+See the other vignettes and function documentation for more details on these advanced features.

@@ -1,0 +1,94 @@
+---
+title: "Getting Started with mcpr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with mcpr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(mcpr)
+```
+
+## Introduction
+
+The `mcpr` package allows you to create Model Context Protocol (MCP) servers in R. This vignette will guide you through building a very simple MCP server with a basic addition tool.
+
+## Creating a Simple MCP Server
+
+Let's create a simple MCP server that can add two numbers:
+
+```{r}
+# Create a new MCP server
+mcp_server <- new_mcp(
+  name = "Simple Adder",
+  description = "A basic MCP server that adds two numbers",
+  version = "1.0.0"
+)
+
+# Create a simple addition tool
+add_tool <- new_tool(
+  name = "add",
+  description = "Adds two numbers together",
+  input_schema = schema(
+    properties = list(
+      a = property_number("First number", "First number to add", required = TRUE),
+      b = property_number("Second number", "Second number to add", required = TRUE)
+    )
+  ),
+  handler = function(input) {
+    result <- input$a + input$b
+    response_text(paste("The sum is:", result))
+  }
+)
+
+# Add the tool to the server
+mcp_server <- add_capability(mcp_server, add_tool)
+```
+
+## Using Standard Input/Output
+
+The simplest way to interact with your MCP server is through standard input/output using the `serve_io` function:
+
+```{r, eval=FALSE}
+# Start the server using standard input/output
+serve_io(mcp_server)
+```
+
+When you run `serve_io(mcp_server)`, your R session will wait for input in JSON-RPC 2.0 format. You can then communicate with your server by sending JSON-RPC requests.
+
+## Testing the Server
+
+To test your server, you can run the above code in an R script and interact with it using the command line. For example:
+
+1. Save the code in a file named `mcp_adder.R`
+2. Run it from the command line: `Rscript mcp_adder.R`
+3. Send a JSON-RPC request to standard input:
+
+```json
+{"jsonrpc":"2.0","id":1,"method":"mcp.tools.add","params":{"a":5,"b":3}}
+```
+
+The server will respond with:
+
+```json
+{"jsonrpc":"2.0","id":1,"result":{"type":"text","text":"The sum is: 8"}}
+```
+
+## Next Steps
+
+Once you're comfortable with the basics, you can:
+
+1. Add more complex tools with different operations
+2. Create resources to serve data
+3. Implement prompts for text generation
+
+See the other vignettes and function documentation for more details on these advanced features.
