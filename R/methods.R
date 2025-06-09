@@ -79,10 +79,7 @@ tools_call <- function(mcp, params, id = NULL) {
       handler_result <- handler(arguments)
 
       # this may be dangerous, we just assume that the handler returns a response
-      if (
-        !inherits(handler_result, "response") &&
-          !inherits(handler_result, "responses")
-      ) {
+      if (!inherits(handler_result, "response")) {
         return(create_error(
           JSONRPC_INTERNAL_ERROR,
           paste0("Tool handler did not return a response object."),
@@ -141,10 +138,7 @@ resources_read <- function(mcp, params, id = NULL) {
       handler_result <- handler(arguments)
 
       # this may be dangerous, we just assume that the handler returns a response
-      if (
-        !inherits(handler_result, "response") &&
-          !inherits(handler_result, "responses")
-      ) {
+      if (!inherits(handler_result, "response")) {
         return(create_error(
           JSONRPC_INTERNAL_ERROR,
           paste0("Tool handler did not return a response object."),
@@ -203,10 +197,7 @@ prompts_get <- function(mcp, params, id = NULL) {
       handler_result <- handler(arguments)
 
       # this may be dangerous, we just assume that the handler returns a response
-      if (
-        !inherits(handler_result, "response") &&
-          !inherits(handler_result, "responses")
-      ) {
+      if (!inherits(handler_result, "response")) {
         return(create_error(
           JSONRPC_INTERNAL_ERROR,
           paste0("Tool handler did not return a response object."),

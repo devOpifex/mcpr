@@ -25,11 +25,7 @@ response_resource(resource)
 
 response_error(text)
 
-response(
-  ...,
-  type = c("text", "image", "audio", "video", "file", "resource"),
-  isError = FALSE
-)
+response(..., is_error = FALSE)
 }
 \arguments{
 \item{text}{Text content}
@@ -48,13 +44,22 @@ response(
 
 \item{...}{Mutliple \code{response} objects}
 
-\item{type}{Type of response}
-
-\item{isError}{Whether the response is an error}
+\item{is_error}{Whether the response is an error}
 }
 \value{
 A response object
 }
 \description{
 Create a response object
+}
+\examples{
+response(
+  response_text("Hello, world!"),
+  response_image(system.file("extdata/logo.png", package = "mcpr")),
+  response_audio(system.file("extdata/sound.mp3", package = "mcpr")),
+  response_video(system.file("extdata/video.mp4", package = "mcpr")),
+  response_file(system.file("extdata/file.txt", package = "mcpr")),
+  response_resource(system.file("extdata/resource.json", package = "mcpr"))
+)
+
 }

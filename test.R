@@ -24,7 +24,9 @@ calculator <- new_tool(
       "multiply" = params$a * params$b,
       "divide" = params$a / params$b
     )
-    response_text(result)
+    response(
+      response_text(result)
+    )
   }
 )
 
