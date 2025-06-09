@@ -6,6 +6,7 @@
 #' @param tools List of tools
 #' @param resources List of resources
 #' @param prompts List of prompts
+#' @param ... Forwarded to [new_server()]
 #'
 #' @return A new MCP object
 #' @export
@@ -16,7 +17,8 @@
 #'   description = "This is a description",
 #'   version = "1.0.0"
 #' )
-new_mcp <- function(
+#' @name new_server
+new_server <- function(
   name,
   description,
   version,
@@ -78,8 +80,15 @@ new_mcp <- function(
     initialized = FALSE,
     name = name,
     description = description,
-    class = c("mcp_server", class(server))
+    class = c("server", class(server))
   )
+}
+
+#' @rdname new_server
+#' @export
+new_mcp <- function(...) {
+  .Deprecated("new_server")
+  new_server(...)
 }
 
 #' Create a new tool
@@ -239,7 +248,6 @@ new_prompt <- function(name, description, arguments = list(), handler) {
   cap
 }
 
-# Print method for mcp_server
 new_capability <- function(
   name,
   description,

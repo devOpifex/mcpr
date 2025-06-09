@@ -22,5 +22,6 @@ RoxygenNote: 7.3.2
 Imports:
     jsonlite (>= 1.7.0)
 Suggests:
-    ambiorix
+    ambiorix,
+    processx
 URL: https://mcpr.opifex.org/, https://github.com/devOpifex/mcpr
