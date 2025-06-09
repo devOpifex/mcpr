@@ -4,7 +4,8 @@ pkgdown_sha: ~
 articles:
   client-integration: client-integration.html
   get-started: get-started.html
-last_built: 2025-06-09T10:47Z
+  practical-examples: practical-examples.html
+last_built: 2025-06-09T11:15Z
 urls:
   reference: https://mcpr.opifex.org/reference
   article: https://mcpr.opifex.org/articles

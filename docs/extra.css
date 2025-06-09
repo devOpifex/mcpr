@@ -22,18 +22,13 @@
   color: var(--mcpr-light-teal);
 }
 
-.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:hover, 
 .navbar-dark .navbar-nav .nav-link:focus {
   color: var(--mcpr-light-teal);
 }
 
 /* Headings */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   color: var(--mcpr-dark-blue);
 }
 
@@ -42,14 +37,12 @@ a {
   color: var(--mcpr-mid-blue);
 }
 
-a:hover,
-a:focus {
+a:hover, a:focus {
   color: var(--mcpr-teal);
 }
 
 /* Code blocks */
-pre,
-code {
+pre, code {
   background-color: var(--mcpr-very-light-teal);
   border-color: var(--mcpr-light-teal);
 }
@@ -60,8 +53,7 @@ code {
   border-color: var(--mcpr-mid-blue);
 }
 
-.btn-primary:hover,
-.btn-primary:focus {
+.btn-primary:hover, .btn-primary:focus {
   background-color: var(--mcpr-dark-blue);
   border-color: var(--mcpr-dark-blue);
 }
@@ -69,6 +61,12 @@ code {
 /* Sidebar navigation */
 .nav-pills .nav-link.active {
   background-color: var(--mcpr-mid-blue);
+}
+
+/* Footer */
+footer {
+  border-top: 1px solid var(--mcpr-light-teal);
+  background-color: var(--mcpr-very-light-teal);
 }
 
 /* Table styling */
@@ -100,4 +98,3 @@ tr:hover {
 .st {
   color: var(--mcpr-teal);
 }
-
