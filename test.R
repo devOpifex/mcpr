@@ -2,7 +2,7 @@ library(mcpr)
 
 # Create a calculator tool
 calculator <- new_tool(
-  name = "calculator",
+  name = "math_calculator",
   description = "Performs basic arithmetic operations",
   input_schema = schema(
     properties = properties(

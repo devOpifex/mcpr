@@ -65,7 +65,7 @@ response <- function(
 
   structure(
     list(
-      content = list(type = type, ...),
+      content = list(list(type = type, ...)),
       isError = isError
     ),
     class = c(
