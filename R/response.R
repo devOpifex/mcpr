@@ -5,10 +5,13 @@
 #' @param audio Audio content
 #' @param video Video content
 #' @param file File content
+#' @param type Type of the content
 #' @param resource Resource content
 #' @param is_error Whether the response is an error
 #' @param mime_type Mime type of the content
 #' @param ... Mutliple `response` objects
+#'
+#' @details Use `response_item` to create a custom response item.
 #'
 #' @examples
 #' response(
@@ -63,11 +66,17 @@ response_error <- function(text) {
   response_item(text = text, type = "text", isError = TRUE)
 }
 
+#' @rdname response
+#' @export
 response_item <- function(
   ...,
   type = c("text", "image", "audio", "video", "file", "resource")
 ) {
-  type <- match.arg(type)
+  if (length(type) > 1) {
+    stop("Only one type can be specified")
+  }
+
+  type <- type[1]
 
   structure(
     list(

@@ -9,6 +9,7 @@
 \alias{response_file}
 \alias{response_resource}
 \alias{response_error}
+\alias{response_item}
 \title{Create a response object}
 \usage{
 response_text(text)
@@ -24,6 +25,11 @@ response_file(file, mime_type = "application/octet-stream")
 response_resource(resource)
 
 response_error(text)
+
+response_item(
+  ...,
+  type = c("text", "image", "audio", "video", "file", "resource")
+)
 
 response(..., is_error = FALSE)
 }
@@ -44,6 +50,8 @@ response(..., is_error = FALSE)
 
 \item{...}{Mutliple \code{response} objects}
 
+\item{type}{Type of the content}
+
 \item{is_error}{Whether the response is an error}
 }
 \value{
@@ -51,6 +59,9 @@ A response object
 }
 \description{
 Create a response object
+}
+\details{
+Use \code{response_item} to create a custom response item.
 }
 \examples{
 response(

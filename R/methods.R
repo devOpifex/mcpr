@@ -78,6 +78,10 @@ tools_call <- function(mcp, params, id = NULL) {
     {
       handler_result <- handler(arguments)
 
+      if (inherits(handler_result, "response_item")) {
+        handler_result <- response(handler_result)
+      }
+
       # this may be dangerous, we just assume that the handler returns a response
       if (!inherits(handler_result, "response")) {
         return(create_error(
@@ -137,6 +141,10 @@ resources_read <- function(mcp, params, id = NULL) {
     {
       handler_result <- handler(arguments)
 
+      if (inherits(handler_result, "response_item")) {
+        handler_result <- response(handler_result)
+      }
+
       # this may be dangerous, we just assume that the handler returns a response
       if (!inherits(handler_result, "response")) {
         return(create_error(
@@ -195,6 +203,10 @@ prompts_get <- function(mcp, params, id = NULL) {
   tryCatch(
     {
       handler_result <- handler(arguments)
+
+      if (inherits(handler_result, "response_item")) {
+        handler_result <- response(handler_result)
+      }
 
       # this may be dangerous, we just assume that the handler returns a response
       if (!inherits(handler_result, "response")) {
