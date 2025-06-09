@@ -193,6 +193,12 @@ tools_call.server <- function(mcp, params, id = NULL) {
   )
 }
 
+#' @export
+#' @method tools_call client
+tools_call.client <- function(mcp, params, id = NULL) {
+  write(mcp, "tools/call", params, id)
+}
+
 #' Read a resource with the given parameters
 #'
 #' @param mcp A server object
