@@ -52,7 +52,7 @@ serve_http <- function(
     # Get request body
     body <- req$body
 
-    if (is.null(body) || body == "") {
+    if (!length(body) || body == "") {
       error_response <- create_error(
         JSONRPC_INVALID_REQUEST,
         "Empty request body"
@@ -64,9 +64,7 @@ serve_http <- function(
 
     # Process the request through JSON-RPC
     response <- tryCatch(
-      {
-        parse_request(body, mcp)
-      },
+      parse_request(body, mcp),
       error = function(e) {
         create_error(
           JSONRPC_PARSE_ERROR,
