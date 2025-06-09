@@ -103,5 +103,18 @@ To integrate with Cursor see the [documentation](https://docs.cursor.com/context
   }
 }
 ```
-
+### VS Code Agent Mode Integration
+To integrate with VS Code Agent mode see the [documentation](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_add-an-mcp-server-to-your-user-settings)
+```json
+"mcp": {
+        "servers": {
+            "my-mcp-server-calculator": {
+                "type": "stdio",
+                "command": "Rscript",
+                "args": [
+                    "path/to/calculator_server.R"
+                ]
+            }
+}
+```
 More integrations in the [docs](https://mcpr.opifex.org/articles/client-integration)
