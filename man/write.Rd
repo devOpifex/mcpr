@@ -2,12 +2,12 @@
 % Please edit documentation in R/request.R
 \name{write}
 \alias{write}
-\title{Write a JSON-RPC request to a mcp provider}
+\title{Write a JSON-RPC request to a client provider}
 \usage{
 write(x, method, params = NULL, id = generate_id(), timeout = 5000)
 }
 \arguments{
-\item{x}{A mcp provider}
+\item{x}{A client provider}
 
 \item{method}{The method to call}
 
@@ -18,8 +18,8 @@ write(x, method, params = NULL, id = generate_id(), timeout = 5000)
 \item{timeout}{Timeout in milliseconds for reading the response}
 }
 \value{
-The mcp provider
+The client provider
 }
 \description{
-Write a JSON-RPC request to a mcp provider
+Write a JSON-RPC request to a client provider
 }

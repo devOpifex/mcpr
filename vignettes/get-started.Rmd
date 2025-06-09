@@ -28,7 +28,7 @@ Let's create a simple MCP server that can add two numbers:
 
 ```{r}
 # Create a new MCP server
-mcp_server <- new_mcp(
+mcp_server <- new_server(
   name = "Simple Adder",
   description = "A basic MCP server that adds two numbers",
   version = "1.0.0"

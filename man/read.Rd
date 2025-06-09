@@ -2,12 +2,12 @@
 % Please edit documentation in R/request.R
 \name{read}
 \alias{read}
-\title{Read a JSON-RPC response from a mcp provider}
+\title{Read a JSON-RPC response from a client provider}
 \usage{
 read(x, timeout = 60 * 1000)
 }
 \arguments{
-\item{x}{A mcp provider}
+\item{x}{A client provider}
 
 \item{timeout}{Timeout in milliseconds for reading the response}
 }
@@ -15,5 +15,5 @@ read(x, timeout = 60 * 1000)
 The response
 }
 \description{
-Read a JSON-RPC response from a mcp provider
+Read a JSON-RPC response from a client provider
 }

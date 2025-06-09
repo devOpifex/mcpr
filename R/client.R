@@ -1,10 +1,11 @@
-#' Create a new mcp provider
+#' Create a new mcp client
 #'
 #' @param command The command to run
 #' @param args Arguments to pass to the command
-#' @param name The name of the provider
+#' @param name The name of the client
+#' @param version The version of the client
 #'
-#' @return A new mcp provider
+#' @return A new mcp client
 #' @export
 #'
 #' @examples

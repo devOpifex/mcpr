@@ -1,4 +1,16 @@
+#' List all available tools
+#'
+#' @param mcp A server object
+#'
+#' @return A list containing all available tools
+#' @export
 tools_list <- function(mcp) {
+  UseMethod("tools_list")
+}
+
+#' @export
+#' @method tools_list server
+tools_list.server <- function(mcp) {
   # List all available tools
   tools <- list()
   for (tool_name in names(mcp$tools)) {
@@ -8,7 +20,25 @@ tools_list <- function(mcp) {
   list(tools = tools)
 }
 
+#' @export
+#' @method tools_list client
+tools_list.client <- function(mcp) {
+  write(mcp, "tools.list", NULL)
+}
+
+#' List all available resources
+#'
+#' @param mcp A server object
+#'
+#' @return A list containing all available resources
+#' @export
 resources_list <- function(mcp) {
+  UseMethod("resources_list")
+}
+
+#' @export
+#' @method resources_list server
+resources_list.server <- function(mcp) {
   # List all available resources
   resources <- list()
   for (resource_name in names(mcp$resources)) {
@@ -18,7 +48,19 @@ resources_list <- function(mcp) {
   list(resources = resources)
 }
 
+#' List all available prompts
+#'
+#' @param mcp A server object
+#'
+#' @return A list containing all available prompts
+#' @export
 prompts_list <- function(mcp) {
+  UseMethod("prompts_list")
+}
+
+#' @export
+#' @method prompts_list server
+prompts_list.server <- function(mcp) {
   # List all available prompts
   prompts <- list()
   for (prompt_name in names(mcp$prompts)) {
@@ -28,7 +70,19 @@ prompts_list <- function(mcp) {
   list(prompts = prompts)
 }
 
-initialize_server <- function(mcp) {
+#' Initialize the server with protocol information
+#'
+#' @param mcp A server object
+#'
+#' @return A list containing protocol version, server info, and capabilities
+#' @export
+initialize <- function(mcp) {
+  UseMethod("initialize")
+}
+
+#' @export
+#' @method initialize server
+initialize.server <- function(mcp) {
   # Return information about the server and its capabilities in the expected format
   list(
     protocolVersion = "2024-11-05",
@@ -40,7 +94,43 @@ initialize_server <- function(mcp) {
   )
 }
 
+#' @export
+#' @method initialize client
+initialize.client <- function(mcp) {
+  write(
+    mcp,
+    "initialize",
+    list(
+      protocolVersion = "2024-11-05",
+      clientInfo = list(
+        name = attr(mcp, "name"),
+        version = attr(mcp, "version")
+      ),
+      capabilities = list(
+        roots = list(
+          listChanged = FALSE
+        ),
+        sampling = list()
+      )
+    )
+  )
+}
+
+#' Call a tool with the given parameters
+#'
+#' @param mcp A server object
+#' @param params Parameters for the tool call
+#' @param id Optional request ID for response tracking
+#'
+#' @return A response object with the tool call results or an error
+#' @export
 tools_call <- function(mcp, params, id = NULL) {
+  UseMethod("tools_call")
+}
+
+#' @export
+#' @method tools_call server
+tools_call.server <- function(mcp, params, id = NULL) {
   # Check required parameters
   if (is.null(params$name) || !is.character(params$name)) {
     return(create_error(
@@ -103,7 +193,21 @@ tools_call <- function(mcp, params, id = NULL) {
   )
 }
 
+#' Read a resource with the given parameters
+#'
+#' @param mcp A server object
+#' @param params Parameters for the resource read
+#' @param id Optional request ID for response tracking
+#'
+#' @return A response object with the resource read results or an error
+#' @export
 resources_read <- function(mcp, params, id = NULL) {
+  UseMethod("resources_read")
+}
+
+#' @export
+#' @method resources_read server
+resources_read.server <- function(mcp, params, id = NULL) {
   # Check required parameters
   if (is.null(params$name) || !is.character(params$name)) {
     return(create_error(
@@ -166,7 +270,21 @@ resources_read <- function(mcp, params, id = NULL) {
   )
 }
 
+#' Get a prompt with the given parameters
+#'
+#' @param mcp A server object
+#' @param params Parameters for the prompt request
+#' @param id Optional request ID for response tracking
+#'
+#' @return A response object with the prompt results or an error
+#' @export
 prompts_get <- function(mcp, params, id = NULL) {
+  UseMethod("prompts_get")
+}
+
+#' @export
+#' @method prompts_get server
+prompts_get.server <- function(mcp, params, id = NULL) {
   # Check required parameters
   if (is.null(params$name) || !is.character(params$name)) {
     return(create_error(

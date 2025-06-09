@@ -170,7 +170,7 @@ process_request <- function(request, mcp) {
   result <- switch(
     method,
     "initialize" = {
-      initialize_server(mcp)
+      initialize(mcp)
     },
     "tools/list" = {
       tools_list(mcp)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/client.R
 \name{new_client}
 \alias{new_client}
-\title{Create a new mcp provider}
+\title{Create a new mcp client}
 \usage{
 new_client(command, args = character(), name = command, version = "1.0.0")
 }
@@ -11,11 +11,13 @@ new_client(command, args = character(), name = command, version = "1.0.0")
 
 \item{args}{Arguments to pass to the command}
 
-\item{name}{The name of the provider}
+\item{name}{The name of the client}
+
+\item{version}{The version of the client}
 }
 \value{
-A new mcp provider
+A new mcp client
 }
 \description{
-Create a new mcp provider
+Create a new mcp client
 }

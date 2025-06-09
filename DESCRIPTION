@@ -1,6 +1,6 @@
 Package: mcpr
 Title: Model Context Protocol for R
-Version: 0.0.0.9000
+Version: 0.0.1.9000
 Authors@R: 
   c(
     person(given = "John",
@@ -16,6 +16,7 @@ Description: Create and run Model Context Protocol (MCP) servers in R. The packa
     resources, and prompts capabilities. It includes a JSON-RPC 2.0 implementation
     for communication between clients and servers.
 License: GPL (>= 2)
+Depends: R (>= 4.1.0)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
@@ -23,5 +24,8 @@ Imports:
     jsonlite (>= 1.7.0)
 Suggests:
     ambiorix,
-    processx
+    processx,
+    knitr,
+    rmarkdown
 URL: https://mcpr.opifex.org/, https://github.com/devOpifex/mcpr
+VignetteBuilder: knitr

@@ -28,7 +28,7 @@ Let's create a simple MCP server with a basic calculator tool:
 
 ```r
 # Create a new MCP server
-math_server <- new_mcp(
+math_server <- new_server(
   name = "r-calculator",
   description = "A simple calculator that performs basic arithmetic operations",
   version = "1.0.0"

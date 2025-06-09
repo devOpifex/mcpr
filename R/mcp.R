@@ -12,7 +12,7 @@
 #' @export
 #'
 #' @examples
-#' mcp <- new_mcp(
+#' mcp <- new_server(
 #'   name = "My MCP",
 #'   description = "This is a description",
 #'   version = "1.0.0"
