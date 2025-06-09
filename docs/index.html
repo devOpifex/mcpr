@@ -39,11 +39,19 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/client-integration.html">Integrating mcpr with MCP Clients</a></li>
+    <li><a class="dropdown-item" href="articles/get-started.html">Getting Started with mcpr</a></li>
+  </ul>
+</li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/devOpifex/mcpr/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -55,6 +63,7 @@
 <p><img src="reference/figures/logo.png"></p>
 </div>
 <p>mcpr is an R implementation of the <a href="https://modelcontextprotocol.io" class="external-link">Model Context Protocol (MCP)</a>, enabling R applications to expose capabilities (tools, resources, and prompts) to AI models through a standard JSON-RPC 2.0 interface.</p>
+<p>See the official <a href="https://modelcontextprotocol.io" class="external-link">MCP documentation</a> for more information, particularly on schemas and capabilities. Visit <a href="https://mcpr.opifex.org/">package docs</a> for more information on the R implementation.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -67,7 +76,7 @@
 </h2>
 <p>Here’s a simple example that creates an MCP server with a calculator tool:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mcpr</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mcpr.opifex.org/">mcpr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">calculator</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_tool.html">new_tool</a></span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="st">"calculator"</span>,</span>
@@ -140,7 +149,14 @@
 </div>
 </div>
 
-  </main><aside class="col-md-3"><div class="license">
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/devOpifex/mcpr/" class="external-link">Browse source code</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>

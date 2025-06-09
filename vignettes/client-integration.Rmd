@@ -26,7 +26,7 @@ The Model Context Protocol (MCP) allows you to register custom tools with variou
 
 Let's create a simple MCP server with a basic calculator tool:
 
-```{r}
+```r
 # Create a new MCP server
 math_server <- new_mcp(
   name = "r-calculator",
@@ -39,7 +39,7 @@ calculator <- new_tool(
   name = "math_calculator",
   description = "Performs basic arithmetic operations",
   input_schema = schema(
-    properties = list(
+    properties = properties(
       operation = property_enum(
         "Operation", 
         "Math operation to perform",
@@ -67,7 +67,7 @@ math_server <- add_capability(math_server, calculator)
 
 Save this code to a file, for example `calculator_server.R`, and add code to serve it at the end:
 
-```{r, eval=FALSE}
+```r
 # At the end of calculator_server.R, add:
 serve_io(math_server)
 ```
@@ -108,7 +108,7 @@ Now when you ask Cursor to perform calculations, it will have access to your MCP
 
 For OpenAI GPTs, you'll need to run your MCP server over HTTP:
 
-```{r, eval=FALSE}
+```r
 # Modify your calculator_server.R to use HTTP instead of IO
 serve_http(math_server, port = 8080)
 ```
@@ -167,32 +167,6 @@ mcp_client = MultiServerMCPClient(
 tools = mcp_client.get_tools()
 llm = ChatOpenAI(model="gpt-4o")
 agent = create_tool_calling_agent(llm, tools)
-```
-
-## Testing Your MCP Server
-
-Before registering with clients, you can test your MCP server by sending direct JSON-RPC requests:
-
-```{r, eval=FALSE}
-# Using the jsonlite package to create a request
-library(jsonlite)
-
-# Create a JSON-RPC 2.0 request
-request <- toJSON(list(
-  jsonrpc = "2.0",
-  id = 1,
-  method = "mcp.tools.math_calculator",
-  params = list(
-    operation = "multiply",
-    a = 5,
-    b = 3
-  )
-), auto_unbox = TRUE)
-
-# Echo the request to standard output
-cat(request)
-
-# The response will come back through standard input
 ```
 
 ## Conclusion

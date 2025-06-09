@@ -74,13 +74,13 @@ To test your server, you can run the above code in an R script and interact with
 3. Send a JSON-RPC request to standard input:
 
 ```json
-{"jsonrpc":"2.0","id":1,"method":"mcp.tools.add","params":{"a":5,"b":3}}
+{"jsonrpc": "2.0", "id": 123, "method": "tools/call", "params": {"name": "add", "arguments": {"a": 15, "b": 27}}}
 ```
 
 The server will respond with:
 
 ```json
-{"jsonrpc":"2.0","id":1,"result":{"type":"text","text":"The sum is: 8"}}
+{"jsonrpc": "2.0", "id": 123, "result": {"content": [{"type": "text", "text": "The sum is: 42"}]}}
 ```
 
 ## Next Steps
