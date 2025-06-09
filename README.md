@@ -6,6 +6,10 @@ mcpr is an R implementation of the [Model Context Protocol (MCP)](https://modelc
 enabling R applications to expose capabilities (tools, resources, and prompts)
 to AI models through a standard JSON-RPC 2.0 interface.
 
+See the official [MCP documentation](https://modelcontextprotocol.io) for more information,
+particularly on schemas and capabilities.
+Visit [package docs](https://mcpr.opifex.org/) for more information on the R implementation.
+
 ## Installation
 
 You can install mcpr from GitHub using the [pak](https://pak.r-lib.org/) package:
