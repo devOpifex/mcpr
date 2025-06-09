@@ -60,9 +60,16 @@ new_mcp <- function(
     prompts = prompts,
     version = version,
     capabilities = list(
-      tools = length(tools) > 0,
-      resources = length(resources) > 0,
-      prompts = length(prompts) > 0
+      tools = list(
+        listChanged = FALSE
+      ),
+      resources = list(
+        subscribe = FALSE,
+        listChanged = FALSE
+      ),
+      prompts = list(
+        listChanged = FALSE
+      )
     )
   )
 
@@ -258,6 +265,7 @@ new_capability <- function(
 #' @param mcp An MCP object
 #'
 #' @return The MCP object with the capability added
+#' @export
 add_capability <- function(mcp, capability)
   UseMethod("add_capability", capability)
 

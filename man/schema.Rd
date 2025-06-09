@@ -19,9 +19,9 @@ Create a new input schema
 }
 \examples{
 schema <- schema(
-  properties = list(
-    name = prop_string("User name", "The name of the user", required = TRUE),
-    age = prop_number("User age", "The age of the user in years", minimum = 0)
+  properties = properties(
+    name = property_string("User name", "The name of the user", required = TRUE),
+    age = property_number("User age", "The age of the user in years", minimum = 0)
   )
 )
 }

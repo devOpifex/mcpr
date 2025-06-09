@@ -27,8 +27,8 @@ tool <- new_tool(
   description = "This is a description",
   input_schema = schema(
     properties = list(
-      input1 = prop_string("Input 1", "Description of input 1"),
-      input2 = prop_number("Input 2", "Description of input 2")
+      input1 = property_string("Input 1", "Description of input 1"),
+      input2 = property_number("Input 2", "Description of input 2")
     )
   ),
   handler = function(input) {
