@@ -108,7 +108,7 @@ This example creates an MCP resource that generates visualizations from data:
 
 ```r
 # Load required packages
-# library(ggplot2)
+library(ggplot2)
 
 # Create visualization server
 viz_server <- new_mcp(
@@ -161,22 +161,26 @@ scatter_plot <- new_tool(
       return(response_error("X and Y arrays must have the same length"))
     }
     
+    # Create a data frame for ggplot
+    plot_data <- data.frame(x = x, y = y)
+    
     # Create a temporary file for the plot
     # Note: In a production environment, consider file cleanup strategies
     # that don't risk deleting files before clients can access them
     temp_file <- tempfile(fileext = ".png")
     
-    # Create the plot using base R (to avoid dependencies)
-    png(temp_file, width = 800, height = 600)
-    plot(
-      x, y,
-      main = input$title,
-      xlab = input$x_label,
-      ylab = input$y_label,
-      pch = 19,
-      col = "steelblue"
-    )
-    dev.off()
+    # Create the plot using ggplot2
+    p <- ggplot(plot_data, aes(x = x, y = y)) +
+      geom_point(color = "steelblue", size = 3) +
+      labs(
+        title = input$title,
+        x = input$x_label,
+        y = input$y_label
+      ) +
+      theme_minimal()
+    
+    # Save the plot to the temporary file
+    ggsave(temp_file, p, width = 8, height = 6, dpi = 100)
     
     # Return the image
     # The application should handle cleanup of temporary files
@@ -327,41 +331,39 @@ simple_forecast <- new_tool(
       paste(round(forecast_values, 2), collapse = ", ")
     )
     
-    # Create a simple plot of historical + forecast values
+    # Create a plot of historical + forecast values using ggplot2
     # Note: In a production environment, consider file cleanup strategies
     # that don't risk deleting files before clients can access them
     temp_file <- tempfile(fileext = ".png")
     
-    png(temp_file, width = 800, height = 600)
+    # Prepare data for ggplot
+    # Create a data frame with historical and forecast data
+    n_hist <- length(values)
+    n_forecast <- length(forecast_values)
     
-    # Combine historical and forecast data for plotting
-    all_values <- c(values, forecast_values)
-    time_points <- 1:length(all_values)
-    historical_points <- 1:length(values)
-    forecast_points <- (length(values) + 1):length(all_values)
-    
-    # Plot historical data
-    plot(
-      historical_points, values,
-      type = "l", col = "black", lwd = 2,
-      xlim = c(1, length(all_values)),
-      ylim = c(min(all_values) * 0.9, max(all_values) * 1.1),
-      main = paste("Time Series Forecast (", method, ")"),
-      xlab = "Time Period",
-      ylab = "Value"
+    plot_data <- data.frame(
+      time = 1:(n_hist + n_forecast),
+      value = c(values, forecast_values),
+      type = c(rep("Historical", n_hist), rep("Forecast", n_forecast))
     )
     
-    # Add forecast
-    lines(forecast_points, forecast_values, col = "blue", lwd = 2, lty = 2)
+    # Create the plot using ggplot2
+    p <- ggplot(plot_data, aes(x = time, y = value, color = type, linetype = type)) +
+      geom_line(size = 1) +
+      scale_color_manual(values = c("Historical" = "black", "Forecast" = "blue")) +
+      scale_linetype_manual(values = c("Historical" = "solid", "Forecast" = "dashed")) +
+      labs(
+        title = paste("Time Series Forecast (", method, ")"),
+        x = "Time Period",
+        y = "Value",
+        color = "Data Type",
+        linetype = "Data Type"
+      ) +
+      theme_minimal() +
+      theme(legend.position = "top")
     
-    # Add a legend
-    legend("topleft", 
-           legend = c("Historical", "Forecast"),
-           col = c("black", "blue"),
-           lty = c(1, 2),
-           lwd = 2)
-    
-    dev.off()
+    # Save the plot to the temporary file
+    ggsave(temp_file, p, width = 8, height = 6, dpi = 100)
     
     # Return both text and image
     # The application should handle cleanup of temporary files
