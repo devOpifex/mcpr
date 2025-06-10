@@ -1,0 +1,180 @@
+---
+title: "Using the MCP Client"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using the MCP Client}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+```{r setup}
+library(mcpr)
+```
+
+## Introduction
+
+The `mcpr` package allows you to not only create Model Context Protocol (MCP) servers in R but also connect to existing MCP servers as a client. This vignette will guide you through using the MCP client to interact with servers.
+
+## Creating an MCP Client
+
+The client functionality allows you to connect to any MCP server, whether it's running locally as a separate process, or remotely via HTTP. Here's how to create a client:
+
+### Connecting to a Local Server Process
+
+You can connect to a server running as a separate process. This is useful for testing or when you need to communicate with a local MCP implementation:
+
+```{r}
+# Create a client that connects to a local process
+client <- new_client(
+  "Rscript",                                # Command to run
+  "path/to/your/server.R",                  # Path to the server script
+  name = "calculator",                      # Optional name for the server
+  version = "1.0.0"                         # Optional version
+)
+```
+
+### Connecting to an HTTP Server
+
+You can also connect to an MCP server running over HTTP:
+
+```{r}
+# Create a client that connects to an HTTP server
+http_client <- new_client("http://localhost:8080")
+```
+
+## Basic Client Operations
+
+Once you have created a client, you can interact with the server using the various client methods:
+
+### Initializing the Connection
+
+It's good practice to initialize the connection first:
+
+```{r}
+# Initialize the connection
+res <- initialize(client)
+print(res)
+```
+
+### Listing Available Tools
+
+You can list all the tools that the server provides:
+
+```{r}
+# Get a list of available tools
+tools <- tools_list(client)
+print(tools)
+```
+
+### Calling a Tool
+
+Once you know what tools are available, you can call them with specific parameters:
+
+```{r}
+# Call the math_calculator tool
+result <- tools_call(
+  client,
+  name = "math_calculator",
+  params = list(
+    operation = "add",
+    a = 5,
+    b = 3
+  )
+)
+print(result)
+```
+
+### Working with Prompts
+
+If the server has prompts available, you can list and use them:
+
+```{r}
+# List available prompts
+prompts <- prompts_list(client)
+print(prompts)
+
+# Get a specific prompt
+prompt <- prompts_get(client, "example-prompt")
+print(prompt)
+```
+
+### Working with Resources
+
+You can also access resources provided by the server:
+
+```{r}
+# List available resources
+resources <- resources_list(client)
+print(resources)
+
+# Read a specific resource
+resource_content <- resources_read(client, "example-resource")
+print(resource_content)
+```
+
+## Complete Example
+
+Here's a complete example that demonstrates connecting to a calculator server and performing operations:
+
+```{r}
+# Create a client
+client <- new_client(
+  "Rscript",
+  system.file("examples/calculator/server.R", package = "mcpr"),
+  name = "calculator",
+  version = "1.0.0"
+)
+
+# Initialize the connection
+initialize(client)
+
+# List available tools
+tools <- tools_list(client)
+print(tools)
+
+# Call the math_calculator tool with different operations
+add_result <- tools_call(
+  client,
+  name = "math_calculator",
+  params = list(
+    operation = "add",
+    a = 10,
+    b = 5
+  )
+)
+print(add_result)
+
+multiply_result <- tools_call(
+  client,
+  name = "math_calculator",
+  params = list(
+    operation = "multiply",
+    a = 10,
+    b = 5
+  )
+)
+print(multiply_result)
+```
+
+## Practical Use Cases
+
+MCP clients can be used in various scenarios:
+
+1. **Integration with External AI Services**: Connect to AI models or services that expose an MCP interface
+2. **Microservices Architecture**: Communicate between different R services using the MCP protocol
+3. **Testing MCP Servers**: Verify that your MCP server implementations work correctly
+4. **Building UI Applications**: Create user interfaces that interact with MCP servers to provide functionality
+
+## Conclusion
+
+The MCP client functionality in the `mcpr` package provides a flexible way to interact with MCP servers from R. Whether you're building applications that consume AI capabilities or creating distributed systems that communicate via MCP, the client interface makes it easy to work with the protocol.
+
+For more advanced usage, check the function documentation and other vignettes.

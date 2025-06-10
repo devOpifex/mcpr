@@ -28,7 +28,7 @@ This example creates an MCP tool that performs basic statistical analysis on num
 
 ```r
 # Create a statistical analysis MCP server
-stats_server <- new_mcp(
+stats_server <- new_server(
   name = "r-statistics",
   description = "Statistical analysis tools using R",
   version = "1.0.0"
@@ -111,7 +111,7 @@ This example creates an MCP resource that generates visualizations from data:
 library(ggplot2)
 
 # Create visualization server
-viz_server <- new_mcp(
+viz_server <- new_server(
   name = "r-visualizations",
   description = "Data visualization tools using R",
   version = "1.0.0"
@@ -199,7 +199,7 @@ This example demonstrates how to create an MCP tool for text analysis:
 
 ```r
 # Create an NLP server
-nlp_server <- new_mcp(
+nlp_server <- new_server(
   name = "r-text-analysis",
   description = "Text analysis tools using R",
   version = "1.0.0"
@@ -261,7 +261,7 @@ This example creates an MCP tool for simple time series forecasting:
 
 ```r
 # Create a forecasting server
-forecast_server <- new_mcp(
+forecast_server <- new_server(
   name = "r-forecasting",
   description = "Time series forecasting tools using R",
   version = "1.0.0"
@@ -385,7 +385,7 @@ This example demonstrates a simple machine learning classification tool:
 
 ```r
 # Create an ML server
-ml_server <- new_mcp(
+ml_server <- new_server(
   name = "r-machine-learning",
   description = "Machine learning tools using R",
   version = "1.0.0"

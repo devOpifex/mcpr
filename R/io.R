@@ -12,7 +12,7 @@ serve_io <- function(
     stop("An MCP server object is required")
   }
 
-  if (!inherits(mcp, "mcp_server")) {
+  if (!inherits(mcp, "server")) {
     stop("mcp must be an MCP server object")
   }
 
