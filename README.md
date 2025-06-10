@@ -4,7 +4,8 @@
 
 mcpr is an R implementation of the [Model Context Protocol (MCP)](https://modelcontextprotocol.io),
 enabling R applications to expose capabilities (tools, resources, and prompts)
-to AI models through a standard JSON-RPC 2.0 interface.
+to AI models through a standard JSON-RPC 2.0 interface. It also provides client
+functionality to connect to and interact with MCP servers.
 
 See the official [MCP documentation](https://modelcontextprotocol.io) for more information,
 particularly on schemas and capabilities.
@@ -19,6 +20,8 @@ pak::pkg_install("devOpifex/mcpr")
 ```
 
 ## Basic Usage
+
+### Server
 
 Here's a simple example that creates an MCP server with a calculator tool:
 
@@ -79,6 +82,45 @@ response(
 You can also serve via HTTP transport with `serve_http`.
 
 See the [Get Started](https://mcpr.opifex.org/articles/get-started) guide for more information.
+
+### Client
+
+Here's a simple example of using the client to interact with an MCP server:
+
+```r
+library(mcpr)
+
+# Create a client that connects to an MCP server
+client <- new_client("http://localhost:8080")
+
+# List available tools
+tools <- tools_list(client)
+print(tools)
+
+# Call a tool
+result <- tools_call(
+  client,
+  name = "calculator",
+  params = list(
+    operation = "add",
+    a = 5,
+    b = 3
+  )
+)
+print(result)
+
+# List available prompts
+prompts <- prompts_list(client)
+print(prompts)
+
+# List available resources
+resources <- resources_list(client)
+print(resources)
+
+# Read a resource
+resource_content <- resources_read(client, "example-resource")
+print(resource_content)
+```
 
 ## Using mcpr
 

@@ -11,10 +11,11 @@ Authors@R:
            role = c("cph", "fnd"),
            email = "john@opifex.org")
   )
-Description: Create and run Model Context Protocol (MCP) servers in R. The package
+Description: Create, run, and connect to Model Context Protocol (MCP) servers in R. The package
     provides a framework for implementing MCP-compatible servers with tools, 
-    resources, and prompts capabilities. It includes a JSON-RPC 2.0 implementation
-    for communication between clients and servers.
+    resources, and prompts capabilities, as well as client functionality to interact with
+    MCP servers. It includes a JSON-RPC 2.0 implementation for communication between 
+    clients and servers.
 License: GPL (>= 2)
 Depends: R (>= 4.1.0)
 Encoding: UTF-8

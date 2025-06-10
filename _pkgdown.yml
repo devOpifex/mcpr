@@ -39,6 +39,19 @@ reference:
     - serve_io
     - serve_http
 
+- title: "Client Functions"
+  desc: >
+    Functions for connecting to and interacting with MCP servers
+  contents:
+    - new_client
+    - initialize
+    - tools_list
+    - tools_call
+    - prompts_list
+    - prompts_get
+    - resources_list
+    - resources_read
+
 - title: "JSON-RPC Functions"
   desc: >
     Functions for handling JSON-RPC requests and responses
