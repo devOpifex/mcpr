@@ -110,7 +110,7 @@ implementation:</p>
 <p>You can also connect to an MCP server running over HTTP:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a client that connects to an HTTP server</span></span>
-<span><span class="va">http_client</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_client.html">new_client</a></span><span class="op">(</span><span class="st">"http://localhost:8080"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">http_client</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_client.html">new_client</a></span><span class="op">(</span><span class="st">"Rscript"</span>, <span class="st">"path/to/your/server.R"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -145,11 +145,13 @@ specific parameters:</p>
 <code class="sourceCode R"><span><span class="co"># Call the math_calculator tool</span></span>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tools_call.html">tools_call</a></span><span class="op">(</span></span>
 <span>  <span class="va">client</span>,</span>
-<span>  name <span class="op">=</span> <span class="st">"math_calculator"</span>,</span>
-<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    operation <span class="op">=</span> <span class="st">"add"</span>,</span>
-<span>    a <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>    b <span class="op">=</span> <span class="fl">3</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    name <span class="op">=</span> <span class="st">"math_calculator"</span>,</span>
+<span>    params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      operation <span class="op">=</span> <span class="st">"add"</span>,</span>
+<span>      a <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>      b <span class="op">=</span> <span class="fl">3</span></span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></code></pre></div>
