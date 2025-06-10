@@ -48,6 +48,12 @@ resources_list.server <- function(mcp) {
   list(resources = resources)
 }
 
+#' @export
+#' @method resources_list client
+resources_list.client <- function(mcp) {
+  write(mcp, "resources/list", NULL)
+}
+
 #' List all available prompts
 #'
 #' @param mcp A server object
@@ -68,6 +74,12 @@ prompts_list.server <- function(mcp) {
     prompts <- c(prompts, list(prompt))
   }
   list(prompts = prompts)
+}
+
+#' @export
+#' @method prompts_list client
+prompts_list.client <- function(mcp) {
+  write(mcp, "prompts/list", NULL)
 }
 
 #' Initialize the server with protocol information
@@ -276,6 +288,12 @@ resources_read.server <- function(mcp, params, id = NULL) {
   )
 }
 
+#' @export
+#' @method resources_read client
+resources_read.client <- function(mcp, params, id = NULL) {
+  write(mcp, "resources/read", params, id)
+}
+
 #' Get a prompt with the given parameters
 #'
 #' @param mcp A server object
@@ -351,4 +369,10 @@ prompts_get.server <- function(mcp, params, id = NULL) {
       )
     }
   )
+}
+
+#' @export
+#' @method prompts_get client
+prompts_get.client <- function(mcp, params, id = NULL) {
+  write(mcp, "prompts/get", params, id)
 }
