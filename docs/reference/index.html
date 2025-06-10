@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mcpr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,9 +19,11 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/client-integration.html">Integrating mcpr with MCP Clients</a></li>
+    <li><a class="dropdown-item" href="../articles/client-usage.html">Using the MCP Client</a></li>
     <li><a class="dropdown-item" href="../articles/get-started.html">Getting Started with mcpr</a></li>
     <li><a class="dropdown-item" href="../articles/practical-examples.html">Practical MCP Examples with R</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/devOpifex/mcpr/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -48,7 +50,7 @@
 
       <dl><dt>
 
-          <code><a href="new_mcp.html">new_mcp()</a></code>
+          <code><a href="new_server.html">new_server()</a></code> <code><a href="new_server.html">new_mcp()</a></code>
 
         </dt>
         <dd>Create a new MCP object</dd>
@@ -175,6 +177,77 @@
 
         </dt>
         <dd>Serve an MCP server over HTTP using ambiorix</dd>
+      </dl></div><div class="section level2">
+      <h2 id="client-functions">Client Functions<a class="anchor" aria-label="anchor" href="#client-functions"></a></h2>
+
+      <div class="section-desc"><p>Functions for connecting to and interacting with MCP servers</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="new_client.html">new_client()</a></code>
+
+        </dt>
+        <dd>Create a new mcp client</dd>
+      </dl><dl><dt>
+
+          <code><a href="initialize.html">initialize()</a></code>
+
+        </dt>
+        <dd>Initialize the server with protocol information</dd>
+      </dl><dl><dt>
+
+          <code><a href="tools_list.html">tools_list()</a></code>
+
+        </dt>
+        <dd>List all available tools</dd>
+      </dl><dl><dt>
+
+          <code><a href="tools_call.html">tools_call()</a></code>
+
+        </dt>
+        <dd>Call a tool with the given parameters</dd>
+      </dl><dl><dt>
+
+          <code><a href="prompts_list.html">prompts_list()</a></code>
+
+        </dt>
+        <dd>List all available prompts</dd>
+      </dl><dl><dt>
+
+          <code><a href="prompts_get.html">prompts_get()</a></code>
+
+        </dt>
+        <dd>Get a prompt with the given parameters</dd>
+      </dl><dl><dt>
+
+          <code><a href="resources_list.html">resources_list()</a></code>
+
+        </dt>
+        <dd>List all available resources</dd>
+      </dl><dl><dt>
+
+          <code><a href="resources_read.html">resources_read()</a></code>
+
+        </dt>
+        <dd>Read a resource with the given parameters</dd>
+      </dl><dl><dt>
+
+          <code><a href="read.html">read()</a></code>
+
+        </dt>
+        <dd>Read a JSON-RPC response from a client provider</dd>
+      </dl><dl><dt>
+
+          <code><a href="write.html">write()</a></code>
+
+        </dt>
+        <dd>Write a JSON-RPC request to a client provider</dd>
       </dl></div><div class="section level2">
       <h2 id="json-rpc-functions">JSON-RPC Functions<a class="anchor" aria-label="anchor" href="#json-rpc-functions"></a></h2>
 

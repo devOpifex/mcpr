@@ -51,6 +51,8 @@ reference:
     - prompts_get
     - resources_list
     - resources_read
+    - read
+    - write
 
 - title: "JSON-RPC Functions"
   desc: >
