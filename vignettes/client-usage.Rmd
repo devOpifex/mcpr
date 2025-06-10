@@ -47,7 +47,7 @@ You can also connect to an MCP server running over HTTP:
 
 ```{r}
 # Create a client that connects to an HTTP server
-http_client <- new_client("http://localhost:8080")
+http_client <- new_client("Rscript", "path/to/your/server.R")
 ```
 
 ## Basic Client Operations
@@ -82,11 +82,13 @@ Once you know what tools are available, you can call them with specific paramete
 # Call the math_calculator tool
 result <- tools_call(
   client,
-  name = "math_calculator",
-  params = list(
-    operation = "add",
-    a = 5,
-    b = 3
+  list(
+    name = "math_calculator",
+    params = list(
+      operation = "add",
+      a = 5,
+      b = 3
+    )
   )
 )
 print(result)
