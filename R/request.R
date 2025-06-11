@@ -11,9 +11,9 @@
 write <- function(x, method, params = NULL, id = generate_id(), timeout = 5000)
   UseMethod("write")
 
-#' @method write client
+#' @method write client_io
 #' @export
-write.client <- function(
+write.client_io <- function(
   x,
   method,
   params = NULL,
@@ -33,6 +33,24 @@ write.client <- function(
   read(x, timeout)
 }
 
+#' @method write client_http
+#' @export
+write.client_http <- function(
+  x,
+  method,
+  params = NULL,
+  id = generate_id(),
+  timeout = 5000
+) {
+  r <- rpc_request(method, params, id, convert = FALSE)
+
+  x |>
+    httr2::req_timeout(timeout) |>
+    httr2::req_body_json(r) |>
+    httr2::req_perform() |>
+    httr2::resp_body_json()
+}
+
 #' Read a JSON-RPC response from a client provider
 #'
 #' @param x A client provider
@@ -42,9 +60,9 @@ write.client <- function(
 #' @export
 read <- function(x, timeout = 60 * 1000) UseMethod("read")
 
-#' @method read client
+#' @method read client_io
 #' @export
-read.client <- function(x, timeout = 60 * 1000) {
+read.client_io <- function(x, timeout = 60 * 1000) {
   # Check if process is alive before reading
   if (!x$is_alive()) {
     stop("client process is not alive")
@@ -80,7 +98,12 @@ read.client <- function(x, timeout = 60 * 1000) {
   return(NULL)
 }
 
-rpc_request <- function(method, params = NULL, id = generate_id()) {
+rpc_request <- function(
+  method,
+  params = NULL,
+  id = generate_id(),
+  convert = TRUE
+) {
   r <- list(
     jsonrpc = "2.0",
     method = method,
@@ -89,6 +112,9 @@ rpc_request <- function(method, params = NULL, id = generate_id()) {
   )
 
   r <- Filter(Negate(is.null), r)
+
+  if (!convert) return(r)
+
   to_json(r) |>
     as.character()
 }

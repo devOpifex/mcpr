@@ -1,8 +1,14 @@
 devtools::load_all()
 
-client <- new_client(
-  "Rscript",
-  "/home/john/Opifex/Packages/mcpr/examples/calculator/server.R",
+#client <- new_client_io(
+#  "Rscript",
+#  "/home/john/Opifex/Packages/mcpr/examples/calculator/server.R",
+#  name = "calculator",
+#  version = "1.0.0"
+#)
+
+client <- new_client_http(
+  "http://localhost:3000/mcp",
   name = "calculator",
   version = "1.0.0"
 )
