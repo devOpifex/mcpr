@@ -9,7 +9,7 @@ from_json(json, ...)
 \arguments{
 \item{json}{JSON string to parse}
 
-\item{...}{Additional arguments passed to jsonlite::fromJSON}
+\item{...}{Additional arguments passed to yyjsonr::read_json_str}
 }
 \value{
 R object

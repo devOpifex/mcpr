@@ -9,7 +9,7 @@ to_json(x, ...)
 \arguments{
 \item{x}{R object to convert to JSON}
 
-\item{...}{Additional arguments passed to jsonlite::toJSON}
+\item{...}{Additional arguments passed to yyjsonr::write_json_str}
 }
 \value{
 JSON string

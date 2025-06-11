@@ -115,6 +115,5 @@ rpc_request <- function(
 
   if (!convert) return(r)
 
-  to_json(r) |>
-    as.character()
+  to_json(r)
 }

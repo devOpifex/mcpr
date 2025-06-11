@@ -4,10 +4,12 @@
 \alias{schema}
 \title{Create a new input schema}
 \usage{
-schema(properties, additional_properties = FALSE)
+schema(properties, type = "object", additional_properties = FALSE)
 }
 \arguments{
 \item{properties}{List of property definitions}
+
+\item{type}{Type of the schema}
 
 \item{additional_properties}{Logical indicating if additional properties are allowed}
 }

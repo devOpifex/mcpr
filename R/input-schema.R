@@ -1,6 +1,7 @@
 #' Create a new input schema
 #'
 #' @param properties List of property definitions
+#' @param type Type of the schema
 #' @param additional_properties Logical indicating if additional properties are allowed
 #'
 #' @return A list representing a JSON Schema object
@@ -13,7 +14,9 @@
 #'     age = property_number("User age", "The age of the user in years", minimum = 0)
 #'   )
 #' )
-schema <- function(properties, additional_properties = FALSE) {
+schema <- function(properties, type = "object", additional_properties = FALSE) {
+  stopifnot(!missing(properties))
+
   # Extract required properties
   required <- character(0)
   for (name in names(properties)) {
@@ -25,7 +28,7 @@ schema <- function(properties, additional_properties = FALSE) {
 
   # Build schema
   schema <- list(
-    type = "object",
+    type = type,
     properties = properties,
     additionalProperties = additional_properties
   )

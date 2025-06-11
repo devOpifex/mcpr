@@ -18,6 +18,10 @@ new_client_io <- function(
   stopifnot(is.character(command), length(command) == 1)
   stopifnot(!missing(name), is.character(name), length(name) == 1)
 
+  if (!requireNamespace("processx", quietly = TRUE)) {
+    stop("The processx package is required to use the io client")
+  }
+
   p <- processx::process$new(
     command = command,
     args = args,
@@ -41,6 +45,10 @@ new_client_http <- function(
 ) {
   stopifnot(is.character(endpoint), length(endpoint) == 1)
   stopifnot(!missing(name), is.character(name), length(name) == 1)
+
+  if (!requireNamespace("httr2", quietly = TRUE)) {
+    stop("The httr2 package is required to use the http client")
+  }
 
   r <- httr2::request(endpoint) |>
     httr2::req_method("POST")

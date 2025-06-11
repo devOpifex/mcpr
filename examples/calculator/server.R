@@ -38,5 +38,5 @@ mcp <- new_server(
 mcp <- add_capability(mcp, calculator)
 
 # Start the server (listening on stdin/stdout)
-#serve_io(mcp)
-serve_http(mcp, path = "/mcp")
+serve_io(mcp)
+#serve_http(mcp, path = "/mcp")

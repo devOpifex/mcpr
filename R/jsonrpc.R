@@ -9,23 +9,30 @@ JSONRPC_INTERNAL_ERROR <- -32603
 #' Convert an R object to JSON
 #'
 #' @param x R object to convert to JSON
-#' @param ... Additional arguments passed to jsonlite::toJSON
+#' @param ... Additional arguments passed to yyjsonr::write_json_str
 #'
 #' @return JSON string
 #' @keywords internal
 to_json <- function(x, ...) {
-  jsonlite::toJSON(x, auto_unbox = TRUE, ...)
+  yyjsonr::write_json_str(x, list(auto_unbox = TRUE), ...)
 }
 
 #' Parse JSON to an R object
 #'
 #' @param json JSON string to parse
-#' @param ... Additional arguments passed to jsonlite::fromJSON
+#' @param ... Additional arguments passed to yyjsonr::read_json_str
 #'
 #' @return R object
 #' @keywords internal
 from_json <- function(json, ...) {
-  jsonlite::fromJSON(json, simplifyVector = FALSE, ...)
+  yyjsonr::read_json_str(
+    json,
+    opts = list(
+      arr_of_objs_to_df = FALSE,
+      obj_of_arrs_to_df = FALSE
+    ),
+    ...
+  )
 }
 
 #' Create a JSON-RPC 2.0 error response

@@ -43,7 +43,8 @@ reference:
   desc: >
     Functions for connecting to and interacting with MCP servers
   contents:
-    - new_client
+    - new_client_io
+    - new_client_http
     - initialize
     - tools_list
     - tools_call
