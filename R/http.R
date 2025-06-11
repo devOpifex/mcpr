@@ -1,7 +1,6 @@
 #' Serve an MCP server over HTTP using ambiorix
 #'
 #' @param mcp An MCP server object
-#' @param host Host to bind to, defaults to "127.0.0.1"
 #' @param port Port to listen on, defaults to 3000
 #' @param path Path to serve the MCP endpoint, defaults to "/mcp"
 #'
@@ -9,9 +8,8 @@
 #' @export
 serve_http <- function(
   mcp,
-  host = "127.0.0.1",
   port = Sys.getenv("SHINY_PORT", 3000),
-  path = "/"
+  path = "/mcp"
 ) {
   # Validate MCP object
   if (missing(mcp)) {
@@ -44,17 +42,8 @@ serve_http <- function(
   # Define MCP endpoint
   app$post(path, function(req, res) {
     # Get request body
-    body <- req$body
-
-    if (!length(body) || body == "") {
-      error_response <- create_error(
-        JSONRPC_INVALID_REQUEST,
-        "Empty request body"
-      )
-      res$set_header("Content-Type", "application/json")
-      res$send(to_json(error_response))
-      return()
-    }
+    body <- ambiorix::parse_json(req) |>
+      yyjsonr::write_json_str(opts = list(auto_unbox = TRUE))
 
     # Process the request through JSON-RPC
     response <- tryCatch(
@@ -90,8 +79,7 @@ serve_http <- function(
   })
 
   # Start the server
-  message("Starting MCP HTTP server at http://", host, ":", port, path)
-  app$start(host = host, port = port)
+  app$start(port = port)
 
   invisible()
 }

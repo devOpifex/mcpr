@@ -4,12 +4,10 @@
 \alias{serve_http}
 \title{Serve an MCP server over HTTP using ambiorix}
 \usage{
-serve_http(mcp, host = "127.0.0.1", port = 3000, path = "/")
+serve_http(mcp, port = Sys.getenv("SHINY_PORT", 3000), path = "/mcp")
 }
 \arguments{
 \item{mcp}{An MCP server object}
-
-\item{host}{Host to bind to, defaults to "127.0.0.1"}
 
 \item{port}{Port to listen on, defaults to 3000}
 

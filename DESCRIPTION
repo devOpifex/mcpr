@@ -27,6 +27,7 @@ Suggests:
     ambiorix,
     processx,
     knitr,
-    rmarkdown
+    rmarkdown,
+    yyjsonr
 URL: https://mcpr.opifex.org/, https://github.com/devOpifex/mcpr
 VignetteBuilder: knitr

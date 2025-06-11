@@ -1,4 +1,4 @@
-library(mcpr)
+devtools::load_all()
 
 # Create a calculator tool
 calculator <- new_tool(
@@ -38,4 +38,5 @@ mcp <- new_server(
 mcp <- add_capability(mcp, calculator)
 
 # Start the server (listening on stdin/stdout)
-serve_io(mcp)
+#serve_io(mcp)
+serve_http(mcp, path = "/mcp")

@@ -11,6 +11,7 @@
 - Renamed `new_mcp()` (deprecated) to `new_server()` for clarity
 - Added example implementations for both server and client
 - Added client usage vignette
+- Fix major issue with `serve_http()`
 
 # mcpr 0.0.0
 
