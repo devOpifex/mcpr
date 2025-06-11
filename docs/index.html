@@ -130,18 +130,34 @@
 <span>  <span class="fu"><a href="reference/response.html">response_file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/file.txt"</span>, package <span class="op">=</span> <span class="st">"mcpr"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="reference/response.html">response_resource</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/resource.json"</span>, package <span class="op">=</span> <span class="st">"mcpr"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>You can also serve via HTTP transport with <code>serve_http</code>.</p>
+<p>You can also serve via HTTP transport with <code>serve_http</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Serve via HTTP on port 3000</span></span>
+<span><span class="fu"><a href="reference/serve_http.html">serve_http</a></span><span class="op">(</span><span class="va">mcp</span>, port <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span></span></code></pre></div>
 <p>See the <a href="https://mcpr.opifex.org/articles/get-started">Get Started</a> guide for more information.</p>
 </div>
 <div class="section level3">
 <h3 id="client">Client<a class="anchor" aria-label="anchor" href="#client"></a>
 </h3>
 <p>Here’s a simple example of using the client to interact with an MCP server:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mcpr.opifex.org/">mcpr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create a client that connects to an MCP server</span></span>
-<span><span class="va">client</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_client.html">new_client</a></span><span class="op">(</span><span class="st">"http://localhost:8080"</span><span class="op">)</span></span>
+<span><span class="co"># For HTTP transport</span></span>
+<span><span class="va">client</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/client.html">new_client_http</a></span><span class="op">(</span></span>
+<span>  <span class="st">"http://localhost:8080"</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"calculator"</span>,</span>
+<span>  version <span class="op">=</span> <span class="st">"1.0.0"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Or for standard IO transport</span></span>
+<span><span class="co"># client &lt;- new_client_io(</span></span>
+<span><span class="co">#   "Rscript",</span></span>
+<span><span class="co">#   "/path/to/server.R",</span></span>
+<span><span class="co">#   name = "calculator",</span></span>
+<span><span class="co">#   version = "1.0.0"</span></span>
+<span><span class="co"># )</span></span>
 <span></span>
 <span><span class="co"># List available tools</span></span>
 <span><span class="va">tools</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tools_list.html">tools_list</a></span><span class="op">(</span><span class="va">client</span><span class="op">)</span></span>
@@ -179,34 +195,34 @@
 <h3 id="claude-code-integration">Claude Code Integration<a class="anchor" aria-label="anchor" href="#claude-code-integration"></a>
 </h3>
 <p>To use your MCP server with Claude Code, see the <a href="https://docs.anthropic.com/en/docs/claude-code/tutorials#set-up-model-context-protocol-mcp" class="external-link">documentation</a></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">claude</span> mcp add r-calculator <span class="at">--</span> Rscript /path/to/calculator_server.R</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">claude</span> mcp add r-calculator <span class="at">--</span> Rscript /path/to/calculator_server.R</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="cursor-integration">Cursor Integration<a class="anchor" aria-label="anchor" href="#cursor-integration"></a>
 </h3>
 <p>To integrate with Cursor see the <a href="https://docs.cursor.com/context/model-context-protocol" class="external-link">documentation</a></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="dt">"customCommands"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>    <span class="dt">"r-calculator"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>      <span class="dt">"command"</span><span class="fu">:</span> <span class="st">"Rscript 'path/to/calculator_server.R'"</span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="dt">"customCommands"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>    <span class="dt">"r-calculator"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>      <span class="dt">"command"</span><span class="fu">:</span> <span class="st">"Rscript 'path/to/calculator_server.R'"</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="vs-code-agent-mode-integration">VS Code Agent Mode Integration<a class="anchor" aria-label="anchor" href="#vs-code-agent-mode-integration"></a>
 </h3>
 <p>To integrate with VS Code Agent mode see the <a href="https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_add-an-mcp-server-to-your-user-settings" class="external-link">documentation</a></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="er">"mcp":</span> <span class="fu">{</span></span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>        <span class="dt">"servers"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>            <span class="dt">"my-mcp-server-calculator"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>                <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"stdio"</span><span class="fu">,</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>                <span class="dt">"command"</span><span class="fu">:</span> <span class="st">"Rscript"</span><span class="fu">,</span></span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>                <span class="dt">"args"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>                    <span class="st">"path/to/calculator_server.R"</span></span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>                <span class="ot">]</span></span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>            <span class="fu">}</span></span>
-<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="er">"mcp":</span> <span class="fu">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>        <span class="dt">"servers"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>            <span class="dt">"my-mcp-server-calculator"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>                <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"stdio"</span><span class="fu">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>                <span class="dt">"command"</span><span class="fu">:</span> <span class="st">"Rscript"</span><span class="fu">,</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>                <span class="dt">"args"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>                    <span class="st">"path/to/calculator_server.R"</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>                <span class="ot">]</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p>More integrations in the <a href="https://mcpr.opifex.org/articles/client-integration">docs</a></p>
 </div>
 </div>

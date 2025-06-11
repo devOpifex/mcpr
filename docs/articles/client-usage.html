@@ -97,7 +97,7 @@ useful for testing or when you need to communicate with a local MCP
 implementation:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a client that connects to a local process</span></span>
-<span><span class="va">client</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_client.html">new_client</a></span><span class="op">(</span></span>
+<span><span class="va">client</span> <span class="op">&lt;-</span> <span class="fu">new_client</span><span class="op">(</span></span>
 <span>  <span class="st">"Rscript"</span>,                                <span class="co"># Command to run</span></span>
 <span>  <span class="st">"path/to/your/server.R"</span>,                  <span class="co"># Path to the server script</span></span>
 <span>  name <span class="op">=</span> <span class="st">"calculator"</span>,                      <span class="co"># Optional name for the server</span></span>
@@ -110,7 +110,7 @@ implementation:</p>
 <p>You can also connect to an MCP server running over HTTP:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a client that connects to an HTTP server</span></span>
-<span><span class="va">http_client</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_client.html">new_client</a></span><span class="op">(</span><span class="st">"Rscript"</span>, <span class="st">"path/to/your/server.R"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">http_client</span> <span class="op">&lt;-</span> <span class="fu">new_client</span><span class="op">(</span><span class="st">"Rscript"</span>, <span class="st">"path/to/your/server.R"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -192,7 +192,7 @@ specific parameters:</p>
 calculator server and performing operations:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a client</span></span>
-<span><span class="va">client</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_client.html">new_client</a></span><span class="op">(</span></span>
+<span><span class="va">client</span> <span class="op">&lt;-</span> <span class="fu">new_client</span><span class="op">(</span></span>
 <span>  <span class="st">"Rscript"</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/calculator/server.R"</span>, package <span class="op">=</span> <span class="st">"mcpr"</span><span class="op">)</span>,</span>
 <span>  name <span class="op">=</span> <span class="st">"calculator"</span>,</span>
