@@ -10,7 +10,7 @@
 serve_http <- function(
   mcp,
   host = "127.0.0.1",
-  port = 3000,
+  port = Sys.getenv("SHINY_PORT", 3000),
   path = "/"
 ) {
   # Validate MCP object
@@ -28,6 +28,8 @@ serve_http <- function(
       "The 'ambiorix' package is required for HTTP transport. Please install it with install.packages('ambiorix')"
     )
   }
+
+  port <- as.integer(port)
 
   # Create a new ambiorix app
   app <- ambiorix::Ambiorix$new()
