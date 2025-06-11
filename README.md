@@ -79,7 +79,12 @@ response(
 )
 ```
 
-You can also serve via HTTP transport with `serve_http`.
+You can also serve via HTTP transport with `serve_http`:
+
+```r
+# Serve via HTTP on port 3000
+serve_http(mcp, port = 3000)
+```
 
 See the [Get Started](https://mcpr.opifex.org/articles/get-started) guide for more information.
 
@@ -91,7 +96,20 @@ Here's a simple example of using the client to interact with an MCP server:
 library(mcpr)
 
 # Create a client that connects to an MCP server
-client <- new_client("http://localhost:8080")
+# For HTTP transport
+client <- new_client_http(
+  "http://localhost:8080",
+  name = "calculator",
+  version = "1.0.0"
+)
+
+# Or for standard IO transport
+# client <- new_client_io(
+#   "Rscript",
+#   "/path/to/server.R",
+#   name = "calculator",
+#   version = "1.0.0"
+# )
 
 # List available tools
 tools <- tools_list(client)
