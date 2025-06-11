@@ -85,9 +85,11 @@ result <- tools_call(
   list(
     name = "math_calculator",
     params = list(
-      operation = "add",
-      a = 5,
-      b = 3
+      name = "add",
+      arguments = list(
+        a = 10,
+        b = 5
+      )
     )
   )
 )
