@@ -39,14 +39,6 @@ serve_http <- function(
     res$set_header("Access-Control-Allow-Origin", "*")
     res$set_header("Access-Control-Allow-Methods", "POST, OPTIONS")
     res$set_header("Access-Control-Allow-Headers", "Content-Type")
-
-    # Handle preflight OPTIONS requests
-    if (req$method == "OPTIONS") {
-      res$send("")
-      return(FALSE) # Stop processing
-    }
-
-    TRUE # Continue processing
   })
 
   # Define MCP endpoint
