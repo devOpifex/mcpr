@@ -118,11 +118,13 @@ print(tools)
 # Call a tool
 result <- tools_call(
   client,
-  name = "calculator",
   params = list(
-    operation = "add",
-    a = 5,
-    b = 3
+    name = "calculator",
+    arguments = list(
+      operation = "add",
+      a = 5,
+      b = 3
+    )
   )
 )
 print(result)
@@ -136,7 +138,12 @@ resources <- resources_list(client)
 print(resources)
 
 # Read a resource
-resource_content <- resources_read(client, "example-resource")
+resource_content <- resources_read(
+  client,
+  params = list(
+    name = "example-resource"
+  )
+)
 print(resource_content)
 ```
 
