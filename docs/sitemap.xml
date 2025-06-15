@@ -12,11 +12,17 @@
 <url><loc>https://mcpr.opifex.org/reference/JSONRPC_PARSE_ERROR.html</loc></url>
 <url><loc>https://mcpr.opifex.org/reference/add_capability.html</loc></url>
 <url><loc>https://mcpr.opifex.org/reference/client.html</loc></url>
+<url><loc>https://mcpr.opifex.org/reference/create_ellmer_handler.html</loc></url>
+<url><loc>https://mcpr.opifex.org/reference/create_ellmer_type.html</loc></url>
+<url><loc>https://mcpr.opifex.org/reference/create_ellmer_types.html</loc></url>
 <url><loc>https://mcpr.opifex.org/reference/create_error.html</loc></url>
 <url><loc>https://mcpr.opifex.org/reference/create_response.html</loc></url>
+<url><loc>https://mcpr.opifex.org/reference/extract_mcp_result.html</loc></url>
 <url><loc>https://mcpr.opifex.org/reference/from_json.html</loc></url>
 <url><loc>https://mcpr.opifex.org/reference/index.html</loc></url>
 <url><loc>https://mcpr.opifex.org/reference/initialize.html</loc></url>
+<url><loc>https://mcpr.opifex.org/reference/mcpr_clients_to_ellmer_tools.html</loc></url>
+<url><loc>https://mcpr.opifex.org/reference/mcpr_to_ellmer_tools.html</loc></url>
 <url><loc>https://mcpr.opifex.org/reference/new_client.html</loc></url>
 <url><loc>https://mcpr.opifex.org/reference/new_prompt.html</loc></url>
 <url><loc>https://mcpr.opifex.org/reference/new_property.html</loc></url>
@@ -36,6 +42,7 @@
 <url><loc>https://mcpr.opifex.org/reference/property_object.html</loc></url>
 <url><loc>https://mcpr.opifex.org/reference/property_string.html</loc></url>
 <url><loc>https://mcpr.opifex.org/reference/read.html</loc></url>
+<url><loc>https://mcpr.opifex.org/reference/register_mcpr_tools.html</loc></url>
 <url><loc>https://mcpr.opifex.org/reference/resources_list.html</loc></url>
 <url><loc>https://mcpr.opifex.org/reference/resources_read.html</loc></url>
 <url><loc>https://mcpr.opifex.org/reference/response.html</loc></url>

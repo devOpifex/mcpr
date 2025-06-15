@@ -76,3 +76,15 @@ reference:
     - response
     - matches("^response_")
 
+- title: "Ellmer Integration"
+  desc: >
+    Functions for integrating with the Ellmer package
+  contents:
+    - register_mcpr_tools
+    - create_ellmer_handler
+    - create_ellmer_type
+    - create_ellmer_types
+    - extract_mcp_result
+    - mcpr_clients_to_ellmer_tools
+    - mcpr_to_ellmer_tools
+
