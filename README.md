@@ -153,6 +153,10 @@ print(resource_content)
 Use the `register_mcpr_tools` function to convert MCPR tools to ellmer tools and 
 register them with an ellmer chat session.
 
+Note that this integration is not standard since ellmer does not currently support
+MCPs. Here we re-recreate the tools obtained via `tools_list` as ellmer tools which
+themselves call `tools_call` to execute the tool.
+
 ```r
 # Create an MCPR client connected to the calculator server
 client <- new_client_io(
