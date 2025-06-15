@@ -15,3 +15,4 @@ An ellmer type function call
 \description{
 Create an ellmer type function for a specific MCP property
 }
+\keyword{internal}

@@ -6,6 +6,7 @@
 #'
 #' @param client An mcpr client object
 #' @return A list of ellmer-compatible tool functions
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{
@@ -92,6 +93,7 @@ register_mcpr_tools <- function(chat, client) {
 #'
 #' @param schema The MCP schema object
 #' @return A list of ellmer type function calls for each property
+#' @keywords internal
 create_ellmer_types <- function(schema) {
   types <- list()
 
@@ -113,6 +115,7 @@ create_ellmer_types <- function(schema) {
 #'
 #' @param prop The MCP property
 #' @return An ellmer type function call
+#' @keywords internal
 create_ellmer_type <- function(prop) {
   # Get the description
   description <- if (!is.null(prop$description)) {
@@ -152,6 +155,7 @@ create_ellmer_type <- function(prop) {
 #' @param tool_name The name of the MCP tool
 #' @param input_schema The tool's input schema
 #' @return A function that can be used as an ellmer tool handler
+#' @keywords internal
 create_ellmer_handler <- function(client, tool_name, input_schema) {
   # Get parameter names from the schema
 
@@ -191,6 +195,7 @@ create_ellmer_handler <- function(client, tool_name, input_schema) {
 #'
 #' @param result The MCP result object
 #' @return A value in ellmer-compatible format
+#' @keywords internal
 extract_mcp_result <- function(result) {
   # Add debugging
   if (is.character(result) || is.numeric(result) || is.logical(result)) {
@@ -242,6 +247,7 @@ extract_mcp_result <- function(result) {
 #'
 #' @param ... One or more mcpr client objects
 #' @return A list of ellmer-compatible tool functions from all clients
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{

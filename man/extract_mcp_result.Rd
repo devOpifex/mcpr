@@ -15,3 +15,4 @@ A value in ellmer-compatible format
 \description{
 Extract and convert an MCP result to ellmer-compatible format
 }
+\keyword{internal}

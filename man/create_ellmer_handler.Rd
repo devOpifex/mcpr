@@ -19,3 +19,4 @@ A function that can be used as an ellmer tool handler
 \description{
 Create an ellmer handler function for an MCP tool
 }
+\keyword{internal}

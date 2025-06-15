@@ -30,3 +30,4 @@ chat <- ellmer::chat_claude()
 chat$set_tools(ellmer_tools)
 }
 }
+\keyword{internal}

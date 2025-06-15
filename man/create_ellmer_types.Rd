@@ -15,3 +15,4 @@ A list of ellmer type function calls for each property
 \description{
 Create ellmer type functions from MCP schema properties
 }
+\keyword{internal}

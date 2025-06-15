@@ -3,7 +3,7 @@ default: install
 document:
 	R -s -e "devtools::document()"
 
-check: document
+check: site
 	R -s -e "devtools::check(document = FALSE)"
 
 install: check

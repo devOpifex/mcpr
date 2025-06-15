@@ -202,7 +202,7 @@
 <h2 id="ellmer-integrations">ellmer integrations<a class="anchor" aria-label="anchor" href="#ellmer-integrations"></a>
 </h2>
 <p>Use the <code>register_mcpr_tools</code> function to convert MCPR tools to ellmer tools and register them with an ellmer chat session.</p>
-<p>Note that this integration is not standard since ellmer does not currently support MCPs. Here we re-recreate the tools obtained via <code>tools_list</code> as ellmer tools which themselves call <code>tools_call</code> to execute the tool.</p>
+<p>Note that this integration is not standard since ellmer does not currently support MCPs. Here we re-recreate the tools obtained via <code>tools_list</code> as ellmer tools which themselves call <code>tools_call</code> to execute the tool. The tools are currently not namesppaced.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create an MCPR client connected to the calculator server</span></span>
 <span><span class="va">client</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/client.html">new_client_io</a></span><span class="op">(</span></span>
