@@ -9,6 +9,7 @@ reference:
   contents:
     - new_mcp
     - add_capability
+    - register_mcpr_tools
 
 - title: "Capability Creation"
   desc: >
@@ -55,20 +56,6 @@ reference:
     - read
     - write
 
-- title: "JSON-RPC Functions"
-  desc: >
-    Functions for handling JSON-RPC requests and responses
-  contents:
-    - process_request
-    - process_batch
-    - parse_request
-    - validate_request
-    - create_response
-    - create_error
-    - JSONRPC_PARSE_ERROR
-    - from_json
-    - to_json
-
 - title: "Response Functions"
   desc: >
     Functions for creating various response types
@@ -81,10 +68,4 @@ reference:
     Functions for integrating with the Ellmer package
   contents:
     - register_mcpr_tools
-    - create_ellmer_handler
-    - create_ellmer_type
-    - create_ellmer_types
-    - extract_mcp_result
-    - mcpr_clients_to_ellmer_tools
-    - mcpr_to_ellmer_tools
 

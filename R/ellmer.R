@@ -6,7 +6,6 @@
 #'
 #' @param client An mcpr client object
 #' @return A list of ellmer-compatible tool functions
-#' @export
 #'
 #' @examples
 #' \dontrun{
@@ -243,7 +242,6 @@ extract_mcp_result <- function(result) {
 #'
 #' @param ... One or more mcpr client objects
 #' @return A list of ellmer-compatible tool functions from all clients
-#' @export
 #'
 #' @examples
 #' \dontrun{

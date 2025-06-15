@@ -17,3 +17,4 @@ JSON response text or NULL for notifications
 \description{
 Parse and process a JSON-RPC 2.0 request
 }
+\keyword{internal}

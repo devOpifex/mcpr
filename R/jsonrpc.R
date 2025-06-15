@@ -153,7 +153,7 @@ validate_request <- function(request) {
 #' @param mcp MCP server object
 #'
 #' @return Response object or NULL for notifications
-#' @export
+#' @keywords internal
 process_request <- function(request, mcp) {
   # First validate the request
   validation_error <- validate_request(request)
@@ -235,7 +235,7 @@ process_notification <- function(request, mcp) {
 #' @param mcp MCP server object
 #'
 #' @return List of response objects
-#' @export
+#' @keywords internal
 process_batch <- function(batch_requests, mcp) {
   # Validate batch structure
   if (!is.list(batch_requests) || length(batch_requests) == 0) {
@@ -267,7 +267,7 @@ process_batch <- function(batch_requests, mcp) {
 #' @param mcp MCP server object
 #'
 #' @return JSON response text or NULL for notifications
-#' @export
+#' @keywords internal
 parse_request <- function(json_text, mcp) {
   tryCatch(
     {

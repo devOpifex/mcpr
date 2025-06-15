@@ -17,3 +17,4 @@ List of response objects
 \description{
 Process batch JSON-RPC 2.0 requests
 }
+\keyword{internal}

@@ -17,3 +17,4 @@ Response object or NULL for notifications
 \description{
 Process a JSON-RPC 2.0 request
 }
+\keyword{internal}
