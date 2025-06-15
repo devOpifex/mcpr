@@ -218,6 +218,7 @@ To integrate with VS Code Agent mode see the [documentation](https://code.visual
                     "path/to/calculator_server.R"
                 ]
             }
+      }
 }
 ```
 More integrations in the [docs](https://mcpr.opifex.org/articles/client-integration)
