@@ -5,7 +5,6 @@
 #' and creates wrapper functions that call these tools through the MCPR protocol.
 #'
 #' @param client An mcpr client object
-#' @param prefix Optional prefix to add to tool names
 #' @return A list of ellmer-compatible tool functions
 #' @export
 #'
@@ -21,7 +20,7 @@
 #' chat <- ellmer::chat_claude()
 #' chat$set_tools(ellmer_tools)
 #' }
-mcpr_to_ellmer_tools <- function(client, prefix = NULL) {
+mcpr_to_ellmer_tools <- function(client) {
   # Get all available tools from the client
   tools_response <- tools_list(client)
 
@@ -38,18 +37,14 @@ mcpr_to_ellmer_tools <- function(client, prefix = NULL) {
   # Convert each tool to ellmer format
   ellmer_tools <- list()
   for (tool in tools) {
-    # Create the tool name, possibly with prefix
-    tool_name <- if (!is.null(prefix)) {
-      paste0(prefix, "__", tool$name)
-    } else {
-      tool$name
-    }
+    # Use the tool name directly
+    tool_name <- tool$name
 
     # Create the handler function
     handler <- create_ellmer_handler(client, tool$name, tool$inputSchema)
 
     # Get the property types for ellmer
-    prop_types <- create_ellmer_types(tool$input_schema)
+    prop_types <- create_ellmer_types(tool$inputSchema)
 
     # Construct the tool call with dynamic arguments
     tool_call_args <- c(
@@ -72,6 +67,26 @@ mcpr_to_ellmer_tools <- function(client, prefix = NULL) {
   }
 
   return(ellmer_tools)
+}
+
+#' Register MCPR tools with an ellmer chat
+#'
+#' This function registers tools from an MCPR client with an ellmer chat instance.
+#'
+#' @param chat An ellmer chat object
+#' @param client An mcpr client object
+#' @return The chat object (invisibly)
+#' @export
+register_mcpr_tools <- function(chat, client) {
+  stopifnot(!missing(chat), !missing(client))
+  
+  # Get ellmer tools from the client
+  ellmer_tools <- mcpr_to_ellmer_tools(client)
+  
+  # Register the tools with the chat
+  chat$set_tools(ellmer_tools)
+  
+  return(invisible(chat))
 }
 
 #' Create ellmer type functions from MCP schema properties
@@ -144,8 +159,6 @@ create_ellmer_handler <- function(client, tool_name, input_schema) {
   # Get parameter names for functions with parameters
   param_names <- names(input_schema$properties)
 
-  print(param_names)
-
   # For functions with parameters, create them dynamically
   args_str <- paste(param_names, collapse = ", ")
   params_list_str <- paste(
@@ -164,14 +177,12 @@ create_ellmer_handler <- function(client, tool_name, input_schema) {
     tools_call(client, list(
       name = tool_name,
       arguments = args
-    ))
+    ), id = mcpr:::generate_id())
   }
   ",
     args_str,
     params_list_str
   )
-
-  cat(fn_body)
 
   # Evaluate the function definition
   eval(parse(text = fn_body))
@@ -231,7 +242,6 @@ extract_mcp_result <- function(result) {
 #' multiple MCP servers into a single ellmer session.
 #'
 #' @param ... One or more mcpr client objects
-#' @param prefixes Optional prefixes for each client, must match the number of clients
 #' @return A list of ellmer-compatible tool functions from all clients
 #' @export
 #'
@@ -241,43 +251,20 @@ extract_mcp_result <- function(result) {
 #' client1 <- new_client_io("path/to/server1")
 #' client2 <- new_client_io("path/to/server2")
 #'
-#' # Convert all tools with prefixes
-#' ellmer_tools <- mcpr_clients_to_ellmer_tools(
-#'   client1, client2,
-#'   prefixes = c("calc", "image")
-#' )
+#' # Convert all tools
+#' ellmer_tools <- mcpr_clients_to_ellmer_tools(client1, client2)
 #'
 #' # Use with ellmer
 #' chat <- ellmer::chat_claude()
 #' chat$set_tools(ellmer_tools)
 #' }
-mcpr_clients_to_ellmer_tools <- function(..., prefixes = NULL) {
+mcpr_clients_to_ellmer_tools <- function(...) {
   clients <- list(...)
-
-  # Validate prefixes if provided
-  if (!is.null(prefixes)) {
-    if (length(prefixes) != length(clients)) {
-      stop("Number of prefixes must match number of clients")
-    }
-  } else {
-    # Generate default prefixes based on client names
-    prefixes <- vapply(
-      clients,
-      function(client) {
-        if (!is.null(client$name)) {
-          client$name
-        } else {
-          NULL
-        }
-      },
-      character(1)
-    )
-  }
 
   # Convert each client's tools
   all_tools <- list()
   for (i in seq_along(clients)) {
-    client_tools <- mcpr_to_ellmer_tools(clients[[i]], prefixes[[i]])
+    client_tools <- mcpr_to_ellmer_tools(clients[[i]])
     all_tools <- c(all_tools, client_tools)
   }
 

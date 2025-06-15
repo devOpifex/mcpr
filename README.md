@@ -125,7 +125,8 @@ result <- tools_call(
       a = 5,
       b = 3
     )
-  )
+  ),
+  id = 1L
 )
 print(result)
 
