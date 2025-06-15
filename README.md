@@ -125,7 +125,8 @@ result <- tools_call(
       a = 5,
       b = 3
     )
-  )
+  ),
+  id = 1L
 )
 print(result)
 
@@ -145,6 +146,36 @@ resource_content <- resources_read(
   )
 )
 print(resource_content)
+```
+
+## ellmer integrations
+
+Use the `register_mcpr_tools` function to convert MCPR tools to ellmer tools and 
+register them with an ellmer chat session.
+
+Note that this integration is not standard since ellmer does not currently support
+MCPs. Here we re-recreate the tools obtained via `tools_list` as ellmer tools which
+themselves call `tools_call` to execute the tool.
+
+```r
+# Create an MCPR client connected to the calculator server
+client <- new_client_io(
+  "Rscript",
+  "path/to/server.R",
+  name = "calculator",
+  version = "1.0.0"
+)
+
+# Create a Claude chat session with ellmer
+chat <- ellmer::chat_anthropic()
+
+## Convert MCPR tools to ellmer tools and register them with the chat
+chat <- register_mcpr_tools(chat, client)
+
+## Try using the tools in a chat
+chat$chat(
+  "Subtract 2 from 44"
+)
 ```
 
 ## Using mcpr
