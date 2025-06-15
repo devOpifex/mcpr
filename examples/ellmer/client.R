@@ -27,7 +27,7 @@ res <- tools_call(
 chat <- ellmer::chat_anthropic()
 
 ## Convert MCPR tools to ellmer tools and register them with the chat
-chat$set_tools(mcpr_to_ellmer_tools(client))
+chat <- register_mcpr_tools(chat, client)
 
 ## Try using the tools in a chat
 chat$chat(

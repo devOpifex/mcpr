@@ -79,14 +79,14 @@ mcpr_to_ellmer_tools <- function(client) {
 #' @export
 register_mcpr_tools <- function(chat, client) {
   stopifnot(!missing(chat), !missing(client))
-  
+
   # Get ellmer tools from the client
   ellmer_tools <- mcpr_to_ellmer_tools(client)
-  
+
   # Register the tools with the chat
   chat$set_tools(ellmer_tools)
-  
-  return(invisible(chat))
+
+  invisible(chat)
 }
 
 #' Create ellmer type functions from MCP schema properties
@@ -270,3 +270,4 @@ mcpr_clients_to_ellmer_tools <- function(...) {
 
   return(all_tools)
 }
+
