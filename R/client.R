@@ -29,11 +29,11 @@ new_client_io <- function(
     stdout = "|"
   )
 
-  structure(
+  new_client(
     p,
     name = name,
     version = version,
-    class = c("client_io", "client", class(p))
+    type = "io"
   )
 }
 
@@ -53,10 +53,40 @@ new_client_http <- function(
   r <- httr2::request(endpoint) |>
     httr2::req_method("POST")
 
-  structure(
+  new_client(
     r,
     name = name,
     version = version,
-    class = c("client_http", "client", class(r))
+    type = "http"
   )
+}
+
+new_client <- function(obj, name, version, type = c("io", "http")) {
+  type <- match.arg(type)
+  cls <- sprintf("client_%s", type)
+
+  structure(
+    obj,
+    name = name,
+    version = version,
+    class = c(cls, "client", class(obj))
+  )
+}
+
+#' Get the name of a client
+#'
+#' @param x A client object
+#'
+#' @return The name of the client
+#' @export
+get_name <- function(x) UseMethod("get_name")
+
+#' @export
+get_name.client <- function(x) {
+  attr(x, "name")
+}
+
+#' @export
+get_name.server <- function(x) {
+  attr(x, "name")
 }
