@@ -157,7 +157,11 @@ print(resource_content)
 Now supports ellmer tools, you can use ellmer's or mcpr's tools,
 interchangeably.
 
+See the example below, taken from the
+[ellmer documentation](https://ellmer.tidyverse.org/articles/tool-calling.html#defining-a-tool-function)
+
 ```r
+# create an ellmer tool
 current_time <- ellmer::tool(
   \(tz = "UTC") {
     format(Sys.time(), tz = tz, usetz = TRUE)
@@ -177,7 +181,6 @@ mcp <- new_server(
 
 mcp <- add_capability(mcp, current_time)
 
-# Start the server (listening on stdin/stdout)
 serve_io(mcp)
 ```
 
