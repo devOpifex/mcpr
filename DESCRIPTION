@@ -1,6 +1,6 @@
 Package: mcpr
 Title: Model Context Protocol for R
-Version: 0.0.1.9000
+Version: 0.0.2.9000
 Authors@R: 
   c(
     person(given = "John",
@@ -11,7 +11,7 @@ Authors@R:
            role = c("cph", "fnd"),
            email = "john@opifex.org")
   )
-Description: Create, run, and connect to Model Context Protocol (MCP) servers in R. The package
+Description: Create, run, and connect to Model Context Protocol (MCP) servers, and clients in R. The package
     provides a framework for implementing MCP-compatible servers with tools, 
     resources, and prompts capabilities, as well as client functionality to interact with
     MCP servers. It includes a JSON-RPC 2.0 implementation for communication between 
