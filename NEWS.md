@@ -1,3 +1,7 @@
+# mcpr 0.0.2
+
+- Added support for `ellmer::tool`
+
 # mcpr 0.0.1
 
 ## Major Changes
