@@ -179,6 +179,7 @@ mcp <- new_server(
   version = "1.0.0"
 )
 
+# register ellmer tool with mcpr server
 mcp <- add_capability(mcp, current_time)
 
 serve_io(mcp)
