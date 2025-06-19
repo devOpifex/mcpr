@@ -31,5 +31,5 @@ chat <- register_mcpr_tools(chat, client)
 
 ## Try using the tools in a chat
 chat$chat(
-  "Subtract 2 from 44"
+  "What is the current time in the US/Eastern timezone?",
 )
