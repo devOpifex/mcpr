@@ -201,27 +201,29 @@
 <div class="section level2">
 <h2 id="ellmer-integration">ellmer integration<a class="anchor" aria-label="anchor" href="#ellmer-integration"></a>
 </h2>
-<p>Use the <code>register_mcpr_tools</code> function to convert MCPR tools to ellmer tools and register them with an ellmer chat session.</p>
-<p>Note that this integration is not standard since ellmer does not currently support MCPs. Here we re-recreate the tools obtained via <code>tools_list</code> as ellmer tools which themselves call <code>tools_call</code> to execute the tool. The tools are currently not namespaced.</p>
+<p>Now supports ellmer tools, you can use ellmer’s or mcpr’s tools, interchangeably.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Create an MCPR client connected to the calculator server</span></span>
-<span><span class="va">client</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/client.html">new_client_io</a></span><span class="op">(</span></span>
-<span>  <span class="st">"Rscript"</span>,</span>
-<span>  <span class="st">"path/to/server.R"</span>,</span>
-<span>  name <span class="op">=</span> <span class="st">"calculator"</span>,</span>
+<code class="sourceCode R"><span><span class="va">current_time</span> <span class="op">&lt;-</span> <span class="fu">ellmer</span><span class="fu">::</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/tool.html" class="external-link">tool</a></span><span class="op">(</span></span>
+<span>  \<span class="op">(</span><span class="va">tz</span> <span class="op">=</span> <span class="st">"UTC"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, tz <span class="op">=</span> <span class="va">tz</span>, usetz <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span>,</span>
+<span>  <span class="st">"Gets the current time in the given time zone."</span>,</span>
+<span>  tz <span class="op">=</span> <span class="fu">ellmer</span><span class="fu">::</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_string</a></span><span class="op">(</span></span>
+<span>    <span class="st">"The time zone to get the current time in. Defaults to `\"UTC\"`."</span>,</span>
+<span>    required <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mcp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_server.html">new_server</a></span><span class="op">(</span></span>
+<span>  name <span class="op">=</span> <span class="st">"R Calculator Server"</span>,</span>
+<span>  description <span class="op">=</span> <span class="st">"A simple calculator server implemented in R"</span>,</span>
 <span>  version <span class="op">=</span> <span class="st">"1.0.0"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Create a Claude chat session with ellmer</span></span>
-<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu">ellmer</span><span class="fu">::</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_anthropic.html" class="external-link">chat_anthropic</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">mcp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/add_capability.html">add_capability</a></span><span class="op">(</span><span class="va">mcp</span>, <span class="va">current_time</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## Convert MCPR tools to ellmer tools and register them with the chat</span></span>
-<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/register_mcpr_tools.html">register_mcpr_tools</a></span><span class="op">(</span><span class="va">chat</span>, <span class="va">client</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Try using the tools in a chat</span></span>
-<span><span class="va">chat</span><span class="op">$</span><span class="fu">chat</span><span class="op">(</span></span>
-<span>  <span class="st">"Subtract 2 from 44"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># Start the server (listening on stdin/stdout)</span></span>
+<span><span class="fu"><a href="reference/serve_io.html">serve_io</a></span><span class="op">(</span><span class="va">mcp</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="using-mcpr">Using mcpr<a class="anchor" aria-label="anchor" href="#using-mcpr"></a>

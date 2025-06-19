@@ -6,3 +6,4 @@
 ^pkgdown$
 ^examples$
 ^\.github$
+^\.claude$

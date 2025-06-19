@@ -30,6 +30,17 @@ calculator <- new_tool(
   }
 )
 
+current_time <- ellmer::tool(
+  \(tz = "UTC") {
+    format(Sys.time(), tz = tz, usetz = TRUE)
+  },
+  "Gets the current time in the given time zone.",
+  tz = ellmer::type_string(
+    "The time zone to get the current time in. Defaults to `\"UTC\"`.",
+    required = FALSE
+  )
+)
+
 # Create an MCP server and add the calculator tool
 mcp <- new_server(
   name = "R Calculator Server",
@@ -38,6 +49,7 @@ mcp <- new_server(
 )
 
 mcp <- add_capability(mcp, calculator)
+mcp <- add_capability(mcp, current_time)
 
 # Start the server (listening on stdin/stdout)
 serve_io(mcp)

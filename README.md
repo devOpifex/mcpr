@@ -154,33 +154,31 @@ print(resource_content)
 
 ## ellmer integration
 
-Use the `register_mcpr_tools` function to convert MCPR tools to ellmer tools and 
-register them with an ellmer chat session.
-
-Note that this integration is not standard since ellmer does not currently support
-MCPs. Here we re-recreate the tools obtained via `tools_list` as ellmer tools which
-themselves call `tools_call` to execute the tool.
-The tools are currently not namespaced.
+Now supports ellmer tools, you can use ellmer's or mcpr's tools,
+interchangeably.
 
 ```r
-# Create an MCPR client connected to the calculator server
-client <- new_client_io(
-  "Rscript",
-  "path/to/server.R",
-  name = "calculator",
+current_time <- ellmer::tool(
+  \(tz = "UTC") {
+    format(Sys.time(), tz = tz, usetz = TRUE)
+  },
+  "Gets the current time in the given time zone.",
+  tz = ellmer::type_string(
+    "The time zone to get the current time in. Defaults to `\"UTC\"`.",
+    required = FALSE
+  )
+)
+
+mcp <- new_server(
+  name = "R Calculator Server",
+  description = "A simple calculator server implemented in R",
   version = "1.0.0"
 )
 
-# Create a Claude chat session with ellmer
-chat <- ellmer::chat_anthropic()
+mcp <- add_capability(mcp, current_time)
 
-## Convert MCPR tools to ellmer tools and register them with the chat
-chat <- register_mcpr_tools(chat, client)
-
-## Try using the tools in a chat
-chat$chat(
-  "Subtract 2 from 44"
-)
+# Start the server (listening on stdin/stdout)
+serve_io(mcp)
 ```
 
 ## Using mcpr
