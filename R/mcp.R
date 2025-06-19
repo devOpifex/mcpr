@@ -274,8 +274,17 @@ new_capability <- function(
 #'
 #' @return The MCP object with the capability added
 #' @export
-add_capability <- function(mcp, capability)
+add_capability <- function(mcp, capability) {
   UseMethod("add_capability", capability)
+}
+
+#' @export
+#' @method add_capability ellmer::ToolDef
+`add_capability.ellmer::ToolDef` <- function(mcp, capability) {
+  capability <- ellmer_to_mcpr_tool(capability)
+  mcp$tools[[capability$name]] <- capability
+  invisible(mcp)
+}
 
 #' @export
 #' @method add_capability tool
@@ -283,6 +292,7 @@ add_capability.tool <- function(mcp, capability) {
   mcp$tools[[capability$name]] <- capability
   invisible(mcp)
 }
+
 
 #' @export
 #' @method add_capability resource

@@ -68,4 +68,5 @@ reference:
     Functions for integrating with the Ellmer package
   contents:
     - register_mcpr_tools
+    - ellmer_to_mcpr_tool
 
