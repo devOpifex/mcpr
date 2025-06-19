@@ -127,26 +127,38 @@ create_ellmer_type <- function(prop) {
   # Create type based on MCP type
   if (prop$type == "string") {
     return(ellmer::type_string(description))
-  } else if (prop$type == "number") {
+  }
+
+  if (prop$type == "number") {
     return(ellmer::type_number(description))
-  } else if (prop$type == "integer") {
+  }
+
+  if (prop$type == "integer") {
     return(ellmer::type_integer(description))
-  } else if (prop$type == "boolean") {
+  }
+
+  if (prop$type == "boolean") {
     return(ellmer::type_boolean(description))
-  } else if (prop$type == "enum") {
+  }
+
+  if (prop$type == "enum") {
     return(ellmer::type_enum(description, prop$enum))
-  } else if (prop$type == "array") {
+  }
+
+  if (prop$type == "array") {
     # For arrays, we need to create the item type
     item_type <- create_ellmer_type(prop$items)
     return(ellmer::type_array(description, item_type))
-  } else if (prop$type == "object") {
+  }
+
+  if (prop$type == "object") {
     # For objects, we need to create a list of property types
     property_types <- create_ellmer_types(prop)
     return(ellmer::type_object(description, property_types))
-  } else {
-    # Default to string if unknown type
-    return(ellmer::type_string(description))
   }
+
+  # Default to string if unknown type
+  ellmer::type_string(description)
 }
 
 #' Create an ellmer handler function for an MCP tool
@@ -236,7 +248,7 @@ extract_mcp_result <- function(result) {
   }
 
   # If we can't extract anything meaningful, return as string
-  return(as.character(result))
+  as.character(result)
 }
 
 #' Convert multiple MCPR clients to ellmer tools
@@ -272,6 +284,5 @@ mcpr_clients_to_ellmer_tools <- function(...) {
     all_tools <- c(all_tools, client_tools)
   }
 
-  return(all_tools)
+  all_tools
 }
-
