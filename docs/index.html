@@ -65,8 +65,6 @@
   <main id="main" class="col-md-9"><div align="center">
 <p><img src="reference/figures/logo.png"></p>
 </div>
-<!-- badges: start -->
-
 <p>mcpr is an R implementation of the <a href="https://modelcontextprotocol.io" class="external-link">Model Context Protocol (MCP)</a>, enabling R applications to expose capabilities (tools, resources, and prompts) to AI models through a standard JSON-RPC 2.0 interface. It also provides client functionality to connect to and interact with MCP servers.</p>
 <p>See the official <a href="https://modelcontextprotocol.io" class="external-link">MCP documentation</a> for more information, particularly on schemas and capabilities. Visit <a href="https://mcpr.opifex.org/">package docs</a> for more information on the R implementation.</p>
 <div class="section level2">
@@ -138,11 +136,74 @@
 <span><span class="fu"><a href="reference/serve_http.html">serve_http</a></span><span class="op">(</span><span class="va">mcp</span>, port <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span></span></code></pre></div>
 <p>See the <a href="https://mcpr.opifex.org/articles/get-started">Get Started</a> guide for more information.</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="mcp-roclet-for-automatic-server-generation">MCP Roclet for Automatic Server Generation<a class="anchor" aria-label="anchor" href="#mcp-roclet-for-automatic-server-generation"></a>
+</h2>
+<p>mcpr includes a roxygen2 roclet that can automatically generate MCP servers from your R functions using special documentation tags. This provides a convenient way to expose existing R functions as MCP tools.</p>
+<div class="section level3">
+<h3 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h3>
+<ol style="list-style-type: decimal">
+<li>Add <code>@mcp</code> and <code>@type</code> tags to your function documentation:</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' Add two numbers</span></span>
+<span><span class="co">#' @param x First number</span></span>
+<span><span class="co">#' @param y Second number  </span></span>
+<span><span class="co">#' @type x number</span></span>
+<span><span class="co">#' @type y number</span></span>
+<span><span class="co">#' @mcp add_numbers Add two numbers together</span></span>
+<span><span class="va">add_numbers</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">x</span> <span class="op">+</span> <span class="va">y</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Generate the MCP server using roxygen2:</li>
+</ol>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Generate documentation and MCP server</span></span>
+<span><span class="fu">roxygen2</span><span class="fu">::</span><span class="fu"><a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link">roxygenise</a></span><span class="op">(</span>roclets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rd"</span>, <span class="st">"mcpr::mcp_roclet"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>This will create an MCP server file at <code>inst/mcp_server.R</code> that includes: - Tool definitions for all functions with <code>@mcp</code> tags - Proper input schemas based on <code>@type</code> tags - Handler functions that call your original R functions - A complete, runnable MCP server</p>
+</div>
+<div class="section level3">
+<h3 id="supported-types">Supported Types<a class="anchor" aria-label="anchor" href="#supported-types"></a>
+</h3>
+<p>The <code>@type</code> tag supports these parameter types: - <code>string</code> - Text values - <code>number</code> - Numeric values (integers and decimals) - <code>integer</code> - Integer values - <code>boolean</code> - True/false values - <code>array</code> - Lists/vectors - <code>object</code> - Complex R objects - <code>enum:value1,value2,value3</code> - Enumerated values</p>
+</div>
+<div class="section level3">
+<h3 id="example-generated-server">Example Generated Server<a class="anchor" aria-label="anchor" href="#example-generated-server"></a>
+</h3>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Generated MCP server code</span></span>
+<span><span class="va">add_numbers_tool</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_tool.html">new_tool</a></span><span class="op">(</span></span>
+<span>  name <span class="op">=</span> <span class="st">"add_numbers"</span>,</span>
+<span>  description <span class="op">=</span> <span class="st">"Add two numbers together"</span>, </span>
+<span>  input_schema <span class="op">=</span> <span class="fu"><a href="reference/schema.html">schema</a></span><span class="op">(</span></span>
+<span>    properties <span class="op">=</span> <span class="fu"><a href="reference/properties.html">properties</a></span><span class="op">(</span></span>
+<span>      x <span class="op">=</span> <span class="fu"><a href="reference/property_number.html">property_number</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"First number"</span>, required <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>      y <span class="op">=</span> <span class="fu"><a href="reference/property_number.html">property_number</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="st">"Second number"</span>, required <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  handler <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">params</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">add_numbers</span><span class="op">(</span><span class="va">params</span><span class="op">$</span><span class="va">x</span>, <span class="va">params</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="reference/response.html">response_text</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mcp_server</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_server.html">new_server</a></span><span class="op">(</span></span>
+<span>  name <span class="op">=</span> <span class="st">"Auto-generated MCP Server"</span>,</span>
+<span>  description <span class="op">=</span> <span class="st">"MCP server generated from R functions with @mcp tags"</span>,</span>
+<span>  version <span class="op">=</span> <span class="st">"1.0.0"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mcp_server</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/add_capability.html">add_capability</a></span><span class="op">(</span><span class="va">mcp_server</span>, <span class="va">add_numbers_tool</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/serve_io.html">serve_io</a></span><span class="op">(</span><span class="va">mcp_server</span><span class="op">)</span></span></code></pre></div>
+</div>
 <div class="section level3">
 <h3 id="client">Client<a class="anchor" aria-label="anchor" href="#client"></a>
 </h3>
 <p>Here’s a simple example of using the client to interact with an MCP server:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mcpr.opifex.org/">mcpr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create a client that connects to an MCP server</span></span>
@@ -203,7 +264,7 @@
 </h2>
 <p>Now supports ellmer tools, you can use ellmer’s or mcpr’s tools, interchangeably.</p>
 <p>See the example below, taken from the <a href="https://ellmer.tidyverse.org/articles/tool-calling.html#defining-a-tool-function" class="external-link">ellmer documentation</a></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create an ellmer tool</span></span>
 <span><span class="va">current_time</span> <span class="op">&lt;-</span> <span class="fu">ellmer</span><span class="fu">::</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/tool.html" class="external-link">tool</a></span><span class="op">(</span></span>
 <span>  \<span class="op">(</span><span class="va">tz</span> <span class="op">=</span> <span class="st">"UTC"</span><span class="op">)</span> <span class="op">{</span></span>
@@ -234,35 +295,35 @@
 <h3 id="claude-code-integration">Claude Code Integration<a class="anchor" aria-label="anchor" href="#claude-code-integration"></a>
 </h3>
 <p>To use your MCP server with Claude Code, see the <a href="https://docs.anthropic.com/en/docs/claude-code/tutorials#set-up-model-context-protocol-mcp" class="external-link">documentation</a></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">claude</span> mcp add r-calculator <span class="at">--</span> Rscript /path/to/calculator_server.R</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="ex">claude</span> mcp add r-calculator <span class="at">--</span> Rscript /path/to/calculator_server.R</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="cursor-integration">Cursor Integration<a class="anchor" aria-label="anchor" href="#cursor-integration"></a>
 </h3>
 <p>To integrate with Cursor see the <a href="https://docs.cursor.com/context/model-context-protocol" class="external-link">documentation</a></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="dt">"customCommands"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>    <span class="dt">"r-calculator"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>      <span class="dt">"command"</span><span class="fu">:</span> <span class="st">"Rscript 'path/to/calculator_server.R'"</span></span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="dt">"customCommands"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>    <span class="dt">"r-calculator"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>      <span class="dt">"command"</span><span class="fu">:</span> <span class="st">"Rscript 'path/to/calculator_server.R'"</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="vs-code-agent-mode-integration">VS Code Agent Mode Integration<a class="anchor" aria-label="anchor" href="#vs-code-agent-mode-integration"></a>
 </h3>
 <p>To integrate with VS Code Agent mode see the <a href="https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_add-an-mcp-server-to-your-user-settings" class="external-link">documentation</a></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="er">"mcp":</span> <span class="fu">{</span></span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>        <span class="dt">"servers"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>            <span class="dt">"my-mcp-server-calculator"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>                <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"stdio"</span><span class="fu">,</span></span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>                <span class="dt">"command"</span><span class="fu">:</span> <span class="st">"Rscript"</span><span class="fu">,</span></span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>                <span class="dt">"args"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>                    <span class="st">"path/to/calculator_server.R"</span></span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>                <span class="ot">]</span></span>
-<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>            <span class="fu">}</span></span>
-<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>      <span class="fu">}</span></span>
-<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="er">"mcp":</span> <span class="fu">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>        <span class="dt">"servers"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>            <span class="dt">"my-mcp-server-calculator"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>                <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"stdio"</span><span class="fu">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>                <span class="dt">"command"</span><span class="fu">:</span> <span class="st">"Rscript"</span><span class="fu">,</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>                <span class="dt">"args"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>                    <span class="st">"path/to/calculator_server.R"</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>                <span class="ot">]</span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p>More integrations in the <a href="https://mcpr.opifex.org/articles/client-integration">docs</a></p>
 </div>
 </div>
@@ -298,12 +359,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://github.com/devOpifex/mcpr/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/devOpifex/mcpr/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-</ul>
-</div>
+
 
   </aside>
 </div>
