@@ -19,7 +19,7 @@ Description: Create, run, and connect to Model Context Protocol (MCP) servers, a
 License: GPL (>= 2)
 Depends: R (>= 4.1.0)
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
+Roxygen: list(markdown = TRUE, roclets = c("collate", "rd", "namespace", "mcpr::mcp_roclet"))
 RoxygenNote: 7.3.2
 Imports:
     yyjsonr
@@ -29,6 +29,7 @@ Suggests:
     knitr,
     rmarkdown,
     httr2,
-    ellmer
+    ellmer,
+    roxygen2
 URL: https://mcpr.opifex.org/, https://github.com/devOpifex/mcpr
 VignetteBuilder: knitr

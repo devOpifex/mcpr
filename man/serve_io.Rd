@@ -7,7 +7,7 @@
 serve_io(mcp)
 }
 \arguments{
-\item{mcp}{An MCP server object}
+\item{mcp}{An MCP server object created with new_server()}
 }
 \value{
 Nothing, runs indefinitely in normal mode, or the response in test mode

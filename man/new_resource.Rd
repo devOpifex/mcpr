@@ -13,9 +13,9 @@ new_resource(name, description, uri, mime_type = NULL, handler)
 
 \item{uri}{URI of the resource}
 
-\item{mime_type}{Mime type of the resource}
+\item{mime_type}{MIME type of the resource (optional)}
 
-\item{handler}{Function to handle the resource}
+\item{handler}{Function to handle the resource request}
 }
 \value{
 A new resource capability

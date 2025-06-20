@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mcpr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -183,6 +183,12 @@
 
         </dt>
         <dd>Serve an MCP server over HTTP using ambiorix</dd>
+      </dl><dl><dt>
+
+          <code><a href="get_name.html">get_name()</a></code>
+
+        </dt>
+        <dd>Get the name of a client</dd>
       </dl></div><div class="section level2">
       <h2 id="client-functions">Client Functions<a class="anchor" aria-label="anchor" href="#client-functions"></a></h2>
 
@@ -272,6 +278,59 @@
         </dt>
         <dd>Create a response object</dd>
       </dl></div><div class="section level2">
+      <h2 id="roxygen-extension">Roxygen2 Extension<a class="anchor" aria-label="anchor" href="#roxygen-extension"></a></h2>
+
+      <div class="section-desc"><p>Functions for extending roxygen2 with MCP server generation</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="mcp_roclet.html">mcp_roclet()</a></code>
+
+        </dt>
+        <dd>MCP Roclet for Generating MCP Servers</dd>
+      </dl><dl><dt>
+
+          <code><a href="roxy_tag_parse.roxy_tag_mcp.html">roxy_tag_parse(<i>&lt;roxy_tag_mcp&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Parse @mcp tag</dd>
+      </dl><dl><dt>
+
+          <code><a href="roxy_tag_parse.roxy_tag_type.html">roxy_tag_parse(<i>&lt;roxy_tag_type&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Parse @type tag</dd>
+      </dl><dl><dt>
+
+          <code><a href="roclet_process.roclet_mcp.html">roclet_process(<i>&lt;roclet_mcp&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Process blocks for MCP roclet</dd>
+      </dl><dl><dt>
+
+          <code><a href="roxy_tag_rd.roxy_tag_mcp.html">roxy_tag_rd(<i>&lt;roxy_tag_mcp&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Roxygen2 tag for @mcp This function is called by Roxygen2 to generate documentation for the @mcp tag</dd>
+      </dl><dl><dt>
+
+          <code><a href="roxy_tag_rd.roxy_tag_type.html">roxy_tag_rd(<i>&lt;roxy_tag_type&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Roxygen2 tag handler for @type This function is called by Roxygen2 to generate documentation for the @type</dd>
+      </dl><dl><dt>
+
+          <code><a href="roclet_output.roclet_mcp.html">roclet_output(<i>&lt;roclet_mcp&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Generate MCP server output</dd>
+      </dl></div><div class="section level2">
       <h2 id="ellmer-integration">Ellmer Integration<a class="anchor" aria-label="anchor" href="#ellmer-integration"></a></h2>
 
       <div class="section-desc"><p>Functions for integrating with the Ellmer package</p></div>
@@ -288,6 +347,12 @@
 
         </dt>
         <dd>Register MCPR tools with an ellmer chat</dd>
+      </dl><dl><dt>
+
+          <code><a href="ellmer_to_mcpr_tool.html">ellmer_to_mcpr_tool()</a></code>
+
+        </dt>
+        <dd>Convert ellmer tools to mcpr tools</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

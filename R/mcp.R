@@ -1,14 +1,21 @@
 #' Create a new MCP object
 #'
-#' @param name Name of the MCP
-#' @param description Description of the MCP
-#' @param version Version of the MCP
-#' @param tools List of tools
-#' @param resources List of resources
-#' @param prompts List of prompts
+#' @param name Name of the MCP server
+#' @type name string
+#' @param description Description of the MCP server
+#' @type description string
+#' @param version Version of the MCP server
+#' @type version string
+#' @param tools List of tools (optional)
+#' @type tools array
+#' @param resources List of resources (optional)
+#' @type resources array
+#' @param prompts List of prompts (optional)
+#' @type prompts array
 #' @param ... Forwarded to [new_server()]
 #'
 #' @return A new MCP object
+#' @mcp create_mcp_server Create a new MCP server with specified name, description, and version
 #' @export
 #'
 #' @examples
@@ -94,11 +101,16 @@ new_mcp <- function(...) {
 #' Create a new tool
 #'
 #' @param name Name of the tool
-#' @param description Description of the tool
-#' @param input_schema Input schema for the tool
-#' @param handler Function to handle the tool
+#' @type name string
+#' @param description Description of the tool  
+#' @type description string
+#' @param input_schema Input schema for the tool (must be a schema object)
+#' @type input_schema object
+#' @param handler Function to handle the tool execution
+#' @type handler object
 #'
 #' @return A new tool capability
+#' @mcp create_mcp_tool Create a new MCP tool with input schema and handler function
 #' @export
 #'
 #' @examples
@@ -152,12 +164,18 @@ new_tool <- function(
 #' Create a new resource
 #'
 #' @param name Name of the resource
+#' @type name string
 #' @param description Description of the resource
+#' @type description string
 #' @param uri URI of the resource
-#' @param mime_type Mime type of the resource
-#' @param handler Function to handle the resource
+#' @type uri string
+#' @param mime_type MIME type of the resource (optional)
+#' @type mime_type string
+#' @param handler Function to handle the resource request
+#' @type handler object
 #'
 #' @return A new resource capability
+#' @mcp create_mcp_resource Create a new MCP resource with URI and MIME type
 #' @export
 #'
 #' @examples
@@ -199,11 +217,16 @@ new_resource <- function(name, description, uri, mime_type = NULL, handler) {
 #' Create a new prompt
 #'
 #' @param name Name of the prompt
+#' @type name string
 #' @param description Description of the prompt
+#' @type description string
 #' @param arguments List of arguments for the prompt
-#' @param handler Function to handle the prompt
+#' @type arguments array
+#' @param handler Function to handle the prompt execution
+#' @type handler object
 #'
 #' @return A new prompt capability
+#' @mcp create_mcp_prompt Create a new MCP prompt with arguments and handler function
 #' @export
 #'
 #' @examples
@@ -269,10 +292,13 @@ new_capability <- function(
 
 #' Add a capability to an MCP object
 #'
-#' @param capability A capability object
-#' @param mcp An MCP object
+#' @param mcp An MCP server object
+#' @type mcp object
+#' @param capability A tool, resource, or prompt capability object
+#' @type capability object
 #'
 #' @return The MCP object with the capability added
+#' @mcp add_mcp_capability Add a tool, resource, or prompt capability to an existing MCP server
 #' @export
 add_capability <- function(mcp, capability) {
   UseMethod("add_capability", capability)

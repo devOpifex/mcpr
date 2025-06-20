@@ -7,11 +7,11 @@
 schema(properties, type = "object", additional_properties = FALSE)
 }
 \arguments{
-\item{properties}{List of property definitions}
+\item{properties}{List of property definitions created with properties()}
 
-\item{type}{Type of the schema}
+\item{type}{Type of the schema (default: "object")}
 
-\item{additional_properties}{Logical indicating if additional properties are allowed}
+\item{additional_properties}{Whether additional properties are allowed}
 }
 \value{
 A list representing a JSON Schema object

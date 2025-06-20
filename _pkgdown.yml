@@ -39,6 +39,7 @@ reference:
   contents:
     - serve_io
     - serve_http
+    - get_name
 
 - title: "Client Functions"
   desc: >
@@ -62,6 +63,18 @@ reference:
   contents:
     - response
     - matches("^response_")
+
+- title: "Roxygen2 Extension"
+  desc: >
+    Functions for extending roxygen2 with MCP server generation
+  contents:
+    - mcp_roclet
+    - roxy_tag_parse.roxy_tag_mcp
+    - roxy_tag_parse.roxy_tag_type
+    - roclet_process.roclet_mcp
+    - roxy_tag_rd.roxy_tag_mcp
+    - roxy_tag_rd.roxy_tag_type
+    - roclet_output.roclet_mcp
 
 - title: "Ellmer Integration"
   desc: >

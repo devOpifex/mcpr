@@ -1,6 +1,7 @@
 #' Create a response object
 #'
-#' @param text Text content
+#' @param text Text content for the response
+#' @type text string
 #' @param image Image content
 #' @param audio Audio content
 #' @param video Video content
@@ -25,6 +26,7 @@
 #'
 #' @name response
 #' @return A response object
+#' @mcp create_text_response Create a text response for MCP tool handlers
 #' @export
 response_text <- function(text) {
   if (missing(text)) {

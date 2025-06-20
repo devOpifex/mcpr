@@ -30,7 +30,7 @@ property_string(
 
 \item{max_length}{Optional maximum length}
 
-\item{format}{Optional format (e.g., "date-time", "email", "uri")}
+\item{format}{Optional format constraint}
 }
 \value{
 A string property object

@@ -27,13 +27,13 @@ property_number(
 
 \item{maximum}{Optional maximum value}
 
-\item{exclusive_minimum}{Optional logical for exclusive minimum}
+\item{exclusive_minimum}{Whether minimum is exclusive}
 
-\item{exclusive_maximum}{Optional logical for exclusive maximum}
+\item{exclusive_maximum}{Whether maximum is exclusive}
 
 \item{multiple_of}{Optional value the number must be a multiple of}
 
-\item{integer}{Logical indicating if the number should be an integer}
+\item{integer}{Whether the number should be an integer}
 }
 \value{
 A number property object

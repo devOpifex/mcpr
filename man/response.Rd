@@ -34,7 +34,7 @@ response_item(
 response(..., is_error = FALSE)
 }
 \arguments{
-\item{text}{Text content}
+\item{text}{Text content for the response}
 
 \item{image}{Image content}
 

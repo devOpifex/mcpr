@@ -17,17 +17,17 @@ new_server(
 new_mcp(...)
 }
 \arguments{
-\item{name}{Name of the MCP}
+\item{name}{Name of the MCP server}
 
-\item{description}{Description of the MCP}
+\item{description}{Description of the MCP server}
 
-\item{version}{Version of the MCP}
+\item{version}{Version of the MCP server}
 
-\item{tools}{List of tools}
+\item{tools}{List of tools (optional)}
 
-\item{resources}{List of resources}
+\item{resources}{List of resources (optional)}
 
-\item{prompts}{List of prompts}
+\item{prompts}{List of prompts (optional)}
 
 \item{...}{Forwarded to \code{\link[=new_server]{new_server()}}}
 }
