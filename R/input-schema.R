@@ -1,10 +1,14 @@
 #' Create a new input schema
 #'
-#' @param properties List of property definitions
-#' @param type Type of the schema
-#' @param additional_properties Logical indicating if additional properties are allowed
+#' @param properties List of property definitions created with properties()
+#' @type properties object
+#' @param type Type of the schema (default: "object")
+#' @type type string
+#' @param additional_properties Whether additional properties are allowed
+#' @type additional_properties boolean
 #'
 #' @return A list representing a JSON Schema object
+#' @mcp create_json_schema Create a JSON Schema object for MCP tool inputs with property validation
 #' @export
 #'
 #' @examples
@@ -93,15 +97,24 @@ new_property <- function(type, title, description, required = FALSE, ...) {
 #' Create a string property definition
 #'
 #' @param title Short title for the property
+#' @type title string
 #' @param description Longer description of the property
+#' @type description string
 #' @param required Whether the property is required
+#' @type required boolean
 #' @param enum Optional character vector of allowed values
+#' @type enum array
 #' @param pattern Optional regex pattern the string must match
+#' @type pattern string
 #' @param min_length Optional minimum length
+#' @type min_length number
 #' @param max_length Optional maximum length
-#' @param format Optional format (e.g., "date-time", "email", "uri")
+#' @type max_length number
+#' @param format Optional format constraint
+#' @type format enum:date-time,email,uri,hostname,ipv4,ipv6
 #'
 #' @return A string property object
+#' @mcp create_string_property Create a string property with validation constraints for MCP schemas
 #' @export
 #'
 #' @examples
@@ -147,16 +160,26 @@ property_string <- function(
 #' Create a number property definition
 #'
 #' @param title Short title for the property
+#' @type title string
 #' @param description Longer description of the property
+#' @type description string
 #' @param required Whether the property is required
+#' @type required boolean
 #' @param minimum Optional minimum value
+#' @type minimum number
 #' @param maximum Optional maximum value
-#' @param exclusive_minimum Optional logical for exclusive minimum
-#' @param exclusive_maximum Optional logical for exclusive maximum
+#' @type maximum number
+#' @param exclusive_minimum Whether minimum is exclusive
+#' @type exclusive_minimum boolean
+#' @param exclusive_maximum Whether maximum is exclusive
+#' @type exclusive_maximum boolean
 #' @param multiple_of Optional value the number must be a multiple of
-#' @param integer Logical indicating if the number should be an integer
+#' @type multiple_of number
+#' @param integer Whether the number should be an integer
+#' @type integer boolean
 #'
 #' @return A number property object
+#' @mcp create_number_property Create a number property with range and type constraints for MCP schemas
 #' @export
 #'
 #' @examples
@@ -205,10 +228,14 @@ property_number <- function(
 #' Create a boolean property definition
 #'
 #' @param title Short title for the property
+#' @type title string
 #' @param description Longer description of the property
+#' @type description string
 #' @param required Whether the property is required
+#' @type required boolean
 #'
 #' @return A boolean property object
+#' @mcp create_boolean_property Create a boolean property for MCP schemas
 #' @export
 #'
 #' @examples
@@ -316,11 +343,16 @@ property_object <- function(
 #' Create an enum property with predefined values
 #'
 #' @param title Short title for the property
+#' @type title string
 #' @param description Longer description of the property
+#' @type description string
 #' @param values Character vector of allowed values
+#' @type values array
 #' @param required Whether the property is required
+#' @type required boolean
 #'
 #' @return An enum property object
+#' @mcp create_enum_property Create an enum property with predefined values for MCP schemas
 #' @export
 #'
 #' @examples

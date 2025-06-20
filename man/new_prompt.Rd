@@ -13,7 +13,7 @@ new_prompt(name, description, arguments = list(), handler)
 
 \item{arguments}{List of arguments for the prompt}
 
-\item{handler}{Function to handle the prompt}
+\item{handler}{Function to handle the prompt execution}
 }
 \value{
 A new prompt capability

@@ -1,8 +1,10 @@
 #' Serve an MCP server using stdin/stdout
 #'
-#' @param mcp An MCP server object
+#' @param mcp An MCP server object created with new_server()
+#' @type mcp object
 #'
 #' @return Nothing, runs indefinitely in normal mode, or the response in test mode
+#' @mcp start_mcp_server_io Start an MCP server using stdin/stdout transport
 #' @export
 serve_io <- function(
   mcp

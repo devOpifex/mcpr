@@ -3,6 +3,7 @@
 #' This roclet automatically generates MCP (Model Context Protocol) servers
 #' from R functions annotated with @mcp tags.
 #'
+#' @importFrom roxygen2 roclet roclet_process roclet_output roxy_tag_parse roxy_tag_rd block_get_tags roxy_tag_warning block_get_tag_value
 #' @export
 #' @examples
 #' \dontrun{
@@ -10,16 +11,17 @@
 #' roxygen2::roxygenise(roclets = c("rd", "mcpr::mcp_roclet"))
 #' }
 mcp_roclet <- function() {
-  roclet("mcp")
+  roxygen2::roclet("mcp")
 }
+
+# Custom tags are automatically recognized by having roxy_tag_parse methods
 
 #' Parse @mcp tag
 #'
 #' Parses @mcp tags to extract tool name and description.
-#' Format: @mcp [tool_name] [tool_description]
 #'
 #' @param x A roxy_tag object
-#' @return The modified roxy_tag object with parsed val
+#' @method roxy_tag_parse roxy_tag_mcp
 #' @export
 roxy_tag_parse.roxy_tag_mcp <- function(x) {
   # Parse the raw content
@@ -57,6 +59,105 @@ roxy_tag_parse.roxy_tag_mcp <- function(x) {
   x
 }
 
+#' Parse @type tag
+#'
+#' Parses @type tags to extract parameter type information.
+#' Format: @type param_name type enum_values
+#'
+#' @param x A roxy_tag object
+#' @method roxy_tag_parse roxy_tag_type
+#' @export
+roxy_tag_parse.roxy_tag_type <- function(x) {
+  # Parse the raw content
+  raw <- trimws(x$raw)
+
+  if (raw == "") {
+    roxygen2::roxy_tag_warning(x, "Empty @type tag")
+    return(x)
+  }
+
+  # Split by whitespace
+  parts <- strsplit(raw, "\\s+")[[1]]
+
+  if (length(parts) < 2) {
+    roxygen2::roxy_tag_warning(
+      x,
+      "Invalid @type format. Expected: param_name type [enum_values]"
+    )
+    return(x)
+  }
+
+  param_name <- parts[1]
+  param_type <- parts[2]
+
+  # Validate type
+  valid_types <- c(
+    "string",
+    "number",
+    "integer",
+    "boolean",
+    "array",
+    "object",
+    "enum"
+  )
+
+  # Handle enum type specially
+  if (grepl("^enum:", param_type)) {
+    param_type_base <- "enum"
+    enum_string <- gsub("^enum:", "", param_type)
+    enum_values <- trimws(strsplit(enum_string, ",")[[1]])
+  } else {
+    param_type_base <- param_type
+    enum_values <- NULL
+  }
+
+  if (!param_type_base %in% valid_types) {
+    roxygen2::roxy_tag_warning(
+      x,
+      paste(
+        "Invalid parameter type:",
+        param_type_base,
+        ". Valid types:",
+        paste(valid_types, collapse = ", ")
+      )
+    )
+    return(x)
+  }
+
+  x$val <- list(
+    param_name = param_name,
+    type = param_type_base,
+    enum_values = enum_values
+  )
+
+  x
+}
+
+#' Roxygen2 tag for @mcp
+#' This function is called by Roxygen2 to generate documentation for the @mcp tag
+#' @param x Roxygen2 tag object
+#' @param base_path Base path for the package
+#' @param env Environment
+#' @return NULL (invisible)
+#' @method roxy_tag_rd roxy_tag_mcp
+#' @export
+roxy_tag_rd.roxy_tag_mcp <- function(x, base_path, env) {
+  # @mcp tags are not for .Rd generation, only for MCP roclet
+  NULL
+}
+
+#' Roxygen2 tag handler for @type
+#' This function is called by Roxygen2 to generate documentation for the @type
+#' @param x Roxygen2 tag object
+#' @param base_path Base path for the package
+#' @param env Environment
+#' @return NULL (invisible)
+#' @method roxy_tag_rd roxy_tag_type
+#' @export
+roxy_tag_rd.roxy_tag_type <- function(x, base_path, env) {
+  # @type tags are not for .Rd generation, only for MCP roclet
+  NULL
+}
 
 #' Process blocks for MCP roclet
 #'
@@ -65,13 +166,14 @@ roxy_tag_parse.roxy_tag_mcp <- function(x) {
 #' @param env Environment
 #' @param base_path Base path
 #' @return List of processed MCP tools
+#' @method roclet_process roclet_mcp
 #' @export
 roclet_process.roclet_mcp <- function(x, blocks, env, base_path) {
   tools <- list()
 
   for (block in blocks) {
     # Check if block has @mcp tag
-    mcp_tags <- block_get_tags(block, "mcp")
+    mcp_tags <- roxygen2::block_get_tags(block, "mcp")
 
     if (length(mcp_tags) > 0) {
       # Process this block as an MCP tool
@@ -92,6 +194,7 @@ roclet_process.roclet_mcp <- function(x, blocks, env, base_path) {
 #' @param base_path Base path
 #' @param ... Additional arguments
 #' @return NULL (invisible)
+#' @method roclet_output roclet_mcp
 #' @export
 roclet_output.roclet_mcp <- function(x, results, base_path, ...) {
   if (length(results) == 0) {
@@ -119,9 +222,10 @@ roclet_output.roclet_mcp <- function(x, results, base_path, ...) {
 #'
 #' @param block A roxy_block object
 #' @return A list with tool information or NULL
+#' @keywords internal
 process_mcp_block <- function(block) {
   # Get @mcp tag
-  mcp_tags <- block_get_tags(block, "mcp")
+  mcp_tags <- roxygen2::block_get_tags(block, "mcp")
   if (length(mcp_tags) == 0) {
     return(NULL)
   }
@@ -138,14 +242,15 @@ process_mcp_block <- function(block) {
   # Get tool name and description
   tool_name <- mcp_tag$val$name %||% paste0(func_name, "_tool")
   tool_description <- mcp_tag$val$description %||%
-    block_get_tag_value(block, "title") %||%
+    roxygen2::block_get_tag_value(block, "title") %||%
     paste("Tool for", func_name)
 
-  # Get parameters
-  param_tags <- block_get_tags(block, "param")
+  # Get parameters and types
+  param_tags <- roxygen2::block_get_tags(block, "param")
+  type_tags <- roxygen2::block_get_tags(block, "type")
 
   # Build parameter information
-  params <- build_param_info(param_tags)
+  params <- build_param_info(param_tags, type_tags)
 
   list(
     name = tool_name,
@@ -157,12 +262,22 @@ process_mcp_block <- function(block) {
   )
 }
 
-#' Build parameter information from @param tags with embedded type syntax
+#' Build parameter information from @param and @type tags
 #'
 #' @param param_tags List of @param tags
+#' @param type_tags List of @type tags
 #' @return List of parameter information
-build_param_info <- function(param_tags) {
+#' @keywords internal
+build_param_info <- function(param_tags, type_tags = list()) {
   params <- list()
+
+  # Create lookup table for parameter types
+  type_lookup <- list()
+  for (type_tag in type_tags) {
+    if (!is.null(type_tag$val$param_name)) {
+      type_lookup[[type_tag$val$param_name]] <- type_tag$val
+    }
+  }
 
   # Process each @param tag
   for (param_tag in param_tags) {
@@ -185,15 +300,16 @@ build_param_info <- function(param_tags) {
     names <- trimws(strsplit(param_names, ",")[[1]])
 
     for (name in names) {
-      # Parse type information from description
-      # Format: {type} description or {enum:val1,val2,val3} description
-      type_info <- parse_param_type_from_description(param_desc)
+      # Get type information from @type tags
+      type_info <- type_lookup[[name]]
+      param_type <- if (!is.null(type_info)) type_info$type else "string"
+      enum_values <- if (!is.null(type_info)) type_info$enum_values else NULL
 
       params[[name]] <- list(
         name = name,
-        description = type_info$description,
-        type = type_info$type,
-        enum_values = type_info$enum_values,
+        description = param_desc,
+        type = param_type,
+        enum_values = enum_values,
         required = TRUE # Default to required, could be enhanced later
       )
     }
@@ -202,55 +318,13 @@ build_param_info <- function(param_tags) {
   params
 }
 
-#' Parse type information from parameter description
-#'
-#' @param desc Parameter description that may contain {type} syntax
-#' @return List with type, enum_values, and cleaned description
-parse_param_type_from_description <- function(desc) {
-  # Look for {type} or {enum:val1,val2} at the beginning
-  type_match <- regexpr("^\\{([^}]+)\\}\\s*(.*)", desc)
-
-  if (type_match == -1) {
-    # No type specified, default to string
-    return(list(
-      type = "string",
-      enum_values = NULL,
-      description = desc
-    ))
-  }
-
-  # Extract type and clean description
-  matches <- regmatches(desc, type_match, invert = FALSE)
-  type_part <- gsub("^\\{([^}]+)\\}\\s*.*", "\\1", matches)
-  clean_desc <- gsub("^\\{([^}]+)\\}\\s*(.*)", "\\2", matches)
-
-  # Parse enum values if present
-  if (grepl("^enum:", type_part)) {
-    enum_string <- gsub("^enum:", "", type_part)
-    enum_values <- trimws(strsplit(enum_string, ",")[[1]])
-    return(list(
-      type = "enum",
-      enum_values = enum_values,
-      description = clean_desc
-    ))
-  }
-
-  # Validate type
-  valid_types <- c("string", "number", "integer", "boolean", "array", "object")
-  param_type <- if (type_part %in% valid_types) type_part else "string"
-
-  list(
-    type = param_type,
-    enum_values = NULL,
-    description = clean_desc
-  )
-}
 
 #' Generate MCP server R code
 #'
 #' @param tools List of tool information
 #' @param base_path Base path for the package
 #' @return Character vector of R code lines
+#' @keywords internal
 generate_mcp_server <- function(tools, base_path) {
   lines <- c(
     "# Auto-generated MCP Server",
@@ -304,6 +378,7 @@ generate_mcp_server <- function(tools, base_path) {
 #' @param tool Tool information list
 #' @param index Tool index for naming
 #' @return Character vector of R code lines
+#' @keywords internal
 generate_tool_code <- function(tool, index) {
   lines <- c(
     paste0("# Tool: ", tool$name),
@@ -355,6 +430,7 @@ generate_tool_code <- function(tool, index) {
 #'
 #' @param param Parameter information
 #' @return Character string with property code
+#' @keywords internal
 generate_property_code <- function(param) {
   type <- param$type
   name <- param$name
@@ -399,7 +475,7 @@ generate_property_code <- function(param) {
     "(\"",
     name,
     "\", \"",
-    desc,
+    gsub("\"", "'", desc),
     "\", required = ",
     required,
     ")"
@@ -410,6 +486,7 @@ generate_property_code <- function(param) {
 #'
 #' @param tool Tool information
 #' @return Character vector of handler code lines
+#' @keywords internal
 generate_handler_code <- function(tool) {
   if (length(tool$params) == 0) {
     return(c(
@@ -430,4 +507,3 @@ generate_handler_code <- function(tool) {
 
 # Helper function for null coalescing
 `%||%` <- function(x, y) if (is.null(x)) y else x
-

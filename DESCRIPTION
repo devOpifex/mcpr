@@ -29,6 +29,7 @@ Suggests:
     knitr,
     rmarkdown,
     httr2,
-    ellmer
+    ellmer,
+    roxygen2
 URL: https://mcpr.opifex.org/, https://github.com/devOpifex/mcpr
 VignetteBuilder: knitr

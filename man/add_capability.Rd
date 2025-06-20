@@ -7,9 +7,9 @@
 add_capability(mcp, capability)
 }
 \arguments{
-\item{mcp}{An MCP object}
+\item{mcp}{An MCP server object}
 
-\item{capability}{A capability object}
+\item{capability}{A tool, resource, or prompt capability object}
 }
 \value{
 The MCP object with the capability added

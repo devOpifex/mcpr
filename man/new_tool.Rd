@@ -11,9 +11,9 @@ new_tool(name, description, input_schema, handler)
 
 \item{description}{Description of the tool}
 
-\item{input_schema}{Input schema for the tool}
+\item{input_schema}{Input schema for the tool (must be a schema object)}
 
-\item{handler}{Function to handle the tool}
+\item{handler}{Function to handle the tool execution}
 }
 \value{
 A new tool capability
