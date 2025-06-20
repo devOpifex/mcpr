@@ -92,6 +92,79 @@ serve_http(mcp, port = 3000)
 
 See the [Get Started](https://mcpr.opifex.org/articles/get-started) guide for more information.
 
+## MCP Roclet for Automatic Server Generation
+
+mcpr includes a roxygen2 roclet that can automatically generate MCP servers from your R functions using special documentation tags. This provides a convenient way to expose existing R functions as MCP tools.
+
+### Usage
+
+1. Add `@mcp` and `@type` tags to your function documentation:
+
+```r
+#' Add two numbers
+#' @param x First number
+#' @param y Second number  
+#' @type x number
+#' @type y number
+#' @mcp add_numbers Add two numbers together
+add_numbers <- function(x, y) {
+  x + y
+}
+```
+
+2. Generate the MCP server using roxygen2:
+
+```r
+# Generate documentation and MCP server
+roxygen2::roxygenise(roclets = c("rd", "mcpr::mcp_roclet"))
+```
+
+This will create an MCP server file at `inst/mcp_server.R` that includes:
+- Tool definitions for all functions with `@mcp` tags
+- Proper input schemas based on `@type` tags
+- Handler functions that call your original R functions
+- A complete, runnable MCP server
+
+### Supported Types
+
+The `@type` tag supports these parameter types:
+- `string` - Text values
+- `number` - Numeric values (integers and decimals)
+- `integer` - Integer values
+- `boolean` - True/false values
+- `array` - Lists/vectors
+- `object` - Complex R objects
+- `enum:value1,value2,value3` - Enumerated values
+
+### Example Generated Server
+
+```r
+# Generated MCP server code
+add_numbers_tool <- new_tool(
+  name = "add_numbers",
+  description = "Add two numbers together", 
+  input_schema = schema(
+    properties = properties(
+      x = property_number("x", "First number", required = TRUE),
+      y = property_number("y", "Second number", required = TRUE)
+    )
+  ),
+  handler = function(params) {
+    result <- add_numbers(params$x, params$y)
+    response_text(result)
+  }
+)
+
+mcp_server <- new_server(
+  name = "Auto-generated MCP Server",
+  description = "MCP server generated from R functions with @mcp tags",
+  version = "1.0.0"
+)
+
+mcp_server <- add_capability(mcp_server, add_numbers_tool)
+serve_io(mcp_server)
+```
+
 ### Client
 
 Here's a simple example of using the client to interact with an MCP server:
