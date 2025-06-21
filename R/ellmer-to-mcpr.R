@@ -64,11 +64,7 @@ ellmer_to_mcpr_tool <- function(ellmer_tool) {
       }
     )
 
-    response(
-      response_text(
-        yyjsonr::write_json_str(result, list(auto_unbox = TRUE))
-      )
-    )
+    response_force(result)
   }
 
   # Create the mcpr tool

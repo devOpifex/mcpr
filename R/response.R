@@ -158,3 +158,33 @@ response <- function(
     )
   )
 }
+
+response_force <- function(x) UseMethod("response_force")
+
+#' @export
+#' @method response_force default
+response_force.default <- function(x) {
+  response(
+    response_text(as.character(x))
+  )
+}
+
+#' @export
+#' @method response_force response
+response_force.response <- function(x) {
+  x
+}
+
+#' @export
+#' @method response_force response_item
+response_force.response_item <- function(x) {
+  response(x)
+}
+
+#' @export
+#' @method response_force error
+response_force.error <- function(x) {
+  response(
+    response_error(x$message)
+  )
+}

@@ -203,54 +203,6 @@ create_ellmer_handler <- function(client, tool_name, input_schema) {
   eval(parse(text = fn_body))
 }
 
-#' Extract and convert an MCP result to ellmer-compatible format
-#'
-#' @param result The MCP result object
-#' @return A value in ellmer-compatible format
-#' @keywords internal
-extract_mcp_result <- function(result) {
-  # Add debugging
-  if (is.character(result) || is.numeric(result) || is.logical(result)) {
-    return(result) # Already a simple value
-  }
-
-  # For response_text objects, extract the text directly
-  if (inherits(result, "response_item_text")) {
-    return(result$text)
-  }
-
-  # For response objects with content
-  if (!is.null(result$content) && length(result$content) > 0) {
-    # Get the first content item
-    item <- result$content[[1]]
-
-    # Handle based on type
-    if (is.character(item) || is.numeric(item)) {
-      return(item) # Simple value in content
-    }
-
-    if (!is.null(item$type)) {
-      if (item$type == "text") {
-        return(item$text)
-      } else if (item$type == "image") {
-        return(item$data)
-      } else if (item$type == "file") {
-        return(item$data)
-      } else if (item$type == "resource") {
-        return(item$resource)
-      }
-    }
-  }
-
-  # Last resort: try to extract any text we can find
-  if (!is.null(result$text)) {
-    return(result$text)
-  }
-
-  # If we can't extract anything meaningful, return as string
-  as.character(result)
-}
-
 #' Convert multiple MCPR clients to ellmer tools
 #'
 #' This function converts tools from multiple MCPR clients to a format compatible
