@@ -88,9 +88,11 @@ serve_http(mcp, port = 3000)
 
 See the [Get Started](https://mcpr.opifex.org/articles/get-started) guide for more information.
 
-## MCP Roclet for Automatic Server Generation
+## MCP Roclet
 
-mcpr includes a roxygen2 roclet that can automatically generate MCP servers from your R functions using special documentation tags. This provides a convenient way to expose existing R functions as MCP tools.
+mcpr includes a roxygen2 roclet that can automatically generate MCP servers from your R 
+functions using special documentation tags. 
+This provides a convenient way to expose existing R functions as MCP tools.
 
 ### Usage
 
