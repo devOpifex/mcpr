@@ -4,7 +4,14 @@
 \alias{serve_http}
 \title{Serve an MCP server over HTTP using ambiorix}
 \usage{
-serve_http(mcp, port = Sys.getenv("SHINY_PORT", 3000), path = "/mcp")
+serve_http(
+  mcp,
+  port = Sys.getenv("SHINY_PORT", 3000),
+  path = "/mcp",
+  oauth_config = NULL,
+  require_auth = FALSE,
+  protected_scopes = c("mcp:tools", "mcp:resources", "mcp:prompts")
+)
 }
 \arguments{
 \item{mcp}{An MCP server object}
@@ -12,6 +19,12 @@ serve_http(mcp, port = Sys.getenv("SHINY_PORT", 3000), path = "/mcp")
 \item{port}{Port to listen on, defaults to 3000}
 
 \item{path}{Path to serve the MCP endpoint, defaults to "/mcp"}
+
+\item{oauth_config}{Optional OAuth server configuration for authentication}
+
+\item{require_auth}{Whether to require OAuth authentication (default: FALSE for backward compatibility)}
+
+\item{protected_scopes}{Required OAuth scopes for MCP operations}
 }
 \value{
 Invisible, runs indefinitely

@@ -17,12 +17,13 @@ Description: Create, run, and connect to Model Context Protocol (MCP) servers, a
     MCP servers. It includes a JSON-RPC 2.0 implementation for communication between 
     clients and servers.
 License: GPL (>= 2)
-Depends: R (>= 4.1.0)
+Depends: R (>= 4.2.0)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("collate", "rd", "namespace", "mcpr::mcp_roclet"))
 RoxygenNote: 7.3.2
 Imports:
-    yyjsonr
+    yyjsonr,
+    roxygen2
 Suggests:
     ambiorix,
     processx,
@@ -30,6 +31,8 @@ Suggests:
     rmarkdown,
     httr2,
     ellmer,
-    roxygen2
+    jose,
+    openssl,
+    uuid
 URL: https://mcpr.opifex.org/, https://github.com/devOpifex/mcpr
 VignetteBuilder: knitr
