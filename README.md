@@ -55,7 +55,7 @@ calculator <- new_tool(
   }
 )
 
-mcp <- new_mcp(
+mcp <- new_server(
   name = "R Calculator Server",
   description = "A simple calculator server implemented in R",
   version = "1.0.0"
