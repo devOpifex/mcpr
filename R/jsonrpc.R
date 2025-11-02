@@ -1,10 +1,10 @@
 #' JSON-RPC 2.0 Standard Error Codes
 #' @keywords internal
-JSONRPC_PARSE_ERROR <- -32700
-JSONRPC_INVALID_REQUEST <- -32600
-JSONRPC_METHOD_NOT_FOUND <- -32601
-JSONRPC_INVALID_PARAMS <- -32602
-JSONRPC_INTERNAL_ERROR <- -32603
+JSONRPC_PARSE_ERROR <- -32700L
+JSONRPC_INVALID_REQUEST <- -32600L
+JSONRPC_METHOD_NOT_FOUND <- -32601L
+JSONRPC_INVALID_PARAMS <- -32602L
+JSONRPC_INTERNAL_ERROR <- -32603L
 
 #' Convert an R object to JSON
 #'
@@ -46,8 +46,12 @@ from_json <- function(json, ...) {
 #' @keywords internal
 create_error <- function(code, message, data = NULL, id = NULL) {
   error <- list(code = code, message = message)
-  if (!is.null(data)) error$data <- data
-  if (is.null(id)) id <- generate_id()
+  if (!is.null(data)) {
+    error$data <- data
+  }
+  if (is.null(id)) {
+    id <- generate_id()
+  }
 
   structure(
     list(
@@ -67,7 +71,9 @@ create_error <- function(code, message, data = NULL, id = NULL) {
 #' @return A structured JSON-RPC 2.0 success response
 #' @keywords internal
 create_response <- function(result, id = NULL) {
-  if (is.null(id)) id <- generate_id()
+  if (is.null(id)) {
+    id <- generate_id()
+  }
   structure(
     list(
       jsonrpc = "2.0",

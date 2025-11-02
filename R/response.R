@@ -10,7 +10,7 @@
 #' @param resource Resource content
 #' @param is_error Whether the response is an error
 #' @param mime_type Mime type of the content
-#' @param ... Mutliple `response` objects
+#' @param ... Mutliple `response` objects or passed to `ggplot2::ggsave`
 #'
 #' @details Use `response_item` to create a custom response item.
 #'

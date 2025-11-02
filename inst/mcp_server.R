@@ -233,7 +233,7 @@ create_text_response_tool <- new_tool(
       resource = property_string("resource", "Resource content", required = TRUE),
       is_error = property_string("is_error", "Whether the response is an error", required = TRUE),
       mime_type = property_string("mime_type", "Mime type of the content", required = TRUE),
-      ... = property_string("...", "Mutliple `response` objects", required = TRUE)
+      ... = property_string("...", "Mutliple `response` objects or passed to `ggplot2::ggsave`", required = TRUE)
     )
   ),
   handler = function(params) {

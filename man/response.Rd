@@ -48,7 +48,7 @@ response(..., is_error = FALSE)
 
 \item{resource}{Resource content}
 
-\item{...}{Mutliple \code{response} objects}
+\item{...}{Mutliple \code{response} objects or passed to \code{ggplot2::ggsave}}
 
 \item{type}{Type of the content}
 
