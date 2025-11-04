@@ -22,14 +22,14 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("collate", "rd", "namespace", "mcpr::mcp_roclet"))
 RoxygenNote: 7.3.2
 Imports:
-    yyjsonr
+    yyjsonr,
+    roxygen2
 Suggests:
     ambiorix,
     processx,
     knitr,
     rmarkdown,
     httr2,
-    ellmer,
-    roxygen2
+    ellmer
 URL: https://mcpr.opifex.org/, https://github.com/devOpifex/mcpr
 VignetteBuilder: knitr

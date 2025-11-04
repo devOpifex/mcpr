@@ -4,11 +4,14 @@
 \alias{client}
 \alias{new_client_io}
 \alias{new_client_http}
+\alias{new_client}
 \title{Create a new mcp IO}
 \usage{
 new_client_io(command, args = character(), name, version = "1.0.0")
 
 new_client_http(endpoint, name, version = "1.0.0")
+
+new_client(obj, name, version, type = c("io", "http"))
 }
 \arguments{
 \item{command}{The command to run}
@@ -19,11 +22,21 @@ new_client_http(endpoint, name, version = "1.0.0")
 
 \item{version}{The version of the client}
 
-\item{endpoint}{The endpoint to connect to}
+\item{endpoint}{The HTTP endpoint URL of the MCP server to connect to}
+
+\item{obj}{The underlying object for communication (process or request)}
+
+\item{type}{The type of client to create ("io" or "http")}
 }
 \value{
 A new mcp client
+
+A new MCP HTTP client object that can communicate
+with the MCP server at the specified endpoint
+
+A new mcp client object
 }
 \description{
-Create a new mcp IO
+Creates an MCP client that connects to an HTTP endpoint using httr2.
+This client can be used to communicate with MCP servers exposed via HTTP.
 }
