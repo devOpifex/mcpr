@@ -7,6 +7,7 @@
   - `mcp_roclet()` function integrates with roxygen2 to generate complete MCP servers
   - Automatically creates `inst/mcp_server.R` with tool definitions and handlers
   - Supports all standard JSON Schema types and enum values
+- Added support for headers for clients
 
 # mcpr 0.0.1
 

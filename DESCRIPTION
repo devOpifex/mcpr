@@ -1,6 +1,6 @@
 Package: mcpr
 Title: Model Context Protocol for R
-Version: 0.0.2.9000
+Version: 0.0.2.9001
 Authors@R: 
   c(
     person(given = "John",
@@ -20,7 +20,6 @@ License: GPL (>= 2)
 Depends: R (>= 4.1.0)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("collate", "rd", "namespace", "mcpr::mcp_roclet"))
-RoxygenNote: 7.3.2
 Imports:
     yyjsonr
 Suggests:
@@ -33,3 +32,4 @@ Suggests:
     roxygen2
 URL: https://mcpr.opifex.org/, https://github.com/devOpifex/mcpr
 VignetteBuilder: knitr
+Config/roxygen2/version: 8.1.0

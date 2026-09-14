@@ -175,7 +175,8 @@ library(mcpr)
 client <- new_client_http(
   "http://localhost:8080",
   name = "calculator",
-  version = "1.0.0"
+  version = "1.0.0",
+  headers = list(Authorization = "Bearer my-token")
 )
 
 # Or for standard IO transport

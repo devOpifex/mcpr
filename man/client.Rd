@@ -8,7 +8,7 @@
 \usage{
 new_client_io(command, args = character(), name, version = "1.0.0")
 
-new_client_http(endpoint, name, version = "1.0.0")
+new_client_http(endpoint, name, version = "1.0.0", headers = list())
 }
 \arguments{
 \item{command}{The command to run}
@@ -20,6 +20,9 @@ new_client_http(endpoint, name, version = "1.0.0")
 \item{version}{The version of the client}
 
 \item{endpoint}{The endpoint to connect to}
+
+\item{headers}{A named list (or named character vector) of HTTP headers
+to send with every request, e.g. \code{list(Authorization = "Bearer <token>")}.}
 }
 \value{
 A new mcp client

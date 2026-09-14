@@ -5,6 +5,8 @@
 #' @param args Arguments to pass to the command
 #' @param name The name of the client
 #' @param version The version of the client
+#' @param headers A named list (or named character vector) of HTTP headers
+#'   to send with every request, e.g. `list(Authorization = "Bearer <token>")`.
 #'
 #' @return A new mcp client
 #' @export
@@ -38,13 +40,22 @@ new_client_io <- function(
 }
 
 #' @rdname client
+#' @export
 new_client_http <- function(
   endpoint,
   name,
-  version = "1.0.0"
+  version = "1.0.0",
+  headers = list()
 ) {
   stopifnot(is.character(endpoint), length(endpoint) == 1)
   stopifnot(!missing(name), is.character(name), length(name) == 1)
+  stopifnot(is.list(headers) || is.character(headers))
+
+  if (
+    length(headers) && (is.null(names(headers)) || any(names(headers) == ""))
+  ) {
+    stop("`headers` must be a named list")
+  }
 
   if (!requireNamespace("httr2", quietly = TRUE)) {
     stop("The httr2 package is required to use the http client")
@@ -52,6 +63,13 @@ new_client_http <- function(
 
   r <- httr2::request(endpoint) |>
     httr2::req_method("POST")
+
+  if (length(headers)) {
+    r <- do.call(
+      httr2::req_headers,
+      c(list(r), as.list(headers), list(.redact = "Authorization"))
+    )
+  }
 
   new_client(
     r,

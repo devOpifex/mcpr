@@ -40,6 +40,7 @@ export(ellmer_to_mcpr_tool)
 export(get_name)
 export(initialize)
 export(mcp_roclet)
+export(new_client_http)
 export(new_client_io)
 export(new_mcp)
 export(new_prompt)
@@ -74,11 +75,13 @@ export(serve_io)
 export(tools_call)
 export(tools_list)
 export(write)
-importFrom(roxygen2,block_get_tag_value)
-importFrom(roxygen2,block_get_tags)
-importFrom(roxygen2,roclet)
-importFrom(roxygen2,roclet_output)
-importFrom(roxygen2,roclet_process)
-importFrom(roxygen2,roxy_tag_parse)
-importFrom(roxygen2,roxy_tag_rd)
-importFrom(roxygen2,roxy_tag_warning)
+importFrom(roxygen2,
+  block_get_tag_value,
+  block_get_tags,
+  roclet,
+  roclet_output,
+  roclet_process,
+  roxy_tag_parse,
+  roxy_tag_rd,
+  roxy_tag_warning
+)
