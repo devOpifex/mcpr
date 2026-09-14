@@ -34,9 +34,9 @@ serve_http <- function(
 
   # Add CORS headers middleware
   app$use(function(req, res) {
-    res$set_header("Access-Control-Allow-Origin", "*")
-    res$set_header("Access-Control-Allow-Methods", "POST, OPTIONS")
-    res$set_header("Access-Control-Allow-Headers", "Content-Type")
+    res$header("Access-Control-Allow-Origin", "*")
+    res$header("Access-Control-Allow-Methods", "POST, OPTIONS")
+    res$header("Access-Control-Allow-Headers", "Content-Type")
   })
 
   # Define MCP endpoint
@@ -64,7 +64,7 @@ serve_http <- function(
     }
 
     # Set content type and send response
-    res$set_header("Content-Type", "application/json")
+    res$header("Content-Type", "application/json")
 
     # Handle different response types
     if (

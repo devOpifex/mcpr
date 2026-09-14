@@ -61,8 +61,10 @@ new_client_http <- function(
     stop("The httr2 package is required to use the http client")
   }
 
+  # Streamable HTTP servers reject requests (406) that don't accept both
   r <- httr2::request(endpoint) |>
-    httr2::req_method("POST")
+    httr2::req_method("POST") |>
+    httr2::req_headers(Accept = "application/json, text/event-stream")
 
   if (length(headers)) {
     r <- do.call(
@@ -87,6 +89,8 @@ new_client <- function(obj, name, version, type = c("io", "http")) {
     obj,
     name = name,
     version = version,
+    # mutable state set during the session, e.g.: session id, protocol version
+    state = new.env(parent = emptyenv()),
     class = c(cls, "client", class(obj))
   )
 }

@@ -29,6 +29,11 @@ write.client_io <- function(
   r <- rpc_request(method, params, id)
   x$write_input(sprintf("%s\n", r))
 
+  # Notifications (no id) do not get a response
+  if (is.null(id)) {
+    return(invisible(NULL))
+  }
+
   # Read the response with the specified timeout
   read(x, timeout)
 }
@@ -43,12 +48,75 @@ write.client_http <- function(
   timeout = 5000
 ) {
   r <- rpc_request(method, params, id, convert = FALSE)
+  state <- attr(x, "state")
 
-  x |>
-    httr2::req_timeout(timeout) |>
-    httr2::req_body_json(r) |>
-    httr2::req_perform() |>
-    httr2::resp_body_json()
+  # timeout is in milliseconds, httr2 takes seconds
+  req <- x |>
+    httr2::req_timeout(timeout / 1000) |>
+    httr2::req_body_json(r)
+
+  if (!is.null(state$protocol_version)) {
+    req <- httr2::req_headers(
+      req,
+      `MCP-Protocol-Version` = state$protocol_version
+    )
+  }
+
+  if (!is.null(state$session_id)) {
+    req <- httr2::req_headers(req, `Mcp-Session-Id` = state$session_id)
+  }
+
+  resp <- httr2::req_perform(req)
+
+  session_id <- httr2::resp_header(resp, "Mcp-Session-Id")
+  if (!is.null(session_id)) {
+    state$session_id <- session_id
+  }
+
+  # Notifications (no id) get a 202 with no body
+  if (is.null(id) || !httr2::resp_has_body(resp)) {
+    return(invisible(NULL))
+  }
+
+  if (identical(httr2::resp_content_type(resp), "text/event-stream")) {
+    return(read_sse(httr2::resp_body_string(resp), id))
+  }
+
+  httr2::resp_body_json(resp)
+}
+
+# Extract the JSON-RPC response matching `id` from a server-sent events body,
+# skipping any notifications the server sent on the stream before it
+read_sse <- function(body, id) {
+  events <- strsplit(gsub("\r\n", "\n", body), "\n\n", fixed = TRUE)[[1]]
+
+  for (event in events) {
+    lines <- strsplit(event, "\n", fixed = TRUE)[[1]]
+    data <- sub("^data: ?", "", lines[startsWith(lines, "data:")])
+    data <- paste(data, collapse = "\n")
+
+    # servers may send a priming event with an empty data field
+    if (!nzchar(trimws(data))) {
+      next
+    }
+
+    msg <- jsonlite::parse_json(data)
+
+    if (!is.null(msg$id) && same_id(msg$id, id)) {
+      return(msg)
+    }
+  }
+
+  warning("No response found in event stream")
+  NULL
+}
+
+same_id <- function(a, b) {
+  if (is.numeric(a) && is.numeric(b)) {
+    return(isTRUE(all.equal(a, b, tolerance = 0)))
+  }
+
+  identical(as.character(a), as.character(b))
 }
 
 #' Read a JSON-RPC response from a client provider

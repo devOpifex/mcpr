@@ -8,6 +8,14 @@
   - Automatically creates `inst/mcp_server.R` with tool definitions and handlers
   - Supports all standard JSON Schema types and enum values
 - Added support for headers for clients
+- HTTP client works with Streamable HTTP servers: sends the required `Accept` header,
+  reads `text/event-stream` responses, and tracks `Mcp-Session-Id` and `MCP-Protocol-Version`
+- `initialize()` on a client now sends `notifications/initialized` and requests protocol `2025-11-25`
+- HTTP client `timeout` is now honoured in milliseconds, as documented (it was passed as seconds);
+  pass a larger `timeout` for slow tools
+- `tools_call()`, `resources_read()`, and `prompts_get()` on a client generate a request id when
+  none is given, previously they were sent as notifications and never got a response
+- `serve_http()` works with ambiorix 3.0.0, which removed `res$set_header()`
 
 # mcpr 0.0.1
 

@@ -109,23 +109,30 @@ initialize.server <- function(mcp) {
 #' @export
 #' @method initialize client
 initialize.client <- function(mcp) {
-  write(
+  res <- write(
     mcp,
     "initialize",
     list(
-      protocolVersion = "2024-11-05",
+      protocolVersion = "2025-11-25",
       clientInfo = list(
         name = attr(mcp, "name"),
         version = attr(mcp, "version")
       ),
-      capabilities = list(
-        roots = list(
-          listChanged = FALSE
-        ),
-        sampling = list()
-      )
+      # the client does not implement roots, sampling, or elicitation
+      capabilities = structure(list(), names = character(0))
     )
   )
+
+  if (is.null(res$result)) {
+    return(res)
+  }
+
+  # The server may pick an older version, subsequent requests must use it
+  attr(mcp, "state")$protocol_version <- res$result$protocolVersion
+
+  write(mcp, "notifications/initialized", id = NULL)
+
+  res
 }
 
 #' Call a tool with the given parameters
@@ -205,6 +212,11 @@ tools_call.server <- function(mcp, params, id = NULL) {
 #' @export
 #' @method tools_call client
 tools_call.client <- function(mcp, params, id = NULL) {
+  # without an id the request would be sent as a notification
+  if (is.null(id)) {
+    id <- generate_id()
+  }
+
   write(mcp, "tools/call", params, id)
 }
 
@@ -285,6 +297,10 @@ resources_read.server <- function(mcp, params, id = NULL) {
 #' @export
 #' @method resources_read client
 resources_read.client <- function(mcp, params, id = NULL) {
+  if (is.null(id)) {
+    id <- generate_id()
+  }
+
   write(mcp, "resources/read", params, id)
 }
 
@@ -365,5 +381,9 @@ prompts_get.server <- function(mcp, params, id = NULL) {
 #' @export
 #' @method prompts_get client
 prompts_get.client <- function(mcp, params, id = NULL) {
+  if (is.null(id)) {
+    id <- generate_id()
+  }
+
   write(mcp, "prompts/get", params, id)
 }
