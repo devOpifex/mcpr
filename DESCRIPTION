@@ -1,6 +1,6 @@
 Package: mcpr
 Title: Model Context Protocol for R
-Version: 0.0.2.9001
+Version: 0.0.3.9001
 Authors@R: 
   c(
     person(given = "John",
