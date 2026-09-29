@@ -1,6 +1,32 @@
 url: https://mcpr.opifex.org
 template:
   bootstrap: 5
+  light-switch: false
+  bslib:
+    preset: bootstrap
+    bg: "#191919"
+    fg: "#deeeed"
+    primary: "#7788aa"
+    secondary: "#789978"
+    success: "#789978"
+    info: "#7788aa"
+    warning: "#abab77"
+    danger: "#d70000"
+    body-bg: "#191919"
+    body-color: "#deeeed"
+    border-color: "#333333"
+    link-color: "#7788aa"
+    link-hover-color: "#789978"
+    base_font: {google: "Open Sans"}
+    heading_font: {google: "Open Sans"}
+    code_font: {google: "JetBrains Mono"}
+    font-size-base: "1rem"
+    line-height-base: 1.75
+    navbar-bg: "#191919"
+    pkgdown-nav-height: 56px
+
+navbar:
+  bg: dark
 
 reference:
 - title: "MCP Core Functions"

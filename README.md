@@ -1,7 +1,3 @@
-<div align="center">
-<img src="man/figures/logo.png" />
-</div>
-
 mcpr is an R implementation of the [Model Context Protocol (MCP)](https://modelcontextprotocol.io),
 enabling R applications to expose capabilities (tools, resources, and prompts)
 to AI models through a standard JSON-RPC 2.0 interface. It also provides client

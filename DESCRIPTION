@@ -30,7 +30,9 @@ Suggests:
     rmarkdown,
     httr2,
     jsonlite,
-    ellmer
+    ellmer (>= 0.3.0),
+    testthat (>= 3.0.0)
 URL: https://mcpr.opifex.org/, https://github.com/devOpifex/mcpr
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.1.0
+Config/testthat/edition: 3

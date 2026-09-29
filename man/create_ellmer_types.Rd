@@ -10,7 +10,7 @@ create_ellmer_types(schema)
 \item{schema}{The MCP schema object}
 }
 \value{
-A list of ellmer type function calls for each property
+A list of ellmer type objects for each property
 }
 \description{
 Create ellmer type functions from MCP schema properties

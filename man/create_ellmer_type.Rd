@@ -2,17 +2,19 @@
 % Please edit documentation in R/mcpr-to-ellmer.R
 \name{create_ellmer_type}
 \alias{create_ellmer_type}
-\title{Create an ellmer type function for a specific MCP property}
+\title{Create an ellmer type for a specific MCP property}
 \usage{
-create_ellmer_type(prop)
+create_ellmer_type(prop, required = TRUE)
 }
 \arguments{
 \item{prop}{The MCP property}
+
+\item{required}{Whether the property is required}
 }
 \value{
-An ellmer type function call
+An ellmer type object
 }
 \description{
-Create an ellmer type function for a specific MCP property
+Create an ellmer type for a specific MCP property
 }
 \keyword{internal}

@@ -1,0 +1,538 @@
+# Practical MCP Examples with R
+
+``` r
+library(mcpr)
+#> 
+#> Attaching package: 'mcpr'
+#> The following object is masked from 'package:methods':
+#> 
+#>     initialize
+#> The following object is masked from 'package:base':
+#> 
+#>     write
+```
+
+## Introduction
+
+The Model Context Protocol (MCP) enables AI models to interact with your
+R code. This vignette showcases several practical examples of MCP tools
+that leverage R’s statistical and data manipulation capabilities.
+
+## Example 1: Statistical Analysis Tool
+
+This example creates an MCP tool that performs basic statistical
+analysis on numeric data:
+
+``` r
+# Create a statistical analysis MCP server
+stats_server <- new_server(
+  name = "r-statistics",
+  description = "Statistical analysis tools using R",
+  version = "1.0.0"
+)
+
+# Create a summary statistics tool
+summary_stats <- new_tool(
+  name = "summary_statistics",
+  description = "Calculate summary statistics for a numeric vector",
+  input_schema = schema(
+    properties = properties(
+      data = property_array(
+        "Data", 
+        "Numeric vector to analyze",
+        items = property_number("Value", "A numeric value"),
+        required = TRUE
+      ),
+      include_quantiles = property_boolean(
+        "Include Quantiles", 
+        "Whether to include quantiles in the results",
+        default = FALSE
+      )
+    )
+  ),
+  handler = function(input) {
+    # Convert input to numeric vector
+    data <- unlist(input$data)
+    
+    # Calculate basic statistics
+    stats <- list(
+      n = length(data),
+      mean = mean(data, na.rm = TRUE),
+      median = median(data, na.rm = TRUE),
+      sd = sd(data, na.rm = TRUE),
+      min = min(data, na.rm = TRUE),
+      max = max(data, na.rm = TRUE)
+    )
+    
+    # Add quantiles if requested
+    if (input$include_quantiles) {
+      stats$quantiles <- as.list(quantile(data, 
+                                         probs = c(0.25, 0.5, 0.75), 
+                                         na.rm = TRUE))
+    }
+    
+    # Format the results as text
+    result_text <- paste0(
+      "Summary Statistics:\n",
+      "- n: ", stats$n, "\n",
+      "- Mean: ", round(stats$mean, 4), "\n",
+      "- Median: ", round(stats$median, 4), "\n",
+      "- Standard Deviation: ", round(stats$sd, 4), "\n",
+      "- Min: ", round(stats$min, 4), "\n",
+      "- Max: ", round(stats$max, 4)
+    )
+    
+    if (input$include_quantiles) {
+      result_text <- paste0(
+        result_text, "\n",
+        "- 25th Percentile: ", round(stats$quantiles[[1]], 4), "\n",
+        "- 50th Percentile: ", round(stats$quantiles[[2]], 4), "\n",
+        "- 75th Percentile: ", round(stats$quantiles[[3]], 4)
+      )
+    }
+    
+    response_text(result_text)
+  }
+)
+
+# Add the tool to the server
+stats_server <- add_capability(stats_server, summary_stats)
+```
+
+## Example 2: Data Visualization Resource
+
+This example creates an MCP resource that generates visualizations from
+data:
+
+``` r
+# Load required packages
+library(ggplot2)
+
+# Create visualization server
+viz_server <- new_server(
+  name = "r-visualizations",
+  description = "Data visualization tools using R",
+  version = "1.0.0"
+)
+
+# Create a scatter plot tool
+scatter_plot <- new_tool(
+  name = "scatter_plot",
+  description = "Create a scatter plot from x and y coordinates",
+  input_schema = schema(
+    properties = properties(
+      x = property_array(
+        "X values", 
+        "X-axis coordinates",
+        items = property_number("X value", "A numeric value"),
+        required = TRUE
+      ),
+      y = property_array(
+        "Y values", 
+        "Y-axis coordinates",
+        items = property_number("Y value", "A numeric value"),
+        required = TRUE
+      ),
+      title = property_string(
+        "Plot title",
+        "Title for the plot",
+        default = "Scatter Plot"
+      ),
+      x_label = property_string(
+        "X-axis label",
+        "Label for the x-axis",
+        default = "X"
+      ),
+      y_label = property_string(
+        "Y-axis label",
+        "Label for the y-axis",
+        default = "Y"
+      )
+    )
+  ),
+  handler = function(input) {
+    # Check that x and y have the same length
+    x <- unlist(input$x)
+    y <- unlist(input$y)
+    
+    if (length(x) != length(y)) {
+      return(response_error("X and Y arrays must have the same length"))
+    }
+    
+    # Create a data frame for ggplot
+    plot_data <- data.frame(x = x, y = y)
+    
+    # Create a temporary file for the plot
+    # Note: In a production environment, consider file cleanup strategies
+    # that don't risk deleting files before clients can access them
+    temp_file <- tempfile(fileext = ".png")
+    
+    # Create the plot using ggplot2
+    p <- ggplot(plot_data, aes(x = x, y = y)) +
+      geom_point(color = "steelblue", size = 3) +
+      labs(
+        title = input$title,
+        x = input$x_label,
+        y = input$y_label
+      ) +
+      theme_minimal()
+    
+    # Save the plot to the temporary file
+    ggsave(temp_file, p, width = 8, height = 6, dpi = 100)
+    
+    # Return the image
+    # The application should handle cleanup of temporary files
+    # based on its specific file management strategy
+    response_image(temp_file)
+  }
+)
+
+# Add the tool to the server
+viz_server <- add_capability(viz_server, scatter_plot)
+```
+
+## Example 3: Natural Language Processing
+
+This example demonstrates how to create an MCP tool for text analysis:
+
+``` r
+# Create an NLP server
+nlp_server <- new_server(
+  name = "r-text-analysis",
+  description = "Text analysis tools using R",
+  version = "1.0.0"
+)
+
+# Create a text summary tool
+text_analyzer <- new_tool(
+  name = "text_analyzer",
+  description = "Analyze text to extract basic metrics",
+  input_schema = schema(
+    properties = properties(
+      text = property_string(
+        "Text", 
+        "Text content to analyze",
+        required = TRUE
+      )
+    )
+  ),
+  handler = function(input) {
+    # Extract text from input
+    text <- input$text
+    
+    # Calculate basic text metrics
+    char_count <- nchar(text)
+    word_count <- length(unlist(strsplit(text, "\\s+")))
+    sentence_count <- length(unlist(strsplit(text, "[.!?]\\s*")))
+    
+    # Calculate word frequencies
+    words <- tolower(unlist(strsplit(text, "\\W+")))
+    words <- words[words != ""]
+    word_freq <- sort(table(words), decreasing = TRUE)
+    
+    # Get top 5 words
+    top_words <- head(word_freq, 5)
+    top_words_text <- paste(names(top_words), "(", top_words, ")", 
+                           collapse = ", ")
+    
+    # Format the results
+    result <- paste0(
+      "Text Analysis:\n",
+      "- Character count: ", char_count, "\n",
+      "- Word count: ", word_count, "\n",
+      "- Sentence count: ", sentence_count, "\n",
+      "- Unique words: ", length(word_freq), "\n",
+      "- Top 5 words: ", top_words_text
+    )
+    
+    response_text(result)
+  }
+)
+
+# Add the tool to the server
+nlp_server <- add_capability(nlp_server, text_analyzer)
+```
+
+## Example 4: Time Series Forecasting
+
+This example creates an MCP tool for simple time series forecasting:
+
+``` r
+# Create a forecasting server
+forecast_server <- new_server(
+  name = "r-forecasting",
+  description = "Time series forecasting tools using R",
+  version = "1.0.0"
+)
+
+# Create a simple forecasting tool
+simple_forecast <- new_tool(
+  name = "simple_forecast",
+  description = "Forecast future values based on historical time series data",
+  input_schema = schema(
+    properties = properties(
+      values = property_array(
+        "Historical values", 
+        "Historical time series values",
+        items = property_number("Value", "A numeric value"),
+        required = TRUE
+      ),
+      periods = property_number(
+        "Forecast periods",
+        "Number of periods to forecast",
+        default = 5,
+        minimum = 1,
+        maximum = 50
+      ),
+      method = property_enum(
+        "Forecast method",
+        "Method to use for forecasting",
+        enum = c("mean", "naive", "drift", "exponential"),
+        default = "exponential"
+      )
+    )
+  ),
+  handler = function(input) {
+    # Extract inputs
+    values <- unlist(input$values)
+    periods <- input$periods
+    method <- input$method
+    
+    # Apply the selected forecasting method
+    forecast_values <- switch(
+      method,
+      "mean" = {
+        rep(mean(values), periods)
+      },
+      "naive" = {
+        rep(tail(values, 1), periods)
+      },
+      "drift" = {
+        last_value <- tail(values, 1)
+        avg_change <- (last_value - values[1]) / (length(values) - 1)
+        last_value + (1:periods) * avg_change
+      },
+      "exponential" = {
+        # Simple exponential smoothing
+        alpha <- 0.3  # smoothing parameter
+        level <- values[1]
+        for (i in 2:length(values)) {
+          level <- alpha * values[i] + (1 - alpha) * level
+        }
+        rep(level, periods)
+      }
+    )
+    
+    # Format the results
+    forecast_text <- paste(
+      "Forecast for next", periods, "periods using", method, "method:",
+      paste(round(forecast_values, 2), collapse = ", ")
+    )
+    
+    # Create a plot of historical + forecast values using ggplot2
+    # Note: In a production environment, consider file cleanup strategies
+    # that don't risk deleting files before clients can access them
+    temp_file <- tempfile(fileext = ".png")
+    
+    # Prepare data for ggplot
+    # Create a data frame with historical and forecast data
+    n_hist <- length(values)
+    n_forecast <- length(forecast_values)
+    
+    plot_data <- data.frame(
+      time = 1:(n_hist + n_forecast),
+      value = c(values, forecast_values),
+      type = c(rep("Historical", n_hist), rep("Forecast", n_forecast))
+    )
+    
+    # Create the plot using ggplot2
+    p <- ggplot(plot_data, aes(x = time, y = value, color = type, linetype = type)) +
+      geom_line(size = 1) +
+      scale_color_manual(values = c("Historical" = "black", "Forecast" = "blue")) +
+      scale_linetype_manual(values = c("Historical" = "solid", "Forecast" = "dashed")) +
+      labs(
+        title = paste("Time Series Forecast (", method, ")"),
+        x = "Time Period",
+        y = "Value",
+        color = "Data Type",
+        linetype = "Data Type"
+      ) +
+      theme_minimal() +
+      theme(legend.position = "top")
+    
+    # Save the plot to the temporary file
+    ggsave(temp_file, p, width = 8, height = 6, dpi = 100)
+    
+    # Return both text and image
+    # The application should handle cleanup of temporary files
+    # based on its specific file management strategy
+    response(list(
+      response_text(forecast_text),
+      response_image(temp_file)
+    ))
+  }
+)
+
+# Add the tool to the server
+forecast_server <- add_capability(forecast_server, simple_forecast)
+```
+
+## Example 5: Machine Learning Classification
+
+This example demonstrates a simple machine learning classification tool:
+
+``` r
+# Create an ML server
+ml_server <- new_server(
+  name = "r-machine-learning",
+  description = "Machine learning tools using R",
+  version = "1.0.0"
+)
+
+# Create a simple classifier tool
+simple_classifier <- new_tool(
+  name = "simple_classifier",
+  description = "Train a simple classifier and make predictions",
+  input_schema = schema(
+    properties = properties(
+      features = property_array(
+        "Training features", 
+        "Features for training (list of feature vectors)",
+        items = property_array(
+          "Feature vector",
+          "Vector of features for a single instance",
+          items = property_number("Feature", "Feature value")
+        ),
+        required = TRUE
+      ),
+      labels = property_array(
+        "Training labels",
+        "Labels for training data (0 or 1)",
+        items = property_number(
+          "Label",
+          "Class label (0 or 1)"
+        ),
+        required = TRUE
+      ),
+      test_features = property_array(
+        "Test features",
+        "Features for prediction",
+        items = property_array(
+          "Feature vector",
+          "Vector of features for a single instance",
+          items = property_number("Feature", "Feature value")
+        ),
+        required = TRUE
+      ),
+      method = property_enum(
+        "Classification method",
+        "Method to use for classification",
+        enum = c("logistic", "lda"),
+        default = "logistic"
+      )
+    )
+  ),
+  handler = function(input) {
+    # Process input data
+    features <- lapply(input$features, unlist)
+    labels <- unlist(input$labels)
+    test_features <- lapply(input$test_features, unlist)
+    method <- input$method
+    
+    # Check that all feature vectors have the same length
+    feature_lengths <- sapply(features, length)
+    if (length(unique(feature_lengths)) != 1) {
+      return(response_error("All feature vectors must have the same length"))
+    }
+    
+    test_feature_lengths <- sapply(test_features, length)
+    if (any(test_feature_lengths != feature_lengths[1])) {
+      return(response_error("Test features must have the same dimensions as training features"))
+    }
+    
+    # Create a training data frame
+    train_df <- as.data.frame(do.call(rbind, features))
+    colnames(train_df) <- paste0("X", 1:ncol(train_df))
+    train_df$y <- as.factor(labels)
+    
+    # Create a test data frame
+    test_df <- as.data.frame(do.call(rbind, test_features))
+    colnames(test_df) <- paste0("X", 1:ncol(test_df))
+    
+    # Train a model based on the selected method
+    if (method == "logistic") {
+      formula <- as.formula(paste("y ~", paste(colnames(train_df)[colnames(train_df) != "y"], collapse = " + ")))
+      model <- glm(formula, data = train_df, family = "binomial")
+      
+      # Make predictions
+      pred_probs <- predict(model, test_df, type = "response")
+      predictions <- ifelse(pred_probs > 0.5, 1, 0)
+      
+    } else if (method == "lda") {
+      # Use simple implementation to avoid additional dependencies
+      # Calculate means for each class
+      means_class0 <- colMeans(train_df[train_df$y == 0, colnames(train_df) != "y", drop = FALSE])
+      means_class1 <- colMeans(train_df[train_df$y == 1, colnames(train_df) != "y", drop = FALSE])
+      
+      # Calculate pooled covariance matrix
+      n0 <- sum(train_df$y == 0)
+      n1 <- sum(train_df$y == 1)
+      
+      # Make predictions using distance to means
+      predictions <- numeric(nrow(test_df))
+      for (i in 1:nrow(test_df)) {
+        dist0 <- sum((as.numeric(test_df[i,]) - means_class0)^2)
+        dist1 <- sum((as.numeric(test_df[i,]) - means_class1)^2)
+        predictions[i] <- ifelse(dist0 < dist1, 0, 1)
+      }
+    }
+    
+    # Format results
+    result_text <- paste(
+      "Classification results using", method, "method:\n",
+      "Predictions:", paste(predictions, collapse = ", ")
+    )
+    
+    response_text(result_text)
+  }
+)
+
+# Add the tool to the server
+ml_server <- add_capability(ml_server, simple_classifier)
+```
+
+## Running These Examples
+
+To run any of these examples, save the code to an R script and add the
+appropriate
+[`serve_io()`](https://mcpr.opifex.org/reference/serve_io.md) or
+[`serve_http()`](https://mcpr.opifex.org/reference/serve_http.md) call
+at the end:
+
+``` r
+# For CLI-based tools (Claude Code, Cursor, etc.)
+serve_io(your_server)
+
+# For HTTP-based tools (OpenAI, LangChain, etc.)
+serve_http(your_server, port = 8080)
+```
+
+Then follow the client integration instructions from the “Integrating
+mcpr with MCP Clients” vignette.
+
+## Conclusion
+
+These examples demonstrate how R’s powerful statistical, visualization,
+and machine learning capabilities can be exposed to AI systems through
+the Model Context Protocol. By creating specialized MCP tools, you can
+enhance AI applications with R’s unique strengths.
+
+For more advanced usage, consider:
+
+1.  Combining multiple tools in a single server
+2.  Adding error handling and input validation
+3.  Creating more complex responses with multiple content types
+4.  Leveraging R packages for specialized domains
+
+See the package documentation for more details on these advanced
+features.

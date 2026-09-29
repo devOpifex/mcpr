@@ -1,100 +1,347 @@
-/* mcpr theme based on logo colors */
+/* mcpr: dark theme, in the style of builder.opifex.org */
 
 :root {
-  --mcpr-dark-blue: #1a3c5e;
-  --mcpr-mid-blue: #195b7f;
-  --mcpr-teal: #19b8bf;
-  --mcpr-light-teal: #72d6d9;
-  --mcpr-very-light-teal: #e5f7f7;
+  --bg: #191919;
+  --bg-deep: #111111;
+  --bg-code: #080808;
+  --fg: #deeeed;
+  --fg-muted: #9aa5a4;
+  --border: #333333;
+  --border-strong: #444444;
+  --link: #7788aa;
+  --accent: #789978;
+  --hover: rgba(119, 136, 170, 0.1);
 }
 
-/* Navbar styling */
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- navbar ------------------------------------------------------------ */
+
 .navbar {
-  background-color: var(--mcpr-dark-blue);
-  border-bottom: 3px solid var(--mcpr-teal);
+  background-color: var(--bg) !important;
+  border-bottom: 1px solid var(--border);
+  box-shadow: none;
 }
 
-.navbar-dark .navbar-nav .nav-link {
-  color: rgba(255, 255, 255, 0.85);
+.navbar .navbar-brand {
+  font-weight: 600;
+  color: var(--fg) !important;
 }
 
-.navbar-dark .navbar-nav .active > .nav-link {
-  color: var(--mcpr-light-teal);
+.navbar .nav-text {
+  color: var(--fg-muted) !important;
+  font-size: 0.8rem;
 }
 
-.navbar-dark .navbar-nav .nav-link:hover, 
-.navbar-dark .navbar-nav .nav-link:focus {
-  color: var(--mcpr-light-teal);
+.navbar .nav-link {
+  color: var(--link) !important;
+  padding: 0.35rem 0.7rem !important;
+  border-radius: 4px;
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
 
-/* Headings */
+.navbar .nav-link:hover,
+.navbar .nav-link:focus,
+.navbar .nav-item.active > .nav-link {
+  color: var(--accent) !important;
+  background-color: var(--hover);
+}
+
+.dropdown-menu {
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  padding: 0.5rem;
+}
+
+.dropdown-menu .dropdown-item {
+  color: var(--link);
+  border-radius: 3px;
+  font-size: 0.9rem;
+}
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+  background-color: rgba(119, 136, 170, 0.12);
+  color: var(--accent);
+}
+
+.dropdown-header {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.navbar .form-control {
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  color: var(--fg);
+}
+
+.navbar .form-control::placeholder {
+  color: var(--fg-muted);
+}
+
+.navbar .form-control:focus {
+  border-color: var(--link);
+  box-shadow: none;
+}
+
+/* ---- typography -------------------------------------------------------- */
+
 h1, h2, h3, h4, h5, h6 {
-  color: var(--mcpr-dark-blue);
+  color: var(--fg);
+  font-weight: 600;
 }
 
-/* Links */
+h1 { font-size: 1.875rem; }
+h2 { font-size: 1.25rem; margin-top: 2.5rem; }
+h3 { font-size: 1rem; margin-top: 1.75rem; }
+
+.page-header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.75rem;
+}
+
+.page-header .text-muted,
+.text-muted {
+  color: var(--fg-muted) !important;
+}
+
 a {
-  color: var(--mcpr-mid-blue);
+  color: var(--link);
+  text-decoration: none;
 }
 
-a:hover, a:focus {
-  color: var(--mcpr-teal);
+a:hover {
+  color: var(--accent);
 }
 
-/* Code blocks */
-pre, code {
-  background-color: var(--mcpr-very-light-teal);
-  border-color: var(--mcpr-light-teal);
+main a:not(.anchor):not(.external-link-icon) {
+  text-decoration: underline;
+  text-decoration-color: rgba(119, 136, 170, 0.35);
+  text-underline-offset: 3px;
 }
 
-/* Buttons */
-.btn-primary {
-  background-color: var(--mcpr-mid-blue);
-  border-color: var(--mcpr-mid-blue);
+main a:hover {
+  text-decoration-color: var(--accent);
 }
 
-.btn-primary:hover, .btn-primary:focus {
-  background-color: var(--mcpr-dark-blue);
-  border-color: var(--mcpr-dark-blue);
+a.anchor {
+  color: #555555;
 }
 
-/* Sidebar navigation */
-.nav-pills .nav-link.active {
-  background-color: var(--mcpr-mid-blue);
+hr {
+  border-color: var(--border-strong);
+  opacity: 1;
 }
 
-/* Footer */
+blockquote {
+  border-left: 3px solid var(--border-strong);
+  padding-left: 1rem;
+  color: var(--fg-muted);
+}
+
+/* ---- code -------------------------------------------------------------- */
+
+code {
+  color: var(--fg);
+  background-color: var(--bg-code);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.875em;
+}
+
+pre {
+  background-color: var(--bg-code) !important;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem !important;
+  color: var(--fg);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+pre code {
+  padding: 0;
+  background: transparent;
+  font-size: inherit;
+}
+
+div.sourceCode {
+  background-color: transparent;
+}
+
+/* copy button */
+.btn-copy-ex {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--fg-muted);
+}
+
+.btn-copy-ex:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(120, 153, 120, 0.1);
+}
+
+/* syntax highlighting: muted, few colours
+   (html prefix beats pkgdown's built-in `pre code span.xx` theme) */
+code, pre { font-variant-ligatures: none; }
+html code span        { color: var(--fg); }
+html code span.kw,
+html code span.cf     { color: #7788aa; font-weight: 600; }  /* keyword, control flow */
+html code span.fu     { color: #aabbcc; }                    /* function */
+html code span.st,
+html code span.ss,
+html code span.vs,
+html code span.ch,
+html code span.sc     { color: #789978; }                    /* strings */
+html code span.dv,
+html code span.fl,
+html code span.bn,
+html code span.cn     { color: #abab77; }                    /* numbers, constants */
+html code span.va     { color: #cccccc; }                    /* variables */
+html code span.op     { color: #7a7a7a; }                    /* operators */
+html code span.at     { color: #9a9a9a; }                    /* attributes / args */
+html code span.co,
+html code span.cv,
+html code span.do     { color: #6b6b6b; font-style: italic; } /* comments */
+html code span.im,
+html code span.ot     { color: #708090; }
+html code span.er,
+html code span.al     { color: #d70000; }
+html code span.fu a,
+html code span a      { color: inherit; text-decoration: none !important; }
+html code span a:hover { color: var(--accent); }
+
+/* example output */
+.r-out,
+.r-plt {
+  color: var(--fg-muted);
+}
+
+/* ---- sidebar ----------------------------------------------------------- */
+
+#toc,
+aside {
+  font-size: 0.875rem;
+}
+
+aside h2 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-top: 1.5rem;
+}
+
+aside .nav-link,
+#toc .nav-link {
+  color: #aabbcc;
+  padding: 0.15rem 0;
+  border: none;
+}
+
+aside .nav-link:hover,
+#toc .nav-link:hover,
+#toc .nav-link.active {
+  color: var(--accent);
+  background: transparent;
+}
+
+#toc > .nav .nav {
+  padding-left: 0.75rem;
+}
+
+aside .list-unstyled li {
+  margin-bottom: 0.25rem;
+}
+
+/* ---- tables ------------------------------------------------------------ */
+
+table,
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--fg);
+  --bs-table-hover-bg: rgba(119, 136, 170, 0.06);
+  border-color: var(--border-strong);
+}
+
+thead th {
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-strong);
+}
+
+td, th {
+  border-color: var(--border) !important;
+}
+
+/* reference index */
+.template-reference-index h2 {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.4rem;
+}
+
+/* inline code that is a link (reference index, cross-refs) */
+main a > code,
+main code:has(> a) {
+  background: transparent;
+  padding: 0;
+}
+
+main a > code,
+main code > a {
+  color: var(--link) !important;
+  text-decoration: none !important;
+}
+
+main a:hover > code,
+main code > a:hover {
+  color: var(--accent) !important;
+}
+
+.template-reference-index dd {
+  color: var(--fg-muted);
+  margin-bottom: 0.9rem;
+}
+
+/* ---- footer ------------------------------------------------------------ */
+
 footer {
-  border-top: 1px solid var(--mcpr-light-teal);
-  background-color: var(--mcpr-very-light-teal);
+  border-top: 1px solid var(--border);
+  background-color: transparent;
+  color: var(--fg-muted);
+  font-size: 0.85rem;
 }
 
-/* Table styling */
-table {
-  border-collapse: collapse;
+/* ---- search ------------------------------------------------------------ */
+
+.aa-dropdown-menu {
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  color: var(--fg);
 }
 
-thead {
-  background-color: var(--mcpr-very-light-teal);
+.aa-suggestion.aa-cursor {
+  background: var(--hover);
 }
 
-th {
-  color: var(--mcpr-dark-blue);
+/* ---- no hex logo ------------------------------------------------------- */
+
+.page-header img.logo {
+  display: none;
 }
 
-tr:hover {
-  background-color: var(--mcpr-very-light-teal);
-}
-
-/* Syntax highlighting tweaks */
-.fl {
-  color: var(--mcpr-mid-blue);
-}
-
-.fu {
-  color: var(--mcpr-dark-blue);
-}
-
-.st {
-  color: var(--mcpr-teal);
+.template-home main {
+  padding-top: 1.5rem;
 }

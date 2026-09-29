@@ -43,24 +43,14 @@ mcpr_to_ellmer_tools <- function(client) {
     # Create the handler function
     handler <- create_ellmer_handler(client, tool$name, tool$inputSchema)
 
-    # Get the property types for ellmer
-    prop_types <- create_ellmer_types(tool$inputSchema)
-
-    # Construct the tool call with dynamic arguments
-    tool_call_args <- c(
-      list(
-        handler,
-        tool$description,
-        .name = tool_name,
-        .annotations = ellmer::tool_annotations(
-          title = tool_name
-        )
-      ),
-      prop_types
-    )
-
     # Create an ellmer tool
-    ellmer_tool <- do.call(ellmer::tool, tool_call_args)
+    ellmer_tool <- ellmer::tool(
+      handler,
+      tool$description,
+      arguments = create_ellmer_types(tool$inputSchema),
+      name = tool_name,
+      annotations = ellmer::tool_annotations(title = tool_name)
+    )
 
     # Add the tool to the result list
     ellmer_tools[[tool_name]] <- ellmer_tool
@@ -92,73 +82,77 @@ register_mcpr_tools <- function(chat, client) {
 #' Create ellmer type functions from MCP schema properties
 #'
 #' @param schema The MCP schema object
-#' @return A list of ellmer type function calls for each property
+#' @return A list of ellmer type objects for each property
 #' @keywords internal
 create_ellmer_types <- function(schema) {
+  required <- unlist(schema$required)
   types <- list()
 
-  # Process each property in the schema
   for (prop_name in names(schema$properties)) {
-    prop <- schema$properties[[prop_name]]
-
-    # Create the appropriate type function based on MCP type
-    type_fn <- create_ellmer_type(prop)
-
-    # Add to the list of type functions
-    types[[prop_name]] <- type_fn
+    types[[prop_name]] <- create_ellmer_type(
+      schema$properties[[prop_name]],
+      required = prop_name %in% required
+    )
   }
 
-  return(types)
+  types
 }
 
-#' Create an ellmer type function for a specific MCP property
+#' Create an ellmer type for a specific MCP property
 #'
 #' @param prop The MCP property
-#' @return An ellmer type function call
+#' @param required Whether the property is required
+#' @return An ellmer type object
 #' @keywords internal
-create_ellmer_type <- function(prop) {
-  # Get the description
-  description <- if (!is.null(prop$description)) {
-    prop$description
-  } else {
-    prop$title
+create_ellmer_type <- function(prop, required = TRUE) {
+  description <- prop$description
+  if (is.null(description)) {
+    description <- prop$title
   }
 
-  # Create type based on MCP type
-  if (prop$type == "string") {
-    return(ellmer::type_string(description))
+  # JSON Schema allows `type: ["string", "null"]`; null means optional
+  types <- unlist(prop$type)
+  if ("null" %in% types) {
+    required <- FALSE
+  }
+  types <- setdiff(types, "null")
+  # Missing type (e.g. anyOf/oneOf) falls back to string
+  type <- if (length(types) > 0) types[[1]] else "string"
+
+  # Enums are expressed as `enum` alongside a base type
+  if (!is.null(prop$enum)) {
+    return(ellmer::type_enum(
+      as.character(unlist(prop$enum)),
+      description,
+      required = required
+    ))
   }
 
-  if (prop$type == "number") {
-    return(ellmer::type_number(description))
-  }
-
-  if (prop$type == "integer") {
-    return(ellmer::type_integer(description))
-  }
-
-  if (prop$type == "boolean") {
-    return(ellmer::type_boolean(description))
-  }
-
-  if (prop$type == "enum") {
-    return(ellmer::type_enum(description, prop$enum))
-  }
-
-  if (prop$type == "array") {
-    # For arrays, we need to create the item type
-    item_type <- create_ellmer_type(prop$items)
-    return(ellmer::type_array(description, item_type))
-  }
-
-  if (prop$type == "object") {
-    # For objects, we need to create a list of property types
-    property_types <- create_ellmer_types(prop)
-    return(ellmer::type_object(description, property_types))
-  }
-
-  # Default to string if unknown type
-  ellmer::type_string(description)
+  switch(
+    type,
+    number = ellmer::type_number(description, required = required),
+    integer = ellmer::type_integer(description, required = required),
+    boolean = ellmer::type_boolean(description, required = required),
+    array = {
+      items <- prop$items
+      if (is.null(items)) {
+        items <- list(type = "string")
+      }
+      ellmer::type_array(
+        create_ellmer_type(items),
+        description,
+        required = required
+      )
+    },
+    object = do.call(
+      ellmer::type_object,
+      c(
+        list(.description = description, .required = required),
+        create_ellmer_types(prop)
+      )
+    ),
+    ellmer::type_string(description, required = required)
+  )
 }
 
 #' Create an ellmer handler function for an MCP tool
@@ -169,25 +163,30 @@ create_ellmer_type <- function(prop) {
 #' @return A function that can be used as an ellmer tool handler
 #' @keywords internal
 create_ellmer_handler <- function(client, tool_name, input_schema) {
-  # Get parameter names from the schema
+  # Force now: the caller's loop variable changes before the handler runs
+  force(client)
+  force(tool_name)
 
-  # Get parameter names for functions with parameters
   param_names <- names(input_schema$properties)
 
-  # For functions with parameters, create them dynamically
-  args_str <- paste(param_names, collapse = ", ")
-  params_list_str <- paste(
-    paste0(param_names, " = ", param_names),
-    collapse = ", "
-  )
+  # Optional parameters default to NULL so ellmer can omit them
+  args_str <- ""
+  params_list_str <- ""
+  if (length(param_names) > 0) {
+    args_str <- paste0(param_names, " = NULL", collapse = ", ")
+    params_list_str <- paste0(param_names, " = ", param_names, collapse = ", ")
+  }
 
   # Build the function body as a string with proper line breaks
   fn_body <- sprintf(
     "
   function(%s) {
-    # Collect arguments into a list
+    # Collect arguments, dropping omitted optional ones
     args <- list(%s)
-    
+    args <- args[!vapply(args, is.null, logical(1))]
+    # Named so an empty list serialises to {} rather than []
+    names(args) <- as.character(names(args))
+
     # Call the MCP tool with the correct parameters structure
     tools_call(client, list(
       name = tool_name,
